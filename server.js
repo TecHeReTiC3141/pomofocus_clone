@@ -5,8 +5,6 @@ const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
 
-
-
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/layout');
@@ -20,3 +18,4 @@ app.use('/', indexRouter);
 
 app.listen(process.env.POST || 3000,
     () => console.log('On http://localhost:3000'));
+

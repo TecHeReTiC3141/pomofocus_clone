@@ -3,14 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>Pomofocus</title>
+    <script src="https://kit.fontawesome.com/c9b4448de0.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="/js/index.js" type="module"></script>
     <link href="/dist/output.css" type="text/css" rel="stylesheet">
 </head>
-<body>
-    <header>
+<body class="bg-primary flex flex-col items-center text-white">
+    <header class="flex justify-between items-center
+    border-black w-[40rem] p-4 shadow mb-8">
         <div class="logo">
-            <img src="/images/icon.png">
-            <h4 class="underline text-yellow-400">PomoFocus</h4>
+<!--            <img src="/images/icon.png">-->
+
+            <h4 class="font-bold text-xl tracking-wide">
+                <i class="fa-solid fa-circle-check"></i> PomoFocus
+            </h4>
+        </div>
+
+        <div class="flex gap-5">
+            <div class="p-2 bg-secondary">
+                <button class="text-sm rounded-md">Report</button>
+            </div>
+            <div class="p-2 bg-secondary">
+                <button class="text-sm rounded-md">Setting</button>
+            </div>
+            <div class="p-2 bg-secondary">
+                <button class="text-sm rounded-md">Login</button>
+            </div>
         </div>
     </header>
+
+    <main class="w-[32rem] flex flex-col items-center text-center relative px-2">
+        <div class="bg-secondary px-20 py-4 relative rounded-md mb-4">
+            <div class="flex  justify-center">
+                <button class="px-2 py-1 mr-4 bg-red-800 rounded-md font-bold">Pomodoro</button>
+                <button class="px-2 py-1 mr-4 rounded-md font-bold">Short Break</button>
+                <button class="px-2 py-1 rounded-md font-bold">Long Break</button>
+            </div>
+            <h1 class="text-[7rem] font-bold">25:00</h1>
+            <button class="px-16 py-3 bg-white text-secondary uppercase
+            text-2xl rounded-md mb-4 font-bold">Start</button>
+        </div>
+
+        <div class="mb-4">
+            <p class="text-gray-400">#1</p>
+            <h3>Time to focus!</h3>
+        </div>
+
+        <div class="flex justify-between items-center w-full">
+            <h2 class="text-xl font-bold">Tasks</h2>
+            <button class="bg-secondary py-1 px-4 rounded-md">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+        </div>
+        <hr class="h-[1px] my-4 bg-white border-0  w-full">
+
+        <div class="w-full">
+
+            <div class="flex w-full justify-between items-center
+            bg-white px-2 py-4 mb-2 rounded-md cursor-pointer">
+                <div class="flex gap-1 items-center">
+                    <button class="text-gray-300 text-2xl">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </button>
+                    <p class="text-black font-bold">Task</p>
+                </div>
+                <div class="text-gray-500 flex">
+                    <p class="tracking-wider"><span class="text-lg">0</span>/1</p>
+                    <button class="border py-1 px-4 ml-2 rounded-md">
+                        <i class="fa-solid fa-ellipsis-vertical text-2lg"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <button class="py-4 w-full bg-black bg-opacity-10
+        rounded-md border-gray-500 border-2 border-dashed
+        font-bold ">
+                <i class="fa-solid fa-circle-plus"></i>
+                Add Task
+            </button>
+        </div>
+
+    </main>
 </body>
 </html>

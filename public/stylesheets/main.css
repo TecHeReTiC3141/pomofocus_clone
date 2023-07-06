@@ -9,6 +9,11 @@
 
     .task {
         @apply flex w-full justify-between items-center
+        border-l-8 border-white hover:border-gray-300
         bg-white px-2 py-4 mb-2 rounded-md cursor-pointer
+    }
+
+    .task.active {
+        @apply border-black;
     }
 }

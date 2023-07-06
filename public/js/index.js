@@ -44,6 +44,7 @@ $(document).ready(() => {
             color: 'bg-longBreak',
         },
     }
+    // setting current state
     let currentMode = $('.modes button.active').text(),
         currentTime = timeModes[currentMode];
     let taskActive = false;
@@ -70,7 +71,7 @@ $(document).ready(() => {
 
     setInterval(() => {
         if (taskActive && currentTime > 0) {
-            console.log(currentTime);
+
             timeLeft.text(setLeftTime(--currentTime));
             let timeLeftRatio = (timeModes[currentMode].time - currentTime) / timeModes[currentMode].time
             let timeLeftBarWidth = Math.floor($('.time-left-container').width() * timeLeftRatio);
@@ -82,10 +83,31 @@ $(document).ready(() => {
             } else {
                 currentMode = 'Pomodoro';
             }
+            $('.time-left-bar').width(0);
+
             $('.time-left-container').addClass('hidden');
             setState();
         }
     }, 1000)
+
+    // -----------------TASKS-------------------
+
+    let tasks = [{
+        done: false,
+        name: 'Task something',
+        pomosDone: 0,
+        pomosNeed: 1,
+    }];
+
+    $('.task').each(function() {
+        $(this).on('click', function() {
+            $('.task').each(function() {
+                $(this).removeClass('active');
+            });
+            $(this).addClass('active');
+        })
+    })
+
 
 
 })

@@ -92,19 +92,13 @@ $(document).ready(() => {
 
     // -----------------TASKS-------------------
 
-    let tasks = [{
-        done: false,
-        name: 'Task something',
-        pomosDone: 0,
-        pomosNeed: 1,
-    }];
-
     $('.task').each(function() {
         $(this).on('click', function() {
             $('.task').each(function() {
                 $(this).removeClass('active');
             });
             $(this).addClass('active');
+            $('.current-task-name').text($(this).text());
         })
     })
 

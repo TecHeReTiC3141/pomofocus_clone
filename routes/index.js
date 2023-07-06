@@ -1,14 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    let tasks = [{
-        done: false,
-        name: 'Task something',
-        pomosDone: 0,
-        pomosNeed: 1,
-    }];
+const Task = require('../models/Task');
 
+router.get('/', async (req, res) => {
+    const tasks = await Task.findAll();
     res.render('app.ejs', {tasks});
 });
 

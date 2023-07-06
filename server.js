@@ -16,6 +16,16 @@ app.use(methodOverride('_method'));
 
 app.use('/', indexRouter);
 
+const sequelize = require('./utils/getDBInstance');
+sequelize.authenticate()
+    .then(() => console.log('Connected successfully'))
+    .catch(err => console.log(`Error while connecting: ${err.message}`));
+
+
+sequelize.sync( {force: true })
+    .then(() => console.log("All models were synchronized successfully."));
+
+console.log(sequelize.models);
 app.listen(process.env.POST || 3000,
     () => console.log('On http://localhost:3000'));
 

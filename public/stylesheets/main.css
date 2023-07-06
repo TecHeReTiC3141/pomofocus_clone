@@ -2,3 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .modes button.active {
+        @apply bg-black bg-opacity-20 font-bold;
+    }
+
+    .task {
+        @apply flex w-full justify-between items-center
+        bg-white px-2 py-4 mb-2 rounded-md cursor-pointer
+    }
+}

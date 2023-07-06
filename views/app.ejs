@@ -8,9 +8,9 @@
     <script src="/js/index.js" type="module"></script>
     <link href="/dist/output.css" type="text/css" rel="stylesheet">
 </head>
-<body class="bg-primary flex flex-col items-center text-white">
+<body class="bg-pomodoro flex flex-col items-center text-white transition ease-linear duration-500">
     <header class="flex justify-between items-center
-    border-black w-[40rem] p-4 shadow mb-8">
+    border-black w-[40rem] p-4 shadow mb-8 relative">
         <div class="logo">
 <!--            <img src="/images/icon.png">-->
 
@@ -20,28 +20,43 @@
         </div>
 
         <div class="flex gap-5">
-            <div class="p-2 bg-secondary">
-                <button class="text-sm rounded-md">Report</button>
+            <div class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md">
+                <button class="text-sm ">
+                    <i class="fa-solid fa-chart-column text-md"></i>
+                    <span class="hidden md:inline-block">Report</span>
+                </button>
             </div>
-            <div class="p-2 bg-secondary">
-                <button class="text-sm rounded-md">Setting</button>
+            <div class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md">
+                <button class="text-sm "><i class="fa-solid fa-gear text-md"></i>
+                    <span class="hidden md:inline-block">Setting</span></button>
             </div>
-            <div class="p-2 bg-secondary">
-                <button class="text-sm rounded-md">Login</button>
+            <div class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md">
+                <button class="text-sm"><i class="fa-solid fa-circle-user text-md"></i>
+                    <span class="hidden md:inline-block">Login</span></button>
             </div>
+        </div>
+
+        <div class="time-left-container
+            absolute h-1 w-full left-0 top-full bg-black bg-opacity-20 rounded-md hidden">
+            <div class="time-left-bar absolute h-1 left-0 top-0 bg-white rounded"></div>
         </div>
     </header>
 
     <main class="w-[32rem] flex flex-col items-center text-center relative px-2">
-        <div class="bg-secondary px-20 py-4 relative rounded-md mb-4">
-            <div class="flex  justify-center">
-                <button class="px-2 py-1 mr-4 bg-red-800 rounded-md font-bold">Pomodoro</button>
-                <button class="px-2 py-1 mr-4 rounded-md font-bold">Short Break</button>
-                <button class="px-2 py-1 rounded-md font-bold">Long Break</button>
+        <div class="bg-white bg-opacity-10 px-20 py-4 relative rounded-md mb-4 relative">
+            <div class="modes flex justify-center">
+                <button class="px-2 py-1 mr-4 active rounded-md" id="pomodoro">Pomodoro</button>
+                <button class="px-2 py-1 mr-4 rounded-md" id="short-break">Short Break</button>
+                <button class="px-2 py-1 rounded-md" id="long-break">Long Break</button>
             </div>
-            <h1 class="text-[7rem] font-bold">25:00</h1>
-            <button class="px-16 py-3 bg-white text-secondary uppercase
-            text-2xl rounded-md mb-4 font-bold">Start</button>
+            <h1 class="time-left text-[7rem] font-bold">25:00</h1>
+            <button class="toggle-task px-16 py-3 bg-white text-pomodoro uppercase
+            text-2xl rounded-md mb-4 font-bold border-b-4 border-gray-300" >Start</button>
+            <button class="forward-btn text-white uppercase
+                text-3xl font-bold ml-16 hover:text-opacity-90
+                absolute  right-20 bottom-10" >
+                <i class="fa-solid fa-forward-step"></i>
+            </button>
         </div>
 
         <div class="mb-4">
@@ -51,18 +66,17 @@
 
         <div class="flex justify-between items-center w-full">
             <h2 class="text-xl font-bold">Tasks</h2>
-            <button class="bg-secondary py-1 px-4 rounded-md">
+            <button class="bg-white bg-opacity-10 py-1 px-4 rounded-md hover:brightness-105">
                 <i class="fa-solid fa-ellipsis-vertical"></i>
             </button>
         </div>
         <hr class="h-[1px] my-4 bg-white border-0  w-full">
 
-        <div class="w-full">
+        <div class="tasks w-full">
 
-            <div class="flex w-full justify-between items-center
-            bg-white px-2 py-4 mb-2 rounded-md cursor-pointer">
+            <div class="task">
                 <div class="flex gap-1 items-center">
-                    <button class="text-gray-300 text-2xl">
+                    <button class="text-gray-300 text-2xl hover:text-opacity-80">
                         <i class="fa-solid fa-circle-check"></i>
                     </button>
                     <p class="text-black font-bold">Task</p>
@@ -73,16 +87,17 @@
                         <i class="fa-solid fa-ellipsis-vertical text-2lg"></i>
                     </button>
                 </div>
-
             </div>
 
-            <button class="py-4 w-full bg-black bg-opacity-10
-        rounded-md border-gray-500 border-2 border-dashed
-        font-bold ">
+        </div>
+
+        <button class="py-4 w-full bg-black bg-opacity-10
+            rounded-md border-gray-500 border-2 border-dashed
+            font-bold ">
                 <i class="fa-solid fa-circle-plus"></i>
                 Add Task
             </button>
-        </div>
+
 
     </main>
 </body>

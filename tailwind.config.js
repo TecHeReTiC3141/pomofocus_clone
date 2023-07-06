@@ -1,8 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./public/**/*.{html,js}"],
+  content: ["./public/**/*.{html,js}", './views/**/*.{html,js,ejs}'],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        pomodoro: '#BA4949',
+        shortBreak: '#38858A',
+        longBreak: '#397097',
+      }
+    },
+
   },
   plugins: [],
 }

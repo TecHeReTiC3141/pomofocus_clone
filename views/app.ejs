@@ -54,7 +54,7 @@
             text-2xl rounded-md mb-4 font-bold border-b-4 border-gray-300" >Start</button>
             <button class="forward-btn text-white uppercase
                 text-3xl font-bold ml-16 hover:text-opacity-90
-                absolute  right-20 bottom-10" >
+                absolute  right-20 bottom-10 hidden" >
                 <i class="fa-solid fa-forward-step"></i>
             </button>
         </div>
@@ -78,7 +78,6 @@
                 <%- include('./task', {task: task}) %>
             <% } %>
 
-
         </div>
 
         <button class="add-task py-4 w-full bg-black bg-opacity-10
@@ -87,7 +86,7 @@
                 <i class="fa-solid fa-circle-plus"></i>
                 Add Task
             </button>
-
+        <%- include('./forms/add_form')%>
 
     </main>
 </body>

@@ -102,6 +102,21 @@ $(document).ready(() => {
         })
     })
 
+    $('.add-task').on('click', function() {
+        $(this).addClass('hidden');
+        $('#add-form').removeClass('hidden');
+    });
+
+    $('#cancel-add-btn').on('click', function(ev) {
+        ev.preventDefault();
+        $('.add-task').removeClass('hidden');
+        $('#add-form').addClass('hidden');
+    })
+
+    $('#add-note-btn').on('click', function(ev) {
+        ev.preventDefault();
+    })
+
 
 
 })

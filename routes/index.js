@@ -8,4 +8,12 @@ router.get('/', async (req, res) => {
     res.render('app.ejs', {tasks});
 });
 
+router.post('/new', async (req, res) => {
+    const newTask = await Task.create({
+        name: req.body.name,
+        pomosNeed: req.body.pomosNeed,
+    });
+    res.redirect('/');
+})
+
 module.exports = router;

@@ -22,7 +22,7 @@ sequelize.authenticate()
     .catch(err => console.log(`Error while connecting: ${err.message}`));
 
 
-sequelize.sync( {force: true })
+sequelize.sync( {alter: true })
     .then(() => console.log("All models were synchronized successfully."));
 
 console.log(sequelize.models);

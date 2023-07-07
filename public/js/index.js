@@ -123,15 +123,19 @@ $(document).ready(() => {
 
     $('.task:first-child').addClass('active');
 
-    $('.task').each(function() {
-        $(this).on('click', function() {
+    function initTask(task) {
+        task.on('click', function() {
             $('.task').each(function() {
-                $(this).removeClass('active');
+               $(this).removeClass('active');
             });
-            $(this).addClass('active');
-            $('.current-task-name').text($(this).data('name'));
+            task.addClass('active');
+            $('.current-task-name').text(task.data('name'));
         })
-    })
+    }
+
+    $('.task').each(function() {
+        initTask($(this));
+    });
 
     $('.add-task').on('click', function() {
         $(this).addClass('hidden');
@@ -152,8 +156,10 @@ $(document).ready(() => {
         $.post('/new', {
             name: $('#name', addForm).val(),
             pomosNeed: $('#pomosNeed', addForm).val(),
+            description: $('#description', addForm).val(),
         }, data => {
             const newTask = $(data);
+            initTask(newTask);
             $('.tasks').append(newTask);
         })
 
@@ -167,10 +173,10 @@ $(document).ready(() => {
 
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
-
-
-
     })
+
+    $('#description', addForm).prop('selectionEnd', 1);
+
 
     $('#add-note-btn').on('click', function(ev) {
         ev.preventDefault();

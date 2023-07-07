@@ -25,6 +25,7 @@ router.post('/new', async (req, res) => {
         const newTask = await Task.create({
             name: req.body.name,
             pomosNeed: req.body.pomosNeed,
+            description: req.body.description,
         });
         res.send(getTask(newTask));
     } catch (err) {

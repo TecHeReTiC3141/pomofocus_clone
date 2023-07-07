@@ -1,6 +1,7 @@
 function generateTask(task) {
     return `<div class="task" data-name="${task.name}" data-id="${task.id}">
-        <div>
+        <div class="flex w-full justify-between items-center
+         mb-2 rounded-md cursor-pointer">
             <div class="flex gap-1 items-center">
                 <button class="text-gray-300 text-2xl hover:text-opacity-80">
                     <i class="fa-solid fa-circle-check"></i>
@@ -17,7 +18,11 @@ function generateTask(task) {
                 </button>
             </div>
         </div>
-        
+        ${task.description && 
+            `<div class="bg-yellow-100 w-[28rem] mx-4\n text-gray-700 p-2 text-left rounded shadow">
+                ${task.description}           
+            </div>`}
+            
     </div>`
 }
 

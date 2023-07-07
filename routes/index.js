@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const { getTask } = require('../utils/generateTemplates');
+
 const Task = require('../models/Task');
 
 router.get('/', async (req, res) => {
@@ -19,15 +21,21 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/new', async (req, res) => {
-    const newTask = await Task.create({
-        name: req.body.name,
-        pomosNeed: req.body.pomosNeed,
-    });
-    res.redirect('/');
+    try {
+        const newTask = await Task.create({
+            name: req.body.name,
+            pomosNeed: req.body.pomosNeed,
+        });
+        res.send(getTask(newTask));
+    } catch (err) {
+        console.log(`$Error while adding {err.message}`);
+    }
+
 })
 
 router.get('/update/:id', async (req, res) => {
     try {
+        console.log(req.params);
         const curTask = await Task.findOne({
             where: {
                 id: req.params.id,
@@ -38,10 +46,15 @@ router.get('/update/:id', async (req, res) => {
             pomosNeed: curTask.pomosNeed === curTask.pomosDone ? curTask.pomosNeed + 1 : curTask.pomosNeed,
         })
         await curTask.save()
+        res.send({
+            pomosDone: curTask.pomosDone,
+            pomosNeed: curTask.pomosNeed,
+        })
     } catch (err) {
         console.log(`Error while adding done pomo ${err.message}`);
+        res.sendStatus(503);
     }
-    res.redirect('/');
+
 
 })
 

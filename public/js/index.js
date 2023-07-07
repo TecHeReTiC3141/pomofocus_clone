@@ -77,17 +77,23 @@ $(document).ready(() => {
             timeLeft.text(setLeftTime(--currentTime));
             let timeLeftRatio = (timeModes[currentMode].time - currentTime) / timeModes[currentMode].time
             let timeLeftBarWidth = Math.floor($('.time-left-container').width() * timeLeftRatio);
-            console.log(currentTime, timeLeftRatio, timeLeftBarWidth);
             $('.time-left-bar').width(timeLeftBarWidth);
         } else if (currentTime === 0) {
             if (currentMode === 'Pomodoro') {
                 currentMode = 'Short Break';
+                const currentTask = $('.task.active');
+                $.get(`/update/${currentTask.data('id')}`, {}, (data) => {
+                    const {pomosDone, pomosNeed} = data;
+                    $('.task-pomos-need', currentTask).text(pomosNeed);
+                    $('.task-pomos-done', currentTask).text(pomosDone);
+                })
             } else {
                 currentMode = 'Pomodoro';
             }
             $('.time-left-bar').width(0);
 
             $('.time-left-container').addClass('hidden');
+
             setState();
         }
     }, 1000)
@@ -99,6 +105,8 @@ $(document).ready(() => {
             animation: 150,
             ghostClass: 'ghost',
         });
+
+    $('.task:first-child').addClass('active');
 
     $('.task').each(function() {
         $(this).on('click', function() {
@@ -119,6 +127,26 @@ $(document).ready(() => {
         ev.preventDefault();
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
+    })
+
+    // form for adding new Tasks
+    const addForm = $('#add-form');
+    $('.submit-btn', addForm).on('click', function(ev) {
+        ev.preventDefault();
+
+        $.post('/new', {
+            name: $('#name', addForm).val(),
+            pomosNeed: $('#pomosNeed', addForm).val(),
+        }, data => {
+            const newTask = $(data);
+            $('.tasks').append(newTask);
+        })
+
+        $('input, textarea', addForm).val('');
+
+        $('.add-task').removeClass('hidden');
+        $('#add-form').addClass('hidden');
+
     })
 
     $('#add-note-btn').on('click', function(ev) {

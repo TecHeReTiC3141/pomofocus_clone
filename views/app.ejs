@@ -89,13 +89,15 @@
                 Add Task
             </button>
         <%- include('./forms/add_form')%>
-
-        <div class="pomo-stats bg-white bg-opacity-10 w-full rounded
-                flex justify-center gap-12 mt-8 mb-8 border-t-2
-                py-4">
-            <p>Pomos: <span class="font-bold text-xl mr-4"><%= totalPomosDone %> / <%= totalPomosNeed %></span>
-                Finish At: (</p>
-        </div>
+        <% if (tasks.length) { %>
+            <div class="pomo-stats bg-white bg-opacity-10 w-full rounded
+                    flex justify-center gap-12 mt-8 mb-8 border-t-2
+                    py-4">
+                <p class="text-gray-300">Pomos: <span class="font-bold text-2xl mr-4 text-white"><span class="total-pomos-done "><%= totalPomosDone %> </span>
+                        / <span class="total-pomos-need "><%= totalPomosNeed %></span> </span>
+                    Finish At: <span class="font-bold text-2xl text-white">18:20</span></p>
+            </div>
+        <% } %>
     </main>
 </body>
 </html>

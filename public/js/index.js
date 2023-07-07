@@ -1,5 +1,3 @@
-
-
 function setLeftTime(timeLeft) {
     let le = Math.floor(timeLeft / 60).toString(), ri = (timeLeft % 60).toString();
     if (le.length === 1) {
@@ -32,17 +30,31 @@ $(document).ready(() => {
         $('.forward-btn').addClass('hidden');
     }
 
+    function setFinishTime() {
+        let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
+        let start = Date.now();
+        if (pomosLeft) {
+            start += 1000 * (pomosLeft * timeModes['Pomodoro'].time +
+                (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
+                Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time);
+        }
+
+        const finishTime = new Date(start);
+        $('.finish-time').text(`${finishTime.getHours()}:${finishTime.getMinutes()}`);
+    }
+
+
     const timeModes = {
         'Pomodoro': {
-            time: 15,
+            time: 1500,
             color: 'bg-pomodoro',
         },
         'Short Break': {
-            time: 3,
+            time: 300,
             color: 'bg-shortBreak',
         },
         'Long Break': {
-            time: 6,
+            time: 600,
             color: 'bg-longBreak',
         },
     }
@@ -51,6 +63,7 @@ $(document).ready(() => {
         currentTime = timeModes[currentMode];
     let taskActive = false;
     const timeLeft = $('.time-left');
+    setFinishTime();
 
     const modesBtns = $('.modes button')
     modesBtns.each(function() {
@@ -86,7 +99,9 @@ $(document).ready(() => {
                     const {pomosDone, pomosNeed} = data;
                     $('.task-pomos-need', currentTask).text(pomosNeed);
                     $('.task-pomos-done', currentTask).text(pomosDone);
-                })
+                    setFinishTime();
+                });
+
             } else {
                 currentMode = 'Pomodoro';
             }
@@ -142,10 +157,18 @@ $(document).ready(() => {
             $('.tasks').append(newTask);
         })
 
+        const curTotPomosNeed = Number($('.total-pomos-need').text());
+
+        $('.total-pomos-need').text(curTotPomosNeed + +$('#pomosNeed', addForm).val());
+
+        setFinishTime();
+
         $('input, textarea', addForm).val('');
 
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
+
+
 
     })
 

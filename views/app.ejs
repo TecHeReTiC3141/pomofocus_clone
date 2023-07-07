@@ -5,6 +5,8 @@
     <title>Pomofocus</title>
     <script src="https://kit.fontawesome.com/c9b4448de0.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
+            integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/js/index.js" type="module"></script>
     <link href="/dist/output.css" type="text/css" rel="stylesheet">
 </head>
@@ -88,6 +90,12 @@
             </button>
         <%- include('./forms/add_form')%>
 
+        <div class="pomo-stats bg-white bg-opacity-10 w-full rounded
+                flex justify-center gap-12 mt-8 mb-8 border-t-2
+                py-4">
+            <p>Pomos: <span class="font-bold text-xl mr-4"><%= totalPomosDone %> / <%= totalPomosNeed %></span>
+                Finish At: (</p>
+        </div>
     </main>
 </body>
 </html>

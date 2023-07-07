@@ -1,3 +1,5 @@
+
+
 function setLeftTime(timeLeft) {
     let le = Math.floor(timeLeft / 60).toString(), ri = (timeLeft % 60).toString();
     if (le.length === 1) {
@@ -91,6 +93,12 @@ $(document).ready(() => {
     }, 1000)
 
     // -----------------TASKS-------------------
+    const tasks = document.querySelector('.tasks');
+    let sortable = Sortable.create(tasks,
+        {
+            animation: 150,
+            ghostClass: 'ghost',
+        });
 
     $('.task').each(function() {
         $(this).on('click', function() {
@@ -98,7 +106,7 @@ $(document).ready(() => {
                 $(this).removeClass('active');
             });
             $(this).addClass('active');
-            $('.current-task-name').text($(this).text());
+            $('.current-task-name').text($(this).data('name'));
         })
     })
 

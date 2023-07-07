@@ -16,4 +16,12 @@
     .task.active {
         @apply border-black;
     }
+
+    .ghost {
+        @apply bg-black bg-opacity-20 border-l-0;
+    }
+
+    .ghost * {
+        @apply opacity-0;
+    }
 }

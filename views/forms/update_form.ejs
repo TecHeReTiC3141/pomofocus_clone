@@ -1,28 +1,29 @@
-<form action="/new" method="POST" class="w-full
+<form action="/update" method="POST" class="w-full
 bg-white rounded-t-md py-4 px-6 hidden
 text-black flex flex-col items-start relative mb-12"
-      id="add-form">
+      id="update-form">
     <label for="">
         <input type="text" placeholder="What are you working on?" class="text-2xl border-0
-        focus:outline-none w-full my-2" name="name" id="name" required>
+        focus:outline-none w-full my-2" name="name" id="name" required value="<%= task.name %>">
     </label>
     <p class="text-left font-bold mb-4">Est Pomodoros</p>
     <label for="pomosNeed">
         <input type="number" min="1" class="bg-gray-200 w-16 mb-4
-        focus:outline-none rounded-md text-black p-1" name="pomosNeed" id="pomosNeed" value="1" required>
+        focus:outline-none rounded-md text-black p-1" name="pomosNeed" id="pomosNeed" value="<%= task.pomosNeed %>" required>
     </label>
 
-    <button class="add-note-btn text-gray-600 text-sm underline">+ Add Note</button>
+<!--    <button class="text-gray-600 text-sm underline" id="add-note-btn">+ Add Note</button>-->
 
     <textarea name="description" id="description" cols="55" rows="5"
               placeholder="Leave blank if you want"
-              class="rounded-md bg-gray-200 resize-y mt-4 focus:outline-none p-2
-               hidden">Leave blank if you want
+              class="rounded-md bg-gray-200 resize-y mt-4 focus:outline-none p-2"><%= task.description %>"
     </textarea>
 
     <div class="absolute left-0 top-full w-full p-3 rounded-b-md
             flex justify-end gap-3 bg-gray-300">
-        <button class="text-gray-600 text-sm" id="cancel-add-btn">Cancel</button>
+
+        <button class="text-gray-500 text-sm mr-auto ml-4 font-bold" id="delete-btn">Delete</button>
+        <button class="text-gray-500 text-sm font-bold" id="cancel-add-btn  ">Cancel</button>
         <button class="submit-btn bg-black text-white py-2 px-4 rounded">Save</button>
     </div>
 

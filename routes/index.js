@@ -34,7 +34,7 @@ router.post('/new', async (req, res) => {
 
 })
 
-router.get('/update/:id', async (req, res) => {
+router.get('/task_done/:id', async (req, res) => {
     try {
         console.log(req.params);
         const curTask = await Task.findOne({
@@ -55,8 +55,8 @@ router.get('/update/:id', async (req, res) => {
         console.log(`Error while adding done pomo ${err.message}`);
         res.sendStatus(503);
     }
-
-
 })
+
+
 
 module.exports = router;

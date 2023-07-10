@@ -95,7 +95,7 @@ $(document).ready(() => {
             if (currentMode === 'Pomodoro') {
                 currentMode = 'Short Break';
                 const currentTask = $('.task.active');
-                $.get(`/update/${currentTask.data('id')}`, {}, (data) => {
+                $.get(`/task_done/${currentTask.data('id')}`, {}, (data) => {
                     const {pomosDone, pomosNeed} = data;
                     $('.task-pomos-need', currentTask).text(pomosNeed);
                     $('.task-pomos-done', currentTask).text(pomosDone);
@@ -131,6 +131,17 @@ $(document).ready(() => {
             task.addClass('active');
             $('.current-task-name').text(task.data('name'));
         })
+        $('.done-btn', task).on('click', function(ev) {
+            ev.stopPropagation();
+            $(this).toggleClass('active');
+        })
+
+        $('.toggle-update-btn', task).on('click', function(ev) {
+            ev.stopPropagation();
+            $(this).addClass('hidden');
+            $(task).addClass('updated');
+            $('#update-form', task).removeClass('hidden');
+        })
     }
 
     $('.task').each(function() {
@@ -146,10 +157,19 @@ $(document).ready(() => {
         ev.preventDefault();
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
+        $('#add-form #description').addClass('hidden');
+        $('#add-form .add-note-btn').removeClass('hidden');
     })
 
     // form for adding new Tasks
     const addForm = $('#add-form');
+
+    $('.add-note-btn', addForm).on('click', function(ev) {
+        ev.preventDefault();
+        $(this).addClass('hidden');
+        $('#description', addForm).removeClass('hidden').focus();
+    })
+
     $('.submit-btn', addForm).on('click', function(ev) {
         ev.preventDefault();
 
@@ -177,11 +197,11 @@ $(document).ready(() => {
 
     $('#description', addForm).prop('selectionEnd', 1);
 
-
-    $('#add-note-btn').on('click', function(ev) {
-        ev.preventDefault();
-    })
-
+    // updating tasks
+    /*
+    * TODO: implement done button (tick);
+    * TODO: implement task updating (form and button);
+    * */
 
 
 })

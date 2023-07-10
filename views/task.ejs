@@ -2,7 +2,7 @@
     <div class="flex w-full justify-between items-center
          mb-2 rounded-md cursor-pointer">
         <div class="flex gap-1 items-center">
-            <button class="text-gray-300 text-2xl hover:text-opacity-80">
+            <button class="done-btn text-gray-300 text-2xl hover:text-opacity-80">
                 <i class="fa-solid fa-circle-check"></i>
             </button>
             <p class="text-black font-bold"><%= task.name %></p>
@@ -10,7 +10,8 @@
         <div class="text-gray-500 flex">
             <p class="tracking-wider"><span class="task-pomos-done text-lg"><%= task.pomosDone %></span>
                 / <span class="task-pomos-need"><%= task.pomosNeed %></span></p>
-            <button class="border py-1 px-4 ml-2 rounded-md">
+            <button class="toggle-update-btn border py-1 px-3 ml-2
+            rounded-md hover:bg-gray-300">
                 <i class="fa-solid fa-ellipsis-vertical text-2lg"></i>
             </button>
         </div>
@@ -22,4 +23,6 @@
             <%= task.description%>
         </div>
     <% } %>
+
+    <%- include('./forms/update_form', {task}) %>
 </div>

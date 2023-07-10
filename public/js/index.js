@@ -123,6 +123,10 @@ $(document).ready(() => {
 
     $('.task:first-child').addClass('active');
 
+    function updateTask(task, newData) {
+
+    }
+
     function initTask(task) {
         task.on('click', function() {
             $('.task').each(function() {
@@ -134,12 +138,11 @@ $(document).ready(() => {
 
         $('.done-btn', task).on('click', function(ev) {
             ev.stopPropagation();
-            $(this).toggleClass('active');
+            $(task).toggleClass('done');
         })
 
         $('.toggle-update-btn', task).on('click', function(ev) {
             ev.stopPropagation();
-            $(this).addClass('hidden');
             $(task).addClass('updated');
             $('#update-form', task).removeClass('hidden');
         })
@@ -161,6 +164,25 @@ $(document).ready(() => {
 
                     setFinishTime();
                 }
+            })
+        })
+
+        $('#cancel-add-btn', updateForm).on('click', function(ev) {
+            ev.preventDefault();
+            $(task).removeClass('updated');
+            $('#update-form', task).addClass('hidden');
+        })
+
+        $('#submit-btn', updateForm).on('click', function(ev) {
+            ev.preventDefault();
+            $.post('/update?_method=PUT', {
+                id: task.data('id'),
+                name: $('#name', updateForm).val(),
+                pomosNeed: +$('#pomosNeed', updateForm).val(),
+                description: $('#description', updateForm).val(),
+            }, data => {
+                console.log(data);
+                updateTask(task, data);
             })
         })
     }

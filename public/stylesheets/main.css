@@ -25,8 +25,12 @@
         @apply hidden;
     }
 
-    .done-btn.active {
+    .task.done .done-btn {
         @apply text-pomodoro;
+    }
+
+    .task.done .task-name {
+        @apply line-through text-gray-600 opacity-80;
     }
 
     .ghost {

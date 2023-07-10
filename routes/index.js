@@ -66,7 +66,7 @@ router.put('/update', async (req, res) => {
         });
         await task.update({
             name: req.body.name,
-            pomosNeed: req.pomosNeedbody.pomosNeed,
+            pomosNeed: req.body.pomosNeed,
             description: req.body.description,
         });
         await task.save();

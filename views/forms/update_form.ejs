@@ -1,6 +1,6 @@
 <form action="/update" method="POST" class="w-full
 bg-white rounded-t-md py-4 px-6 hidden
-text-black flex flex-col items-start relative mb-12"
+text-black flex flex-col items-start relative mb-12 cursor-default"
       id="update-form">
     <label for="">
         <input type="text" placeholder="What are you working on?" class="text-2xl border-0
@@ -9,7 +9,7 @@ text-black flex flex-col items-start relative mb-12"
     <p class="text-left font-bold mb-4">Est Pomodoros</p>
     <label for="pomosNeed">
         <input type="number" min="1" class="bg-gray-200 w-16 mb-4
-        focus:outline-none rounded-md text-black p-1" name="pomosNeed" id="pomosNeed" value="<%= task.pomosNeed %>" required>
+        focus:outline-none rounded-md text-black p-1 indent-1.5" name="pomosNeed" id="pomosNeed" value="<%= task.pomosNeed %>" required>
     </label>
 
 <!--    <button class="text-gray-600 text-sm underline" id="add-note-btn">+ Add Note</button>-->

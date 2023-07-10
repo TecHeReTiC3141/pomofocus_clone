@@ -57,6 +57,41 @@ router.get('/task_done/:id', async (req, res) => {
     }
 })
 
+router.put('/update', async (req, res) => {
+    try {
+        const task = await Task.findOne({
+            where: {
+                id: req.body.id,
+            }
+        });
+        await task.update({
+            name: req.body.name,
+            pomosNeed: req.pomosNeedbody.pomosNeed,
+            description: req.body.description,
+        });
+        await task.save();
+        res.send(task);
+    } catch (err) {
+        console.log(`Error while updating task ${err.message}`);
+        res.status(503);
+    }
+})
 
+router.delete('/delete', async (req, res) => {
+    try {
+        await Task.destroy({
+            where: {
+                id: req.body.id,
+            }
+        });
+        res.send({
+            deleted: true,
+        })
+    } catch (err) {
+        console.log(`Error while deleting task ${err.message}`);
+        res.status(503);
+    }
+
+})
 
 module.exports = router;

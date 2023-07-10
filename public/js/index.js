@@ -131,6 +131,7 @@ $(document).ready(() => {
             task.addClass('active');
             $('.current-task-name').text(task.data('name'));
         })
+
         $('.done-btn', task).on('click', function(ev) {
             ev.stopPropagation();
             $(this).toggleClass('active');
@@ -141,6 +142,26 @@ $(document).ready(() => {
             $(this).addClass('hidden');
             $(task).addClass('updated');
             $('#update-form', task).removeClass('hidden');
+        })
+
+        const updateForm = $('#update-form', task);
+
+        $('#delete-btn', updateForm).on('click', function(ev) {
+            ev.preventDefault();
+            $.post('/delete?_method=DELETE', {
+                id: task.data('id'),
+            }, (data) => {
+                if (data?.deleted === true) {
+                    task.addClass('hidden');
+                    const curTotPomosNeed = Number($('.total-pomos-need').text());
+                    $('.total-pomos-need').text(curTotPomosNeed - +$('.task-pomos-need', task).text());
+
+                    const curTotPomosDone = Number($('.total-pomos-done').text());
+                    $('.total-pomos-done').text(curTotPomosDone - +$('.task-pomos-done', task).text());
+
+                    setFinishTime();
+                }
+            })
         })
     }
 

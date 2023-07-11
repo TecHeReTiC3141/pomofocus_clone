@@ -774,16 +774,17 @@ video {
   gap: 0.75rem;
 }
 
-.overflow-y-hidden {
-  overflow-y: hidden;
-}
-
 .rounded {
   border-radius: 0.25rem;
 }
 
 .rounded-md {
   border-radius: 0.375rem;
+}
+
+.rounded-b {
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
 }
 
 .rounded-b-md {
@@ -965,6 +966,10 @@ video {
   text-indent: 0.375rem;
 }
 
+.font-body {
+  font-family: Nunito, ui-sans-serif;
+}
+
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -975,8 +980,8 @@ video {
   line-height: 2.25rem;
 }
 
-.text-\[7rem\] {
-  font-size: 7rem;
+.text-\[7\.5rem\] {
+  font-size: 7.5rem;
 }
 
 .text-lg {

@@ -7,6 +7,9 @@ module.exports = {
         pomodoro: '#BA4949',
         shortBreak: '#38858A',
         longBreak: '#397097',
+      },
+      fontFamily: {
+        'body': ['Nunito', 'ui-sans-serif'],
       }
     },
 

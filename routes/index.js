@@ -112,7 +112,51 @@ router.delete('/delete', async (req, res) => {
         console.log(`Error while deleting task ${err.message}`);
         res.status(503);
     }
+})
 
+router.delete('/delete-finished-tasks', async (req, res) => {
+    try {
+        await Task.destroy({
+            where: {
+                done: true,
+            }
+        });
+        res.send({
+            success: true,
+        })
+    } catch (err) {
+        console.log(`Error while deleting finished task ${err.message}`);
+        res.status(503);
+    }
+})
+
+router.delete('/delete-all-tasks', async (req, res) => {
+    try {
+        await Task.destroy({
+            truncate: true
+        });
+        res.send({
+            success: true,
+        })
+    } catch (err) {
+        console.log(`Error while deleting all task ${err.message}`);
+        res.status(503);
+    }
+})
+
+router.post('/clear-act-pomos', async (req, res) => {
+    try {
+        await Task.update({ pomosDone: 0 }, {
+            where: {}
+        });
+
+        res.send({
+            success: true,
+        })
+    } catch (err) {
+        console.log(`Error while clearing act pomos ${err.message}`);
+        res.status(503);
+    }
 })
 
 module.exports = router;

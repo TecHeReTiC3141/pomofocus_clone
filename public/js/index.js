@@ -30,17 +30,24 @@ $(document).ready(() => {
         $('.forward-btn').addClass('hidden');
     }
 
+
+
     function setFinishTime() {
         let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
-        let start = Date.now();
+        let start = Date.now(), timeNeeded = 1000 * (pomosLeft * timeModes['Pomodoro'].time +
+            (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
+            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time);
         if (pomosLeft) {
-            start += 1000 * (pomosLeft * timeModes['Pomodoro'].time +
-                (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
-                Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time);
+            start += timeNeeded;
         }
 
         const finishTime = new Date(start);
-        $('.finish-time').text(`${finishTime.getHours()}:${finishTime.getMinutes()}`);
+        let mins = finishTime.getMinutes().toString();
+        if (mins.length < 2) {
+            mins = '0' + mins;
+        }
+        $('.finish-time').text(`${finishTime.getHours()}:${mins}`);
+        $('.time-needed').text((timeNeeded / 3600000).toFixed(1));
     }
 
     const timeModes = {
@@ -64,6 +71,7 @@ $(document).ready(() => {
     const timeLeft = $('.time-left');
     setFinishTime();
 
+
     const modesBtns = $('.modes button')
     modesBtns.each(function () {
         $(this).on('click', function () {
@@ -71,7 +79,7 @@ $(document).ready(() => {
             setState();
         })
     })
-
+    setState();
     $('.toggle-task').on('click', function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
@@ -295,17 +303,47 @@ $(document).ready(() => {
     * */
     // Tasks menu
 
+    const tasksMenu =  $('.tasks-menu');
+
     $('.toggle-tasks-menu').on('click', function (ev) {
         ev.stopPropagation();
-        $('.tasks-menu').toggleClass('hidden');
+        tasksMenu.toggleClass('hidden');
     })
 
-    $('.tasks-menu').on('click', function (ev) {
+    tasksMenu.on('click', function (ev) {
         ev.stopPropagation();
     })
 
     $(document).on('click', function () {
-        $('.tasks-menu').addClass('hidden');
+        tasksMenu.addClass('hidden');
     })
+
+    $('.clear-finished-tasks', tasksMenu).on('click', function() {
+        $.post('/delete-finished-tasks?_method=DELETE', {}, data => {
+            if (data?.success) {
+                $('.task.done').addClass('hidden');
+            }
+        });
+    })
+
+    $('.clear-all-tasks', tasksMenu).on('click', function() {
+        $.post('/delete-all-tasks?_method=DELETE', {}, data => {
+            if (data?.success) {
+                $('.task').addClass('hidden');
+            }
+        });
+    })
+
+    $('.clear-act-pomos', tasksMenu).on('click', function() {
+        $.post('/clear-act-pomos', {}, data => {
+            if (data?.success) {
+                $('.task .task-pomos-done').text(0);
+                $('.total-pomos-done').text(0);
+                setFinishTime();
+            }
+        });
+    })
+
+
 
 })

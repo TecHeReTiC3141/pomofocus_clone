@@ -57,6 +57,27 @@ router.get('/task_done/:id', async (req, res) => {
     }
 })
 
+router.get('/toggle_done/:id', async (req, res) => {
+    try {
+        const task = await Task.findOne({
+            where: {
+                id: req.params.id,
+            }
+        })
+        await task.update({
+            done: !task.done,
+        });
+        await task.save();
+        res.send({
+            success: true,
+        });
+    } catch (err) {
+        console.log(`Error while setting task done ${err.message}`);
+        res.sendStatus(503);
+    }
+
+})
+
 router.put('/update', async (req, res) => {
     try {
         const task = await Task.findOne({

@@ -1,4 +1,4 @@
-<div class="task" data-name="<%= task.name %>" data-id="<%= task.id %>">
+<div class="task <%= task.done ? 'done' : '' %>" data-name="<%= task.name %>" data-id="<%= task.id %>">
     <div class="flex w-full justify-between items-center
          mb-2 rounded-md cursor-pointer">
         <div class="flex gap-1 items-center">
@@ -11,7 +11,7 @@
             <p class="tracking-wider"><span class="task-pomos-done text-lg"><%= task.pomosDone %></span>
                 / <span class="task-pomos-need"><%= task.pomosNeed %></span></p>
             <button class="toggle-update-btn border py-1 px-3 ml-2
-            rounded-md hover:bg-gray-300">
+            rounded-md hover:bg-gray-300 relative active:top-0.5">
                 <i class="fa-solid fa-ellipsis-vertical text-2lg"></i>
             </button>
         </div>

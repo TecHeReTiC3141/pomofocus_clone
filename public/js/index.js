@@ -12,7 +12,7 @@ function setLeftTime(timeLeft) {
 $(document).ready(() => {
 
     function setState() {
-        modesBtns.each(function() {
+        modesBtns.each(function () {
             $(this).removeClass('active');
         })
         const activeBtn = $(`#${currentMode.toLowerCase().replace(' ', '-')}`);
@@ -43,7 +43,6 @@ $(document).ready(() => {
         $('.finish-time').text(`${finishTime.getHours()}:${finishTime.getMinutes()}`);
     }
 
-
     const timeModes = {
         'Pomodoro': {
             time: 1500,
@@ -66,21 +65,21 @@ $(document).ready(() => {
     setFinishTime();
 
     const modesBtns = $('.modes button')
-    modesBtns.each(function() {
-        $(this).on('click', function() {
+    modesBtns.each(function () {
+        $(this).on('click', function () {
             currentMode = $(this).text()
             setState();
         })
     })
 
-    $('.toggle-task').on('click', function() {
+    $('.toggle-task').on('click', function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
         $(this).text(taskActive ? 'Pause' : 'Start');
     })
 
-    $('.forward-btn').on('click', function() {
+    $('.forward-btn').on('click', function () {
         currentTime = 0;
     })
 
@@ -128,32 +127,72 @@ $(document).ready(() => {
         $('.task-name', task).text(newData.name);
         $('.task-pomos-need', task).text(newData.pomosNeed);
         $('.task-description', task).text(newData.description);
-
     }
 
     function initTask(task) {
-        task.on('click', function() {
-            $('.task').each(function() {
-               $(this).removeClass('active');
+
+        task.on('click', function () {
+            $('.task').each(function () {
+                $(this).removeClass('active');
             });
             task.addClass('active');
             $('.current-task-name').text(task.data('name'));
         })
 
-        $('.done-btn', task).on('click', function(ev) {
+        // updating and deleting tasks
+        $('.done-btn', task).on('click', function (ev) {
             ev.stopPropagation();
-            $(task).toggleClass('done');
-        })
-
-        $('.toggle-update-btn', task).on('click', function(ev) {
-            ev.stopPropagation();
-            $(task).addClass('updated');
-            $('#update-form', task).removeClass('hidden');
+            $.get(`/toggle_done/${task.data('id')}`, {},
+                data => {
+                    if (data?.success) {
+                        $(task).toggleClass('done');
+                        const curTotPomosNeed = +$('.total-pomos-need').text();
+                        const curTotPomosDone = +$('.total-pomos-done').text();
+                        if (task.hasClass('done')) {
+                            $('.total-pomos-need').text(curTotPomosNeed - +$('.task-pomos-need', task).text());
+                            $('.total-pomos-done').text(curTotPomosDone - +$('.task-pomos-done', task).text());
+                        } else {
+                            $('.total-pomos-need').text(curTotPomosNeed + +$('.task-pomos-need', task).text());
+                            $('.total-pomos-done').text(curTotPomosDone + +$('.task-pomos-done', task).text());
+                        }
+                        setFinishTime();
+                    }
+                })
         })
 
         const updateForm = $('#update-form', task);
 
-        $('#delete-btn', updateForm).on('click', function(ev) {
+        function resetUpdateForm() {
+            $('#name', updateForm).val($('.task-name', task).text());
+            $('#pomosNeed', updateForm).val($('.task-pomos-need', task).text());
+            $('#description', updateForm).val($('.task-description', task).text().trim());
+        }
+
+        $('.toggle-update-btn', task).on('click', function (ev) {
+            if (!$('.task.updated').length) {
+                ev.stopPropagation();
+                $(task).addClass('updated');
+                resetUpdateForm()
+                updateForm.removeClass('hidden');
+            }
+
+        });
+
+        updateForm.on('click', function (ev) {
+            ev.stopPropagation();
+        })
+
+        document.addEventListener('click', function (ev) {
+            if (!updateForm.hasClass('hidden')) {
+                const isCancelled = confirm('The change will be lost. Are you sure you want to close it?');
+                if (isCancelled) {
+                    $(task).removeClass('updated');
+                    $('#update-form', task).addClass('hidden');
+                }
+            }
+        })
+
+        $('#delete-btn', updateForm).on('click', function (ev) {
             ev.preventDefault();
             $.post('/delete?_method=DELETE', {
                 id: task.data('id'),
@@ -171,13 +210,13 @@ $(document).ready(() => {
             })
         })
 
-        $('#cancel-add-btn', updateForm).on('click', function(ev) {
+        $('#cancel-add-btn', updateForm).on('click', function (ev) {
             ev.preventDefault();
             $(task).removeClass('updated');
             $('#update-form', task).addClass('hidden');
         })
 
-        $('#submit-btn', updateForm).on('click', function(ev) {
+        $('#submit-btn', updateForm).on('click', function (ev) {
             ev.preventDefault();
             $.post('/update?_method=PUT', {
                 id: task.data('id'),
@@ -193,11 +232,11 @@ $(document).ready(() => {
         })
     }
 
-    $('.task').each(function() {
+    $('.task').each(function () {
         initTask($(this));
     });
 
-    $('.add-task').on('click', function() {
+    $('.add-task').on('click', function () {
         $(this).addClass('hidden');
         $('#add-form').removeClass('hidden');
     });
@@ -205,7 +244,7 @@ $(document).ready(() => {
     // form for adding new Tasks
     const addForm = $('#add-form');
 
-    $('#cancel-add-btn', addForm).on('click', function(ev) {
+    $('#cancel-add-btn', addForm).on('click', function (ev) {
         ev.preventDefault();
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
@@ -213,13 +252,13 @@ $(document).ready(() => {
         $('#add-form .add-note-btn').removeClass('hidden');
     })
 
-    $('.add-note-btn', addForm).on('click', function(ev) {
+    $('.add-note-btn', addForm).on('click', function (ev) {
         ev.preventDefault();
         $(this).addClass('hidden');
         $('#description', addForm).removeClass('hidden').focus();
     })
 
-    $('.submit-btn', addForm).on('click', function(ev) {
+    $('.submit-btn', addForm).on('click', function (ev) {
         ev.preventDefault();
 
         $.post('/new', {
@@ -246,12 +285,27 @@ $(document).ready(() => {
 
     $('#description', addForm).prop('selectionEnd', 1);
 
-    // updating tasks
+
     /*
     * TODO: implement done button (tick);
     * TODO: implement task updating (form and button);
+    * TODO: implement tasks menu
+    * TODO: search for better font
+    * TODO: add dark mode
     * */
+    // Tasks menu
 
+    $('.toggle-tasks-menu').on('click', function (ev) {
+        ev.stopPropagation();
+        $('.tasks-menu').toggleClass('hidden');
+    })
+
+    $('.tasks-menu').on('click', function (ev) {
+        ev.stopPropagation();
+    })
+
+    $(document).on('click', function () {
+        $('.tasks-menu').addClass('hidden');
+    })
 
 })
-

@@ -14,8 +14,6 @@ const cookieParser = require('cookie-parser');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 const sequelize = require('./utils/getDBInstance');
 
@@ -56,6 +54,16 @@ app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    res.locals.isAuthenticated = req.isAuthenticated();
+
+    next();
+})
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 app.listen(process.env.POST || 3000,
     () => console.log('On http://localhost:3000'));

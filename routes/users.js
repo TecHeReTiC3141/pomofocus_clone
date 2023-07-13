@@ -8,22 +8,28 @@ const passport = require('passport');
 const initializePassport = require('../utils/initializePassport');
 (async () => {
     await initializePassport(passport,
-        async email => await User.findOne({
+        async email => (await User.findOne({
             where: {
                 email,
             }
-        }),
-        async id => await User.findOne({
+        })).toJSON(),
+        async id => (await User.findOne({
             where: {
                 id,
             }
-        })
+        })).toJSON()
     )
 })();
 
 router.get('/login', (req, res) => {
     res.render('users/login.ejs');
 });
+
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/users/login',
+    failureFlash: true,
+}));
 
 router.get('/signup', (req, res) => {
     res.render('users/signup.ejs');

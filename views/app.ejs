@@ -19,10 +19,19 @@ border-black w-[40rem] p-4 shadow mb-8 relative">
             <button class="text-sm "><i class="fa-solid fa-gear text-md"></i>
                 <span class="hidden md:inline-block">Setting</span></button>
         </div>
-        <a href="/users/login" class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
-            <button class="text-sm"><i class="fa-solid fa-circle-user text-md"></i>
-                <span class="hidden md:inline-block">Login</span></button>
-        </a>
+        <% if (isAuthenticated) { %>
+            <button class="text-sm p-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
+                <i class="fa-solid fa-circle-user text-md"></i>
+                <span class="hidden md:inline-block"><%= user.name %></span>
+            </button>
+
+
+        <% } else { %>
+            <a href="/users/login" class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
+                <button class="text-sm"><i class="fa-solid fa-circle-user text-md"></i>
+                    <span class="hidden md:inline-block">Login</span></button>
+            </a>
+        <% } %>
     </div>
 
     <div class="time-left-container

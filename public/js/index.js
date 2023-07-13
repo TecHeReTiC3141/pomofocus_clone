@@ -274,8 +274,8 @@ $(document).ready(() => {
             pomosNeed: $('#pomosNeed', addForm).val(),
             description: $('#description', addForm).val(),
         }, data => {
-            const newTask = $(data);
-            initTask(newTask);
+            const newTask = $('.blank-task .task').clone();
+            updateTask(newTask, data);
             $('.tasks').append(newTask);
         })
 

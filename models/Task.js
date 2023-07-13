@@ -1,6 +1,8 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../utils/getDBInstance');
 
+const User = require('./User');
+
 const Task = connection.define('Task', {
     name: {
         type: DataTypes.STRING,
@@ -28,5 +30,12 @@ const Task = connection.define('Task', {
         allowNull: true,
     }
 })
+
+User.hasMany(Task, {
+
+    onDelete: 'CASCADE',
+});
+
+Task.belongsTo(User);
 
 module.exports = Task;

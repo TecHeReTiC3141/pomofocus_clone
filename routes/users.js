@@ -12,12 +12,12 @@ const initializePassport = require('../utils/initializePassport');
             where: {
                 email,
             }
-        })).toJSON(),
+        }))?.toJSON(),
         async id => (await User.findOne({
             where: {
                 id,
             }
-        })).toJSON()
+        }))?.toJSON()
     )
 })();
 

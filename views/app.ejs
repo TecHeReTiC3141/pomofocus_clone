@@ -1,7 +1,7 @@
 <header class="flex justify-between items-center
  w-[40rem] py-4 px-1 shadow mb-8 relative">
     <div class="logo">
-<!--            <img src="/images/icon.png">-->
+        <!--            <img src="/images/icon.png">-->
 
         <h4 class="font-bold text-xl tracking-wide">
             <i class="fa-solid fa-circle-check"></i> PomoFocus
@@ -25,7 +25,8 @@
                 <img src="/images/user-icon.png" alt="user_icon" class="block w-6 bg-gray-100 rounded">
             </button>
         <% } else { %>
-            <a href="/users/login" class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
+            <a href="/users/login"
+               class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
                 <button class="text-sm">
                     <i class="fa-solid fa-circle-user text-md"></i>
                     <span class="hidden md:inline-block">Login</span>
@@ -63,10 +64,11 @@
         </div>
         <h1 class="time-left text-[7.5rem] font-bold">25:00</h1>
         <button class="toggle-task px-16 py-3 bg-white text-pomodoro uppercase
-        text-2xl rounded-md mb-4 font-bold border-b-4 border-gray-300" >Start</button>
+        text-2xl rounded-md mb-4 font-bold border-b-4 border-gray-300">Start
+        </button>
         <button class="forward-btn text-white uppercase
             text-3xl font-bold ml-16 hover:text-opacity-90
-            absolute  right-20 bottom-10 hidden" >
+            absolute  right-20 bottom-10 hidden">
             <i class="fa-solid fa-forward-step"></i>
         </button>
     </div>
@@ -102,6 +104,17 @@
 
     <div class="tasks w-full">
 
+        <div class="blank-task hidden">
+            <%- include('task.ejs', { task: {
+            done: null,
+            name: null,
+            pomosDone: 0,
+            pomosNeed: null,
+            description: null,
+            }
+            }) %>
+        </div>
+
         <% for (let task of tasks) { %>
             <%- include('./task', {task: task}) %>
         <% } %>
@@ -111,15 +124,16 @@
     <button class="add-task py-4 w-full bg-black bg-opacity-10
         rounded-md border-gray-500 border-2 border-dashed
         font-bold ">
-            <i class="fa-solid fa-circle-plus"></i>
-            Add Task
-        </button>
-    <%- include('./forms/add_form')%>
+        <i class="fa-solid fa-circle-plus"></i>
+        Add Task
+    </button>
+    <%- include('./forms/add_form') %>
     <% if (tasks.length) { %>
         <div class="pomo-stats bg-white bg-opacity-10 w-full rounded-b
                 flex justify-center gap-12 mt-8 mb-8 border-t-2
                 py-4">
-            <p class="text-gray-300">Pomos: <span class="font-bold text-2xl mr-4 text-white"><span class="total-pomos-done "><%= totalPomosDone %> </span>
+            <p class="text-gray-300">Pomos: <span class="font-bold text-2xl mr-4 text-white"><span
+                            class="total-pomos-done "><%= totalPomosDone %> </span>
                     / <span class="total-pomos-need "><%= totalPomosNeed %></span> </span>
                 Finish At: <span class="finish-time font-bold text-2xl text-white">18:20</span>
                 (<span class="time-needed">0 </span>h)</p>

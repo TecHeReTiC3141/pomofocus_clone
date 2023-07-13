@@ -6,17 +6,29 @@ const { getTask } = require('../utils/generateTemplates');
 const Task = require('../models/Task');
 
 router.get('/', async (req, res) => {
-    const tasks = await Task.findAll();
-    const totalPomosNeed = await Task.sum('pomosNeed', {
-        where: {
-            done: false,
-        }
-    })
-    const totalPomosDone = await Task.sum('pomosDone', {
-        where: {
-            done: false,
-        }
-    })
+    let tasks, totalPomosDone = 0, totalPomosNeed = 0;
+    if (req.isAuthenticated()) {
+        tasks = await Task.findAll({
+            where: {
+                UserId: req.user.id,
+            }
+        });
+        totalPomosNeed = await Task.sum('pomosNeed', {
+            where: {
+                UserId: req.user.id,
+                done: false,
+            }
+        }) || 0;
+        totalPomosDone = await Task.sum('pomosDone', {
+            where: {
+                UserId: req.user.id,
+                done: false,
+            }
+        }) || 0;
+    } else {
+        tasks = req.cookies.tasks || [];
+    }
+
     res.render('app.ejs', {tasks, totalPomosDone, totalPomosNeed});
 });
 
@@ -26,8 +38,9 @@ router.post('/new', async (req, res) => {
             name: req.body.name,
             pomosNeed: req.body.pomosNeed,
             description: req.body.description,
+            UserId: req.user.id,
         });
-        res.send(getTask(newTask));
+        res.send(newTask);
     } catch (err) {
         console.log(`$Error while adding {err.message}`);
     }
@@ -36,7 +49,6 @@ router.post('/new', async (req, res) => {
 
 router.get('/task_done/:id', async (req, res) => {
     try {
-        console.log(req.params);
         const curTask = await Task.findOne({
             where: {
                 id: req.params.id,

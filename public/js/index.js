@@ -30,13 +30,11 @@ $(document).ready(() => {
         $('.forward-btn').addClass('hidden');
     }
 
-
-
     function setFinishTime() {
         let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
-        let start = Date.now(), timeNeeded = 1000 * (pomosLeft * timeModes['Pomodoro'].time +
+        let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
             (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
-            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time);
+            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
         if (pomosLeft) {
             start += timeNeeded;
         }
@@ -295,9 +293,10 @@ $(document).ready(() => {
 
     /*
     *
-    * TODO: create blank task used to add other tasks
     * TODO: search for better font
     * TODO: add dark mode
+    * TODO: implement user menu
+    * TODO: implement adding task using cookies
     * */
     // Tasks menu
 
@@ -363,6 +362,16 @@ $(document).ready(() => {
         $.post('/users/logout?_method=DELETE', {});
     })
 
+    $('.open-profile', userMenu).on('click', function() {
+        userProfile.removeClass('hidden');
+        userMenu.addClass('hidden');
+    })
 
+    const userProfile = $('.user-profile');
+
+    $('.close-profile, #cancel-update-btn', userProfile).on('click', function(ev) {
+        ev.preventDefault();
+        userProfile.addClass('hidden');
+    })
 
 })

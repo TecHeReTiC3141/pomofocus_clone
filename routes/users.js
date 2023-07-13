@@ -21,7 +21,9 @@ const initializePassport = require('../utils/initializePassport');
     )
 })();
 
-router.get('/login', (req, res) => {
+const { checkAuthenticated, checkNotAuthenticated } = require('../utils/middleware');
+
+router.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('users/login.ejs');
 });
 
@@ -31,7 +33,7 @@ router.post('/login', passport.authenticate('local', {
     failureFlash: true,
 }));
 
-router.get('/signup', (req, res) => {
+router.get('/signup', checkNotAuthenticated, (req, res) => {
     res.render('users/signup.ejs');
 });
 

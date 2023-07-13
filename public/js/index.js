@@ -293,11 +293,9 @@ $(document).ready(() => {
 
     $('#description', addForm).prop('selectionEnd', 1);
 
-
     /*
-    * TODO: implement done button (tick);
-    * TODO: implement task updating (form and button);
-    * TODO: implement tasks menu
+    *
+    * TODO: create blank task used to add other tasks
     * TODO: search for better font
     * TODO: add dark mode
     * */
@@ -342,6 +340,27 @@ $(document).ready(() => {
                 setFinishTime();
             }
         });
+    })
+
+    // user menu
+
+    const userMenu = $('.user-menu');
+
+    $('.user-btn').on('click', function(ev) {
+        ev.stopPropagation();
+        userMenu.toggleClass('hidden');
+    })
+
+    userMenu.on('click', function (ev) {
+        ev.stopPropagation();
+    })
+
+    $(document).on('click', function () {
+        userMenu.addClass('hidden');
+    })
+
+    $('.logout', userMenu).on('click', function() {
+        $.post('/users/logout?_method=DELETE', {});
     })
 
 

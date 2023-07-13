@@ -50,4 +50,13 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+router.delete('/logout', (req, res) => {
+    req.logOut(err => {
+        if (err) {
+            console.log(err);
+        }
+        res.redirect('/');
+    })
+})
+
 module.exports = router;

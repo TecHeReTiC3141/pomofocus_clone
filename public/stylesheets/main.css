@@ -40,4 +40,15 @@
     .ghost * {
         @apply opacity-0;
     }
+
+    .menu {
+        @apply absolute top-[140%] right-0 text-black
+        bg-white text-left rounded-md z-40 text-sm py-1
+        drop-shadow hover:drop-shadow-lg transition duration-200
+    }
+
+    .menu > li {
+        @apply flex py-2 px-4 gap-2 items-center
+        cursor-pointer hover:bg-gray-200 w-full
+    }
 }

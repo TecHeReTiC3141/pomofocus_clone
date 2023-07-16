@@ -340,7 +340,6 @@ $(document).ready(() => {
             }
         });
     })
-
     // user menu
 
     const userMenu = $('.user-menu');
@@ -359,7 +358,10 @@ $(document).ready(() => {
     })
 
     $('.logout', userMenu).on('click', function() {
-        $.post('/users/logout?_method=DELETE', {});
+        $.post('/users/logout?_method=DELETE', {}, () => {
+            location.reload();
+        });
+
     })
 
     $('.open-profile', userMenu).on('click', function() {

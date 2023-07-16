@@ -371,6 +371,21 @@ $(document).ready(() => {
 
     const userProfile = $('.user-profile');
 
+    $('#avatar', userProfile).on('click', async function() {
+        const [ fileHandle ] = await window.showOpenFilePicker({
+            types: [{
+                accept: {
+                    'image/*': ['.png', '.gif', '.jpeg', '.jpg', '.webp']
+                }
+            }],
+        });
+        const fileData = await fileHandle.getFile();
+
+        const buffer = await fileData.arrayBuffer();
+        this.src = URL.createObjectURL(new Blob([buffer]));
+        console.log(fileData.type);
+    })
+
     $('.close-profile, #cancel-update-btn', userProfile).on('click', function(ev) {
         ev.preventDefault();
         userProfile.addClass('hidden');

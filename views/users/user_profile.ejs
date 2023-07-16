@@ -12,16 +12,23 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
 
-        <div class="flex flex-col items-center">
+<!--        <div class="w-16 h-16 border-4 border-gray-400-->
+<!--                        border-dotted rounded-full mr-10 overflow-hidden">-->
             <img src="/images/user-icon.png" alt="User avatar"
                  id="avatar" class="w-16 border-4 border-gray-400
-                            border-dotted rounded-full mr-4">
+                        border-dotted rounded-full mr-10 overflow-hidden">
+<!--        </div>-->
+
+        <div>
+            <label for="" class="w-full">
+                <input type="text" value="<%= user.name %>" class="text-2xl
+            focus:outline-none my-2 font-bold
+             border-b border-gray-200 mb-4" name="name" id="name" required>
+            </label>
+
+            <p class="text-left"><%= user.email %></p>
         </div>
 
-        <label for="" class="w-full">
-            <input type="text" value="<%= user.name %>" class="text-2xl border-0
-            focus:outline-none w-full my-2 font-bold" name="name" id="name" required>
-        </label>
 
         <div class="absolute left-0 top-full w-full p-3 rounded-b-md
                 flex justify-end gap-3 bg-gray-300">

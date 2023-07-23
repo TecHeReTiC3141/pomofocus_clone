@@ -9,7 +9,46 @@ function setLeftTime(timeLeft) {
     return `${le}:${ri}`;
 }
 
+function setFinishTime() {
+    let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
+    let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
+        (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
+        Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
+    if (pomosLeft) {
+        start += timeNeeded;
+    }
+
+    const finishTime = new Date(start);
+    let mins = finishTime.getMinutes().toString();
+    if (mins.length < 2) {
+        mins = '0' + mins;
+    }
+    $('.finish-time').text(`${finishTime.getHours()}:${mins}`);
+    $('.time-needed').text((timeNeeded / 3600000).toFixed(1));
+}
+
+const timeModes = {
+    'Pomodoro': {
+        time: 15,
+        color: 'bg-pomodoro',
+    },
+    'Short Break': {
+        time: 300,
+        color: 'bg-shortBreak',
+    },
+    'Long Break': {
+        time: 600,
+        color: 'bg-longBreak',
+    },
+}
+
 $(document).ready(() => {
+
+    let notificationsAllowed;
+    (async () => {
+        notificationsAllowed =(await Notification.requestPermission()) === 'granted';
+        console.log(notificationsAllowed);
+    })()
 
     function setState() {
         modesBtns.each(function () {
@@ -30,38 +69,6 @@ $(document).ready(() => {
         $('.forward-btn').addClass('hidden');
     }
 
-    function setFinishTime() {
-        let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
-        let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
-            (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
-            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
-        if (pomosLeft) {
-            start += timeNeeded;
-        }
-
-        const finishTime = new Date(start);
-        let mins = finishTime.getMinutes().toString();
-        if (mins.length < 2) {
-            mins = '0' + mins;
-        }
-        $('.finish-time').text(`${finishTime.getHours()}:${mins}`);
-        $('.time-needed').text((timeNeeded / 3600000).toFixed(1));
-    }
-
-    const timeModes = {
-        'Pomodoro': {
-            time: 1500,
-            color: 'bg-pomodoro',
-        },
-        'Short Break': {
-            time: 300,
-            color: 'bg-shortBreak',
-        },
-        'Long Break': {
-            time: 600,
-            color: 'bg-longBreak',
-        },
-    }
     // setting current state
     let currentMode = $('.modes button.active').text(),
         currentTime = timeModes[currentMode];
@@ -100,15 +107,24 @@ $(document).ready(() => {
             if (currentMode === 'Pomodoro') {
                 currentMode = 'Short Break';
                 const currentTask = $('.task.active');
-                $.get(`/task_done/${currentTask.data('id')}`, {}, (data) => {
+                $.get(`/task_done/${currentTask.data('id')}`, {}, data => {
                     const {pomosDone, pomosNeed} = data;
                     $('.task-pomos-need', currentTask).text(pomosNeed);
                     $('.task-pomos-done', currentTask).text(pomosDone);
+
+                    $('.total-pomos-done').text(+$('.total-pomos-done').text() + 1);
+
                     setFinishTime();
                 });
+                if (notificationsAllowed) {
+                    new Notification('Time to take a short break!')
+                }
 
             } else {
                 currentMode = 'Pomodoro';
+                if (notificationsAllowed) {
+                    new Notification('Time to focus!')
+                }
             }
             $('.time-left-bar').width(0);
 
@@ -126,13 +142,24 @@ $(document).ready(() => {
             ghostClass: 'ghost',
         });
 
-    $('.task:first-child').addClass('active');
-
     function updateTask(task, newData) {
         task.data('name', newData.name);
         $('.task-name', task).text(newData.name);
         $('.task-pomos-need', task).text(newData.pomosNeed);
         $('.task-description', task).text(newData.description);
+    }
+
+    function getTotalPomos() {
+        let totalPomosNeed = 0, totalPomosDone = 0;
+        $('.task').each(function() {
+            if ($(this).hasClass('done') || $(this).hasClass('hidden')) return;
+            totalPomosNeed += +$('.task-pomos-need', this).text();
+            totalPomosDone += +$('.task-pomos-done', this).text();
+        })
+        console.log(totalPomosNeed, totalPomosDone);
+        $('.total-pomos-need').text(totalPomosNeed);
+        $('.total-pomos-done').text(totalPomosDone);
+        setFinishTime();
     }
 
     function initTask(task) {
@@ -152,16 +179,7 @@ $(document).ready(() => {
                 data => {
                     if (data?.success) {
                         $(task).toggleClass('done');
-                        const curTotPomosNeed = +$('.total-pomos-need').text();
-                        const curTotPomosDone = +$('.total-pomos-done').text();
-                        if (task.hasClass('done')) {
-                            $('.total-pomos-need').text(curTotPomosNeed - +$('.task-pomos-need', task).text());
-                            $('.total-pomos-done').text(curTotPomosDone - +$('.task-pomos-done', task).text());
-                        } else {
-                            $('.total-pomos-need').text(curTotPomosNeed + +$('.task-pomos-need', task).text());
-                            $('.total-pomos-done').text(curTotPomosDone + +$('.task-pomos-done', task).text());
-                        }
-                        setFinishTime();
+                        getTotalPomos()
                     }
                 })
         })
@@ -205,13 +223,7 @@ $(document).ready(() => {
             }, (data) => {
                 if (data?.deleted === true) {
                     task.addClass('hidden');
-                    const curTotPomosNeed = Number($('.total-pomos-need').text());
-                    $('.total-pomos-need').text(curTotPomosNeed - +$('.task-pomos-need', task).text());
-
-                    const curTotPomosDone = Number($('.total-pomos-done').text());
-                    $('.total-pomos-done').text(curTotPomosDone - +$('.task-pomos-done', task).text());
-
-                    setFinishTime();
+                    getTotalPomos();
                 }
             })
         })
@@ -234,6 +246,7 @@ $(document).ready(() => {
                 updateTask(task, data);
                 $(task).removeClass('updated');
                 $('#update-form', task).addClass('hidden');
+                getTotalPomos();
             })
         })
     }
@@ -242,15 +255,17 @@ $(document).ready(() => {
         initTask($(this));
     });
 
+    $('.task:first-child').addClass('active');
+
     $('.add-task').on('click', function () {
         $(this).addClass('hidden');
         $('#add-form').removeClass('hidden');
     });
 
     // form for adding new Tasks
-    const addForm = $('#add-form');
+    const addTaskForm = $('#add-form');
 
-    $('#cancel-add-btn', addForm).on('click', function (ev) {
+    $('#cancel-add-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
@@ -258,38 +273,33 @@ $(document).ready(() => {
         $('#add-form .add-note-btn').removeClass('hidden');
     })
 
-    $('.add-note-btn', addForm).on('click', function (ev) {
+    $('.add-note-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
         $(this).addClass('hidden');
-        $('#description', addForm).removeClass('hidden').focus();
+        $('#description', addTaskForm).removeClass('hidden').focus();
     })
 
-    $('.submit-btn', addForm).on('click', function (ev) {
+    $('.submit-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
 
         $.post('/new', {
-            name: $('#name', addForm).val(),
-            pomosNeed: $('#pomosNeed', addForm).val(),
-            description: $('#description', addForm).val(),
+            name: $('#name', addTaskForm).val(),
+            pomosNeed: $('#pomosNeed', addTaskForm).val(),
+            description: $('#description', addTaskForm).val(),
         }, data => {
             const newTask = $('.blank-task .task').clone();
             updateTask(newTask, data);
             $('.tasks').append(newTask);
+            getTotalPomos();
         })
 
-        const curTotPomosNeed = Number($('.total-pomos-need').text());
-
-        $('.total-pomos-need').text(curTotPomosNeed + +$('#pomosNeed', addForm).val());
-
-        setFinishTime();
-
-        $('input, textarea', addForm).val('');
+        $('input, textarea', addTaskForm).val('');
 
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
     })
 
-    $('#description', addForm).prop('selectionEnd', 1);
+    $('#description', addTaskForm).prop('selectionEnd', 1);
 
     /*
     *
@@ -297,6 +307,8 @@ $(document).ready(() => {
     * TODO: add dark mode
     * TODO: implement adding task using cookies
     * TODO: add notifications when mode is changed
+    * TODO: add settings (time for pomos and breaks, dark mode switch);
+    * TODO: add long breaks
     * */
     // Tasks menu
 

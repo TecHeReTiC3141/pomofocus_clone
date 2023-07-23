@@ -32,7 +32,6 @@ const Task = connection.define('Task', {
 })
 
 User.hasMany(Task, {
-
     onDelete: 'CASCADE',
 });
 

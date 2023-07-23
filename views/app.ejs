@@ -104,6 +104,10 @@
 
     <div class="tasks w-full">
 
+        <% for (let task of tasks) { %>
+            <%- include('./task', {task: task}) %>
+        <% } %>
+
         <div class="blank-task hidden">
             <%- include('task.ejs', { task: {
             done: null,
@@ -114,10 +118,6 @@
             }
             }) %>
         </div>
-
-        <% for (let task of tasks) { %>
-            <%- include('./task', {task: task}) %>
-        <% } %>
 
     </div>
 

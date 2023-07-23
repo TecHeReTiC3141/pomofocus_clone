@@ -42,7 +42,7 @@ router.post('/new', async (req, res) => {
         });
         res.send(newTask);
     } catch (err) {
-        console.log(`$Error while adding {err.message}`);
+        console.log(`Error while adding {err.message}`);
     }
 
 })
@@ -131,6 +131,7 @@ router.delete('/delete-finished-tasks', async (req, res) => {
         await Task.destroy({
             where: {
                 done: true,
+                UserId: req.user?.id,
             }
         });
         res.send({
@@ -145,7 +146,9 @@ router.delete('/delete-finished-tasks', async (req, res) => {
 router.delete('/delete-all-tasks', async (req, res) => {
     try {
         await Task.destroy({
-            truncate: true
+            where: {
+                UserId: req.user?.id,
+            }
         });
         res.send({
             success: true,

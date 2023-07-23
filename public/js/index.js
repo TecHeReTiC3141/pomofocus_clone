@@ -30,13 +30,11 @@ $(document).ready(() => {
         $('.forward-btn').addClass('hidden');
     }
 
-
-
     function setFinishTime() {
         let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
-        let start = Date.now(), timeNeeded = 1000 * (pomosLeft * timeModes['Pomodoro'].time +
+        let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
             (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
-            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time);
+            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
         if (pomosLeft) {
             start += timeNeeded;
         }
@@ -274,8 +272,8 @@ $(document).ready(() => {
             pomosNeed: $('#pomosNeed', addForm).val(),
             description: $('#description', addForm).val(),
         }, data => {
-            const newTask = $(data);
-            initTask(newTask);
+            const newTask = $('.blank-task .task').clone();
+            updateTask(newTask, data);
             $('.tasks').append(newTask);
         })
 
@@ -293,13 +291,12 @@ $(document).ready(() => {
 
     $('#description', addForm).prop('selectionEnd', 1);
 
-
     /*
-    * TODO: implement done button (tick);
-    * TODO: implement task updating (form and button);
-    * TODO: implement tasks menu
+    *
     * TODO: search for better font
     * TODO: add dark mode
+    * TODO: implement adding task using cookies
+    * TODO: add notifications when mode is changed
     * */
     // Tasks menu
 
@@ -343,7 +340,70 @@ $(document).ready(() => {
             }
         });
     })
+    // user menu
 
+    const userMenu = $('.user-menu');
 
+    $('.user-btn').on('click', function(ev) {
+        ev.stopPropagation();
+        userMenu.toggleClass('hidden');
+    })
+
+    userMenu.on('click', function (ev) {
+        ev.stopPropagation();
+    })
+
+    $(document).on('click', function () {
+        userMenu.addClass('hidden');
+    })
+
+    $('.logout', userMenu).on('click', function() {
+        $.post('/users/logout?_method=DELETE', {}, () => {
+            location.reload();
+        });
+
+    })
+
+    $('.delete-account', userMenu).on('click', function() {
+        $.post('/users/delete?_method=DELETE', {}, () => {
+            location.reload();
+        });
+    })
+
+    $('.open-profile', userMenu).on('click', function() {
+        userProfile.removeClass('hidden');
+        userMenu.addClass('hidden');
+    })
+
+    const userProfile = $('.user-profile');
+
+    $('.avatar-field', userProfile).on('click', async function() {
+        const [ fileHandle ] = await window.showOpenFilePicker({
+            types: [{
+                accept: {
+                    'image/*': ['.png', '.gif', '.jpeg', '.jpg', '.webp']
+                }
+            }],
+        });
+        const fileData = await fileHandle.getFile();
+
+        const buffer = await fileData.arrayBuffer();
+        const blob = new Blob([buffer]);
+        $('#avatar', userProfile).prop('src', URL.createObjectURL(blob));
+        let file = new File([blob], fileData.name, {
+            type: fileData.type,
+            lastModified:new Date().getTime()
+        }, );
+        console.log(fileData.name, file);
+        let container = new DataTransfer();
+        container.items.add(file);
+        $('#filedata', userProfile).prop('files', container.files);
+        console.log($('#filedata', userProfile).prop('files'));
+    })
+
+    $('.close-profile, #cancel-update-btn', userProfile).on('click', function(ev) {
+        ev.preventDefault();
+        userProfile.addClass('hidden');
+    })
 
 })

@@ -33,20 +33,20 @@ const timeModes = {
         color: 'bg-pomodoro',
     },
     'Short Break': {
-        time: 300,
+        time: 3,
         color: 'bg-shortBreak',
     },
     'Long Break': {
-        time: 600,
+        time: 6,
         color: 'bg-longBreak',
     },
 }
 
 $(document).ready(() => {
 
-    let notificationsAllowed;
+    let notificationsAllowed, notification;
     (async () => {
-        notificationsAllowed =(await Notification.requestPermission()) === 'granted';
+        notificationsAllowed = (await Notification.requestPermission()) === 'granted';
         console.log(notificationsAllowed);
     })()
 
@@ -112,18 +112,22 @@ $(document).ready(() => {
                     $('.task-pomos-need', currentTask).text(pomosNeed);
                     $('.task-pomos-done', currentTask).text(pomosDone);
 
-                    $('.total-pomos-done').text(+$('.total-pomos-done').text() + 1);
-
-                    setFinishTime();
+                    getTotalPomos();
                 });
-                if (notificationsAllowed) {
-                    new Notification('Time to take a short break!')
+                if (notificationsAllowed && document.visibilityState === 'hidden') {
+                    notification = new Notification('Time to take a short break!')
+                    notification.onclick = function() {
+                        window.focus();
+                    }
                 }
 
             } else {
                 currentMode = 'Pomodoro';
-                if (notificationsAllowed) {
-                    new Notification('Time to focus!')
+                if (notificationsAllowed && document.visibilityState === 'hidden') {
+                    notification = new Notification('Time to focus!')
+                    notification.onclick = function() {
+                        window.focus();
+                    }
                 }
             }
             $('.time-left-bar').width(0);

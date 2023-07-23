@@ -50,13 +50,33 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-router.delete('/logout', (req, res) => {
+router.delete('/logout',  checkAuthenticated, (req, res) => {
     req.logOut(err => {
         if (err) {
             console.log(err);
         }
         res.redirect('/');
     })
+})
+
+router.delete('/delete',  checkAuthenticated, async (req, res) => {
+    try {
+        await User.destroy({
+            where: {
+                id: req.user.id,
+            }
+        })
+        req.logOut(err => {
+            if (err) {
+                console.log(err);
+            }
+            res.redirect('/');
+        })
+    } catch (err) {
+        console.log(`Error while deleting user: ${err.message}`);
+        res.redirect('/');
+    }
+
 })
 
 router.post('/update/:id', async (req, res) => {

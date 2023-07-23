@@ -364,6 +364,12 @@ $(document).ready(() => {
 
     })
 
+    $('.delete-account', userMenu).on('click', function() {
+        $.post('/users/delete?_method=DELETE', {}, () => {
+            location.reload();
+        });
+    })
+
     $('.open-profile', userMenu).on('click', function() {
         userProfile.removeClass('hidden');
         userMenu.addClass('hidden');

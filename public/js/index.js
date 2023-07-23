@@ -295,8 +295,8 @@ $(document).ready(() => {
     *
     * TODO: search for better font
     * TODO: add dark mode
-    * TODO: implement user menu
     * TODO: implement adding task using cookies
+    * TODO: add notifications when mode is changed
     * */
     // Tasks menu
 
@@ -371,7 +371,7 @@ $(document).ready(() => {
 
     const userProfile = $('.user-profile');
 
-    $('#avatar', userProfile).on('click', async function() {
+    $('.avatar-field', userProfile).on('click', async function() {
         const [ fileHandle ] = await window.showOpenFilePicker({
             types: [{
                 accept: {
@@ -383,7 +383,7 @@ $(document).ready(() => {
 
         const buffer = await fileData.arrayBuffer();
         const blob = new Blob([buffer]);
-        this.src = URL.createObjectURL(blob);
+        $('#avatar', userProfile).prop('src', URL.createObjectURL(blob));
         let file = new File([blob], fileData.name, {
             type: fileData.type,
             lastModified:new Date().getTime()

@@ -59,4 +59,29 @@ router.delete('/logout', (req, res) => {
     })
 })
 
+router.post('/update/:id', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            where: {
+                id: req.params.id,
+            }
+        })
+        const newAvatar = req.file;
+        console.log(newAvatar);
+        await user.update({
+            name: req.body.name,
+        })
+        if (newAvatar) {
+            await user.update({
+                avatar: `/uploads/${newAvatar.filename}`,
+            })
+        }
+        await user.save();
+        res.redirect('/');
+    } catch (err) {
+        console.log(`Error while updating user: ${err.message}`);
+        res.redirect('/');
+    }
+})
+
 module.exports = router;

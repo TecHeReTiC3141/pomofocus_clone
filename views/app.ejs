@@ -22,7 +22,7 @@
         </div>
         <% if (isAuthenticated) { %>
             <button class="user-btn text-sm p-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
-                <img src="/images/user-icon.png" alt="user_icon" class="block w-6 bg-gray-100 rounded">
+                <img src="<%= user.avatar || "/images/user-icon.png"%>" alt="user_icon" class="block w-6 bg-gray-100 rounded">
             </button>
         <% } else { %>
             <a href="/users/login"

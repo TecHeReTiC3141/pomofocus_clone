@@ -2,11 +2,11 @@
             bg-black bg-opacity-20
             flex justify-center items-center hidden">
 
-    <form action="" method="POST" class="w-[32rem]
+    <form action="/users/update/<%= user.id %>" method="POST" class="w-[32rem]
                 bg-white rounded-t-md pb-4 pt-12 px-6
                 text-black flex justify-start items-center relative mb-12
                 transition ease-linear duration-300"
-          id="user-update-form">
+          id="user-update-form" enctype="multipart/form-data">
         <h3 class="absolute top-2 left-4 uppercase text-gray-400">Profile</h3>
         <button class="close-profile absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
             <i class="fa-solid fa-xmark"></i>
@@ -14,10 +14,11 @@
 
 <!--        <div class="w-16 h-16 border-4 border-gray-400-->
 <!--                        border-dotted rounded-full mr-10 overflow-hidden">-->
-            <img src="/images/user-icon.png" alt="User avatar"
-                 id="avatar" class="w-16 border-4 border-gray-400
-                        border-dotted rounded-full mr-10 overflow-hidden">
+        <img src="<%= user.avatar || "/images/user-icon.png"%>" alt="User avatar"
+             id="avatar" class="w-16 border-4 border-gray-400
+                    border-dotted rounded-full mr-10 overflow-hidden">
 <!--        </div>-->
+        <input type="file" name="filedata" id="filedata" class="hidden">
 
         <div>
             <label for="" class="w-full">

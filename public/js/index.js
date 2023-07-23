@@ -382,8 +382,17 @@ $(document).ready(() => {
         const fileData = await fileHandle.getFile();
 
         const buffer = await fileData.arrayBuffer();
-        this.src = URL.createObjectURL(new Blob([buffer]));
-        console.log(fileData.type);
+        const blob = new Blob([buffer]);
+        this.src = URL.createObjectURL(blob);
+        let file = new File([blob], fileData.name, {
+            type: fileData.type,
+            lastModified:new Date().getTime()
+        }, );
+        console.log(fileData.name, file);
+        let container = new DataTransfer();
+        container.items.add(file);
+        $('#filedata', userProfile).prop('files', container.files);
+        console.log($('#filedata', userProfile).prop('files'));
     })
 
     $('.close-profile, #cancel-update-btn', userProfile).on('click', function(ev) {

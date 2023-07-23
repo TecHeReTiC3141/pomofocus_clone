@@ -10,6 +10,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const flash = require('express-flash');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -34,6 +35,8 @@ app.use(express.urlencoded({ limit: "50mb",
     extended: true, parameterLimit: 50000 }))
 app.use(expressLayouts);
 app.use(express.static('public'));
+app.use(multer({dest:"public/uploads"}).single("filedata"));
+
 app.use(methodOverride('_method'));
 
 app.use(cookieParser('keyboard cat'));

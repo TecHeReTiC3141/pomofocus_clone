@@ -4,6 +4,8 @@ const router = express.Router();
 const { getTask } = require('../utils/generateTemplates');
 
 const Task = require('../models/Task');
+const DoneTask = require('../models/DoneTask');
+const {User, defaultUserSettings} = require("../models/User");
 
 router.get('/', async (req, res) => {
     let tasks, totalPomosDone = 0, totalPomosNeed = 0;
@@ -25,6 +27,29 @@ router.get('/', async (req, res) => {
                 done: false,
             }
         }) || 0;
+
+        const currentUser = await User.findOne({
+            where: {
+                id: req.user.id,
+            }
+        });
+        let settings = JSON.parse(currentUser.settings), changed = false;
+
+        for (let field in defaultUserSettings) {
+            if (!(field in settings)) {
+                settings = {
+                    ...settings,
+                    [field]: defaultUserSettings[field],
+                };
+                changed = true;
+            }
+        }
+        if (changed) {
+            await currentUser.update({
+                settings: JSON.stringify(settings),
+            });
+            await currentUser.save();
+        }
     } else {
         tasks = req.cookies.tasks || [];
     }
@@ -42,7 +67,7 @@ router.post('/new', async (req, res) => {
         });
         res.send(newTask);
     } catch (err) {
-        console.log(`$Error while adding {err.message}`);
+        console.log(`Error while adding {err.message}`);
     }
 
 })
@@ -64,7 +89,26 @@ router.get('/task_done/:id', async (req, res) => {
             pomosNeed: curTask.pomosNeed,
         })
     } catch (err) {
-        console.log(`Error while adding done pomo ${err.message}`);
+        console.log(`Error while adding done pomo: ${err.message}`);
+        res.sendStatus(503);
+    }
+})
+
+router.post('/save_task', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        res.send('User is not authenticated');
+    }
+    try {
+        console.log(req.body);
+        await DoneTask.create({
+            UserId: req.user.id,
+            name: req.body.name,
+            startTime: new Date(+req.body.startTime),
+            finishTime: new Date(+req.body.finishTime),
+        })
+        res.send({ success: true });
+    } catch (err) {
+        console.log(`Error while saving task: ${err.message}`);
         res.sendStatus(503);
     }
 })
@@ -131,6 +175,7 @@ router.delete('/delete-finished-tasks', async (req, res) => {
         await Task.destroy({
             where: {
                 done: true,
+                UserId: req.user?.id,
             }
         });
         res.send({
@@ -145,7 +190,9 @@ router.delete('/delete-finished-tasks', async (req, res) => {
 router.delete('/delete-all-tasks', async (req, res) => {
     try {
         await Task.destroy({
-            truncate: true
+            where: {
+                UserId: req.user?.id,
+            }
         });
         res.send({
             success: true,

@@ -1,3 +1,25 @@
+/*
+    *
+    * TODO: search for better font
+    * TODO: implement adding task using cookies
+    * TODO: think about adding toast notifications
+    * TODO: save all done tasks in doneTask Table (start and finish time, task name),
+    *  then use it for statistics
+*/
+
+function processForm(form) {
+    let data = {};
+    for (let { name, value } of form.serializeArray()) {
+        data[name] = value;
+    }
+
+    $('input:checkbox', form).map(function() {
+        data[this.name] = this.checked;
+    })
+    console.log(data);
+    return data;
+}
+
 function setLeftTime(timeLeft) {
     let le = Math.floor(timeLeft / 60).toString(), ri = (timeLeft % 60).toString();
     if (le.length === 1) {
@@ -9,7 +31,70 @@ function setLeftTime(timeLeft) {
     return `${le}:${ri}`;
 }
 
+function setFinishTime() {
+    let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
+    let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
+        (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
+        Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
+    if (pomosLeft) {
+        start += timeNeeded;
+    }
+
+    const finishTime = new Date(start);
+    let mins = finishTime.getMinutes().toString();
+    if (mins.length < 2) {
+        mins = '0' + mins;
+    }
+    $('.finish-time').text(`${finishTime.getHours()}:${mins}`);
+    $('.time-needed').text((timeNeeded / 3600000).toFixed(1));
+}
+
+const timeModes = {
+    'Pomodoro': {
+        time: 15,
+        color: 'pomodoro',
+    },
+    'Short Break': {
+        time: 3,
+        color: 'shortBreak',
+    },
+    'Long Break': {
+        time: 6,
+        color: 'longBreak',
+    },
+}
+
 $(document).ready(() => {
+
+    let notificationsAllowed, notification;
+    (async () => {
+        notificationsAllowed = (await Notification.requestPermission()) === 'granted';
+        console.log(notificationsAllowed);
+    })()
+
+    let userSettings = {};
+
+    function updateSettings(newSettings) {
+        userSettings = newSettings;
+        timeModes['Pomodoro'].time = userSettings.pomoTime * 60;
+        timeModes['Short Break'].time = userSettings.shortBreakTime * 60;
+        timeModes['Long Break'].time = userSettings.longBreakTime * 60;
+        setFinishTime();
+    }
+
+    function setUser() {
+        $.get('/users/get_user_settings', {}, data => {
+            updateSettings(data);
+
+            modesBtns.each(function () {
+                $(this).on('click', function () {
+                    currentMode = $(this).text()
+                    setState();
+                })
+            })
+            setState();
+        })
+    }
 
     function setState() {
         modesBtns.each(function () {
@@ -22,67 +107,74 @@ $(document).ready(() => {
         taskActive = false;
 
         timeLeft.text(setLeftTime(currentTime));
+
         $('body')
             .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
-            .addClass(timeModes[currentMode].color);
+            .addClass('bg-' + timeModes[currentMode].color);
+
+        $('.toggle-task')
+            .removeClass('text-pomodoro text-shortBreak text-longBreak')
+            .addClass('text-' + timeModes[currentMode].color);
 
         $('.toggle-task').text('Start');
         $('.forward-btn').addClass('hidden');
     }
 
-    function setFinishTime() {
-        let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
-        let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
-            (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
-            Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
-        if (pomosLeft) {
-            start += timeNeeded;
-        }
-
-        const finishTime = new Date(start);
-        let mins = finishTime.getMinutes().toString();
-        if (mins.length < 2) {
-            mins = '0' + mins;
-        }
-        $('.finish-time').text(`${finishTime.getHours()}:${mins}`);
-        $('.time-needed').text((timeNeeded / 3600000).toFixed(1));
-    }
-
-    const timeModes = {
-        'Pomodoro': {
-            time: 1500,
-            color: 'bg-pomodoro',
-        },
-        'Short Break': {
-            time: 300,
-            color: 'bg-shortBreak',
-        },
-        'Long Break': {
-            time: 600,
-            color: 'bg-longBreak',
-        },
-    }
     // setting current state
     let currentMode = $('.modes button.active').text(),
-        currentTime = timeModes[currentMode];
+        currentTime = timeModes[currentMode],
+        lastStart = Date.now();
     let taskActive = false;
     const timeLeft = $('.time-left');
-    setFinishTime();
 
+    const modesBtns = $('.modes button');
 
-    const modesBtns = $('.modes button')
-    modesBtns.each(function () {
-        $(this).on('click', function () {
-            currentMode = $(this).text()
-            setState();
-        })
-    })
-    setState();
+    setUser();
+
+    function toggleDarkMode() {
+        console.log(userSettings);
+        if (userSettings.darkMode === 'false') return;
+        if (taskActive) {
+            $('body')
+                .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
+                .addClass('bg-black');
+
+            $('.toggle-task')
+                .removeClass('text-pomodoro text-shortBreak text-longBreak')
+                .addClass('text-black');
+        } else {
+            $('body')
+                .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
+                .addClass('bg-' + timeModes[currentMode].color);
+
+            $('.toggle-task')
+                .removeClass('text-pomodoro text-shortBreak text-longBreak')
+                .addClass('text-' + timeModes[currentMode].color);
+        }
+        $('.logo, .user-btn, .modes').toggleClass('opacity-0');
+        $('.tasks, .pomo-stats, .add-task, .tasks-header').toggleClass('hidden');
+        $('body').toggleClass('dark');
+    }
+
     $('.toggle-task').on('click', function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
         $(this).text(taskActive ? 'Pause' : 'Start');
+        if (currentMode === 'Pomodoro') {
+            if (taskActive) lastStart = Date.now();
+            else {
+                console.log(typeof(lastStart))
+                $.post('/save_task', {
+                    name: $('.current-task-name').text(),
+                    startTime: lastStart,
+                    finishTime: Date.now(),
+                }, () => {
+
+                })
+            }
+        }
+        toggleDarkMode();
     })
 
     $('.forward-btn').on('click', function () {
@@ -98,22 +190,41 @@ $(document).ready(() => {
             $('.time-left-bar').width(timeLeftBarWidth);
         } else if (currentTime === 0) {
             if (currentMode === 'Pomodoro') {
-                currentMode = 'Short Break';
+                currentMode = (+$('.total-pomos-done').text() + 1) % userSettings.longBreakInterval === 0
+                    ? 'Long Break' : 'Short Break';
                 const currentTask = $('.task.active');
-                $.get(`/task_done/${currentTask.data('id')}`, {}, (data) => {
+                $.get(`/task_done/${currentTask.data('id')}`, {}, data => {
                     const {pomosDone, pomosNeed} = data;
                     $('.task-pomos-need', currentTask).text(pomosNeed);
                     $('.task-pomos-done', currentTask).text(pomosDone);
-                    setFinishTime();
+                    getTotalPomos();
+                    console.log( +$('.total-pomos-done').text() )
                 });
+                if (notificationsAllowed && document.visibilityState === 'hidden') {
+                    notification = new Notification(`Time to take a ${currentMode.toLowerCase()}!`)
+                    notification.onclick = function() {
+                        window.focus();
+                    }
+                }
+                $.post('/save_task', {
+                    name: $('.current-task-name').text(),
+                    startTime: lastStart,
+                    finishTime: Date.now(),
+                }, () => {});
 
             } else {
                 currentMode = 'Pomodoro';
+                if (notificationsAllowed && document.visibilityState === 'hidden') {
+                    notification = new Notification('Time to focus!')
+                    notification.onclick = function() {
+                        window.focus();
+                    }
+                }
             }
             $('.time-left-bar').width(0);
 
             $('.time-left-container').addClass('hidden');
-
+            toggleDarkMode();
             setState();
         }
     }, 1000)
@@ -126,13 +237,24 @@ $(document).ready(() => {
             ghostClass: 'ghost',
         });
 
-    $('.task:first-child').addClass('active');
-
     function updateTask(task, newData) {
         task.data('name', newData.name);
         $('.task-name', task).text(newData.name);
         $('.task-pomos-need', task).text(newData.pomosNeed);
         $('.task-description', task).text(newData.description);
+    }
+
+    function getTotalPomos() {
+        let totalPomosNeed = 0, totalPomosDone = 0;
+        $('.task').each(function() {
+            if ($(this).hasClass('done') || $(this).hasClass('hidden')) return;
+            totalPomosNeed += +$('.task-pomos-need', this).text();
+            totalPomosDone += +$('.task-pomos-done', this).text();
+        })
+        console.log(totalPomosNeed, totalPomosDone);
+        $('.total-pomos-need').text(totalPomosNeed);
+        $('.total-pomos-done').text(totalPomosDone);
+        setFinishTime();
     }
 
     function initTask(task) {
@@ -152,16 +274,7 @@ $(document).ready(() => {
                 data => {
                     if (data?.success) {
                         $(task).toggleClass('done');
-                        const curTotPomosNeed = +$('.total-pomos-need').text();
-                        const curTotPomosDone = +$('.total-pomos-done').text();
-                        if (task.hasClass('done')) {
-                            $('.total-pomos-need').text(curTotPomosNeed - +$('.task-pomos-need', task).text());
-                            $('.total-pomos-done').text(curTotPomosDone - +$('.task-pomos-done', task).text());
-                        } else {
-                            $('.total-pomos-need').text(curTotPomosNeed + +$('.task-pomos-need', task).text());
-                            $('.total-pomos-done').text(curTotPomosDone + +$('.task-pomos-done', task).text());
-                        }
-                        setFinishTime();
+                        getTotalPomos()
                     }
                 })
         })
@@ -181,7 +294,6 @@ $(document).ready(() => {
                 resetUpdateForm()
                 updateForm.removeClass('hidden');
             }
-
         });
 
         updateForm.on('click', function (ev) {
@@ -189,7 +301,7 @@ $(document).ready(() => {
         })
 
         document.addEventListener('click', function (ev) {
-            if (!updateForm.hasClass('hidden')) {
+            if (!updateForm.hasClass('hidden') && !task.hasClass('hidden')) {
                 const isCancelled = confirm('The change will be lost. Are you sure you want to close it?');
                 if (isCancelled) {
                     $(task).removeClass('updated');
@@ -204,14 +316,8 @@ $(document).ready(() => {
                 id: task.data('id'),
             }, (data) => {
                 if (data?.deleted === true) {
-                    task.addClass('hidden');
-                    const curTotPomosNeed = Number($('.total-pomos-need').text());
-                    $('.total-pomos-need').text(curTotPomosNeed - +$('.task-pomos-need', task).text());
-
-                    const curTotPomosDone = Number($('.total-pomos-done').text());
-                    $('.total-pomos-done').text(curTotPomosDone - +$('.task-pomos-done', task).text());
-
-                    setFinishTime();
+                    task.addClass('hidden').removeClass('updated');
+                    getTotalPomos();
                 }
             })
         })
@@ -226,14 +332,13 @@ $(document).ready(() => {
             ev.preventDefault();
             $.post('/update?_method=PUT', {
                 id: task.data('id'),
-                name: $('#name', updateForm).val(),
-                pomosNeed: +$('#pomosNeed', updateForm).val(),
-                description: $('#description', updateForm).val(),
+                ...processForm(updateForm),
             }, data => {
                 console.log(data);
                 updateTask(task, data);
                 $(task).removeClass('updated');
                 $('#update-form', task).addClass('hidden');
+                getTotalPomos();
             })
         })
     }
@@ -242,15 +347,17 @@ $(document).ready(() => {
         initTask($(this));
     });
 
+    $('.task:first-child').addClass('active');
+
     $('.add-task').on('click', function () {
         $(this).addClass('hidden');
         $('#add-form').removeClass('hidden');
     });
 
     // form for adding new Tasks
-    const addForm = $('#add-form');
+    const addTaskForm = $('#add-form');
 
-    $('#cancel-add-btn', addForm).on('click', function (ev) {
+    $('#cancel-add-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
@@ -258,57 +365,40 @@ $(document).ready(() => {
         $('#add-form .add-note-btn').removeClass('hidden');
     })
 
-    $('.add-note-btn', addForm).on('click', function (ev) {
+    $('.add-note-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
         $(this).addClass('hidden');
-        $('#description', addForm).removeClass('hidden').focus();
+        $('#description', addTaskForm).removeClass('hidden').focus();
     })
 
-    $('.submit-btn', addForm).on('click', function (ev) {
+    $('.submit-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
 
-        $.post('/new', {
-            name: $('#name', addForm).val(),
-            pomosNeed: $('#pomosNeed', addForm).val(),
-            description: $('#description', addForm).val(),
-        }, data => {
+        $.post('/new', processForm(addTaskForm), data => {
             const newTask = $('.blank-task .task').clone();
             updateTask(newTask, data);
+            initTask(newTask);
+            newTask.data('id', data.id);
             $('.tasks').append(newTask);
+            getTotalPomos();
         })
 
-        const curTotPomosNeed = Number($('.total-pomos-need').text());
-
-        $('.total-pomos-need').text(curTotPomosNeed + +$('#pomosNeed', addForm).val());
-
-        setFinishTime();
-
-        $('input, textarea', addForm).val('');
+        $('input, textarea', addTaskForm).val('');
 
         $('.add-task').removeClass('hidden');
         $('#add-form').addClass('hidden');
     })
 
-    $('#description', addForm).prop('selectionEnd', 1);
+    $('#description', addTaskForm).prop('selectionEnd', 1);
 
-    /*
-    *
-    * TODO: search for better font
-    * TODO: add dark mode
-    * TODO: implement adding task using cookies
-    * TODO: add notifications when mode is changed
-    * */
-    // Tasks menu
+
+    // -------TASKS MENU------------
 
     const tasksMenu =  $('.tasks-menu');
 
     $('.toggle-tasks-menu').on('click', function (ev) {
         ev.stopPropagation();
         tasksMenu.toggleClass('hidden');
-    })
-
-    tasksMenu.on('click', function (ev) {
-        ev.stopPropagation();
     })
 
     $(document).on('click', function () {
@@ -340,8 +430,8 @@ $(document).ready(() => {
             }
         });
     })
-    // user menu
 
+    // -------USER MENU------------
     const userMenu = $('.user-menu');
 
     $('.user-btn').on('click', function(ev) {
@@ -375,6 +465,8 @@ $(document).ready(() => {
         userMenu.addClass('hidden');
     })
 
+    // -------USER PROFILE PAGE------------
+
     const userProfile = $('.user-profile');
 
     $('.avatar-field', userProfile).on('click', async function() {
@@ -406,4 +498,51 @@ $(document).ready(() => {
         userProfile.addClass('hidden');
     })
 
+    // -------USER SETTINGS ------------
+
+    const settingsPage = $('.settings'), settingsForm = $('.settings-form');
+
+    $('.settings-btn').on('click', function(ev) {
+        ev.stopPropagation();
+        settingsPage.removeClass('hidden');
+    })
+
+    $(document).on('click', function() {
+        settingsPage.addClass('hidden');
+    })
+
+    settingsForm.on('click', function(ev) {
+        ev.stopPropagation();
+    })
+
+    $('.close-settings', settingsForm).on('click', function(ev) {
+        ev.preventDefault();
+        settingsPage.addClass('hidden');
+    })
+
+    $('.toggle', settingsForm).each(function() {
+        const checkbox = $(`#${$(this).data('field')}`, settingsForm);
+        console.log(checkbox);
+        if (checkbox.prop('checked')) {
+            $(this).addClass('active');
+        }
+        $(this).on('click', function(ev) {
+            ev.preventDefault();
+            $(this).toggleClass('active');
+            checkbox.prop('checked', $(this).hasClass('active'));
+        })
+    })
+
+    $('#submit-btn', settingsForm).on('click', function(ev) {
+        ev.preventDefault();
+        let newSettings = processForm(settingsForm);
+
+        $.post('/users/update_user_settings', { settings: newSettings }, data => {
+            if (data.success) {
+                updateSettings(newSettings);
+            }
+        } );
+        settingsPage.addClass('hidden');
+        console.log(newSettings);
+    })
 })

@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-const User = require('../models/User');
+const {User, defaultUserSettings} = require('../models/User');
+const DoneTask = require('../models/DoneTask');
 
 const passport = require('passport');
 const initializePassport = require('../utils/initializePassport');
@@ -21,7 +22,7 @@ const initializePassport = require('../utils/initializePassport');
     )
 })();
 
-const { checkAuthenticated, checkNotAuthenticated } = require('../utils/middleware');
+const {checkAuthenticated, checkNotAuthenticated} = require('../utils/middleware');
 
 router.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('users/login.ejs');
@@ -50,7 +51,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-router.delete('/logout',  checkAuthenticated, (req, res) => {
+router.delete('/logout', checkAuthenticated, (req, res) => {
     req.logOut(err => {
         if (err) {
             console.log(err);
@@ -59,7 +60,7 @@ router.delete('/logout',  checkAuthenticated, (req, res) => {
     })
 })
 
-router.delete('/delete',  checkAuthenticated, async (req, res) => {
+router.delete('/delete', checkAuthenticated, async (req, res) => {
     try {
         await User.destroy({
             where: {
@@ -87,7 +88,7 @@ router.post('/update/:id', async (req, res) => {
             }
         })
         const newAvatar = req.file;
-        console.log(newAvatar);
+
         await user.update({
             name: req.body.name,
         })
@@ -102,6 +103,34 @@ router.post('/update/:id', async (req, res) => {
         console.log(`Error while updating user: ${err.message}`);
         res.redirect('/');
     }
+});
+
+router.get('/get_user_settings', (req, res) => {
+    if (!req.isAuthenticated) {
+        return res.send(defaultUserSettings)
+    }
+    res.send(JSON.parse(req.user.settings));
 })
+
+router.post('/update_user_settings', async (req, res) => {
+    try {
+        const curUser = await User.findOne({
+            where: {
+                id: req.user.id,
+            }
+        })
+        await curUser.update({
+            settings: JSON.stringify(req.body.settings),
+        })
+        await curUser.save();
+        res.send({ success: true});
+    } catch (err) {
+        console.log(`Error while updating user settings: ${err.message}`);
+        res.send({ success: false });
+    }
+
+})
+
+
 
 module.exports = router;

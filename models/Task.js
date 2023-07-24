@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../utils/getDBInstance');
 
-const User = require('./User');
+const { User } = require('./User');
 
 const Task = connection.define('Task', {
     name: {
@@ -32,7 +32,6 @@ const Task = connection.define('Task', {
 })
 
 User.hasMany(Task, {
-
     onDelete: 'CASCADE',
 });
 

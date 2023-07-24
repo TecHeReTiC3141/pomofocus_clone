@@ -132,11 +132,36 @@ $(document).ready(() => {
 
     setUser();
 
+    function toggleDarkMode() {
+        if (!userSettings.darkMode) return;
+        if (taskActive) {
+            $('body')
+                .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
+                .addClass('bg-black');
+
+            $('.toggle-task')
+                .removeClass('text-pomodoro text-shortBreak text-longBreak')
+                .addClass('text-black');
+        } else {
+            $('body')
+                .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
+                .addClass('bg-' + timeModes[currentMode].color);
+
+            $('.toggle-task')
+                .removeClass('text-pomodoro text-shortBreak text-longBreak')
+                .addClass('text-' + timeModes[currentMode].color);
+        }
+        $('.logo, .user-btn, .modes').toggleClass('opacity-0');
+        $('.tasks, .pomo-stats, .add-task, .tasks-header').toggleClass('hidden');
+        $('body').toggleClass('dark');
+    }
+
     $('.toggle-task').on('click', function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
         $(this).text(taskActive ? 'Pause' : 'Start');
+        toggleDarkMode();
     })
 
     $('.forward-btn').on('click', function () {
@@ -181,7 +206,7 @@ $(document).ready(() => {
             $('.time-left-bar').width(0);
 
             $('.time-left-container').addClass('hidden');
-
+            toggleDarkMode();
             setState();
         }
     }, 1000)

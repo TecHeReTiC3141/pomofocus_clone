@@ -61,4 +61,16 @@
     .toggle.active {
         @apply bg-green-500 after:right-1 after:left-auto;
     }
+
+    body.dark {
+        @apply text-opacity-80;
+    }
+
+    body.dark .timer {
+        @apply bg-opacity-0;
+    }
+
+    body.dark .toggle-task {
+        @apply bg-transparent border-black text-white ;
+    }
 }

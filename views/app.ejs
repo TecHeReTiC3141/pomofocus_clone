@@ -144,7 +144,7 @@
 
     <% if (isAuthenticated) { %>
         <%- include('./users/user_profile', { user }) %>
+        <%- include('./users/user_settings', { settings: JSON.parse(user.settings) }) %>
     <% } %>
-    <%- include('./users/user_settings', { settings: JSON.parse(user.settings) }) %>
 
 </main>

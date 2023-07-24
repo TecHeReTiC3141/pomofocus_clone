@@ -2,11 +2,9 @@ const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../utils/getDBInstance');
 
 const defaultUserSettings = {
-    time: {
-        pomoTime: 1500,
-        shortBreakTime: 300,
-        longBreakTime: 600,
-    },
+    pomoTime: 25,
+    shortBreakTime: 5,
+    longBreakTime: 10,
     longBreakInterval: 3,
     darkMode: true,
 }

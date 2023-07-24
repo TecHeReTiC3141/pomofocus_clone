@@ -74,13 +74,18 @@ $(document).ready(() => {
     })()
 
     let userSettings = {};
+
+    function updateSettings(newSettings) {
+        userSettings = newSettings;
+        timeModes['Pomodoro'].time = userSettings.pomoTime * 60;
+        timeModes['Short Break'].time = userSettings.shortBreakTime * 60;
+        timeModes['Long Break'].time = userSettings.longBreakTime * 60;
+        setFinishTime();
+    }
+
     function setUser() {
         $.get('/users/get_user_settings', {}, data => {
-            userSettings = data;
-            timeModes['Pomodoro'].time = userSettings.time.pomoTime;
-            timeModes['Short Break'].time = userSettings.time.shortBreakTime;
-            timeModes['Long Break'].time = userSettings.time.longBreakTime;
-            setFinishTime();
+            updateSettings(data);
 
             modesBtns.each(function () {
                 $(this).on('click', function () {
@@ -384,9 +389,8 @@ $(document).ready(() => {
             }
         });
     })
+
     // -------USER MENU------------
-
-
     const userMenu = $('.user-menu');
 
     $('.user-btn').on('click', function(ev) {
@@ -476,17 +480,28 @@ $(document).ready(() => {
     })
 
     $('.toggle', settingsForm).each(function() {
+        const checkbox = $(`#${$(this).data('field')}`, settingsForm);
+        console.log(checkbox);
+        if (checkbox.prop('checked')) {
+            $(this).addClass('active');
+        }
         $(this).on('click', function(ev) {
             ev.preventDefault();
             $(this).toggleClass('active');
-            console.log($(`#${$(this).data('field')}`, settingsForm));
-            $(`#${$(this).data('field')}`, settingsForm).prop('checked', $(this).hasClass('active'));
+            checkbox.prop('checked', $(this).hasClass('active'));
         })
     })
 
     $('#submit-btn', settingsForm).on('click', function(ev) {
         ev.preventDefault();
         let newSettings = processForm(settingsForm);
+
+        $.post('/users/update_user_settings', { settings: newSettings }, data => {
+            if (data.success) {
+                updateSettings(newSettings);
+            }
+        } );
+        settingsPage.addClass('hidden');
         console.log(newSettings);
     })
 })

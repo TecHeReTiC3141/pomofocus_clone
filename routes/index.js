@@ -4,6 +4,7 @@ const router = express.Router();
 const { getTask } = require('../utils/generateTemplates');
 
 const Task = require('../models/Task');
+const {User, defaultUserSettings} = require("../models/User");
 
 router.get('/', async (req, res) => {
     let tasks, totalPomosDone = 0, totalPomosNeed = 0;
@@ -25,6 +26,29 @@ router.get('/', async (req, res) => {
                 done: false,
             }
         }) || 0;
+
+        const currentUser = await User.findOne({
+            where: {
+                id: req.user.id,
+            }
+        });
+        let settings = JSON.parse(currentUser.settings), changed = false;
+
+        for (let field in defaultUserSettings) {
+            if (!(field in settings)) {
+                settings = {
+                    ...settings,
+                    [field]: defaultUserSettings[field],
+                };
+                changed = true;
+            }
+        }
+        if (changed) {
+            await currentUser.update({
+                settings: JSON.stringify(settings),
+            });
+            await currentUser.save();
+        }
     } else {
         tasks = req.cookies.tasks || [];
     }

@@ -19,21 +19,21 @@ flex justify-center items-start hidden">
             <div class="flex gap-8">
                  <div>
                      <label for="" class="text-sm text-gray-300 block">Pomodoro
-                         <input type="number" value="<%= settings.time.pomoTime %>" min="1" class="bg-gray-200 w-28
+                         <input type="number" value="<%= settings.pomoTime %>" min="1" class="bg-gray-200 w-28
         focus:outline-none rounded text-black p-2 indent-1" name="pomoTime" id="pomoTime">
                      </label>
                  </div>
 
                 <div>
                     <label for="" class="text-sm text-gray-300 block">Short Break
-                        <input type="number" value="<%= settings.time.shortBreakTime %>" min="1" class="bg-gray-200 w-28
+                        <input type="number" value="<%= settings.shortBreakTime %>" min="1" class="bg-gray-200 w-28
         focus:outline-none rounded text-black p-2 indent-1" name="shortBreakTime" id="shortBreakTime">
                     </label>
                 </div>
 
                 <div>
                     <label for="" class="text-sm text-gray-300 block">Long Break
-                        <input type="number" value="<%= settings.time.longBreakTime %>" min="1" class="bg-gray-200 w-28
+                        <input type="number" value="<%= settings.longBreakTime %>" min="1" class="bg-gray-200 w-28
         focus:outline-none rounded text-black p-2 indent-1" name="longBreakTime" id="longBreakTime">
                     </label>
                 </div>
@@ -48,11 +48,10 @@ flex justify-center items-start hidden">
 
             <h2 class="text-gray-300 uppercase my-6">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Theme</h2>
-
             <div class="flex justify-between items-center my-8">
                 <label for="" class="text-gray-600 font-bold block">Dark Mode</label>
-                <input type="checkbox" checked="<%= settings.darkMode %>" name="darkMode" id="darkMode" class="hidden">
-                <button class="toggle active block" data-field="darkMode"></button>
+                <input type="checkbox" <%= settings.darkMode === 'true' && 'checked'%> name="darkMode" id="darkMode" class="hidden">
+                <button class="toggle block" data-field="darkMode"></button>
             </div>
 
         </div>

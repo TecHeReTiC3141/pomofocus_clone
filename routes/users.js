@@ -87,7 +87,7 @@ router.post('/update/:id', async (req, res) => {
             }
         })
         const newAvatar = req.file;
-        console.log(newAvatar);
+
         await user.update({
             name: req.body.name,
         })
@@ -104,40 +104,32 @@ router.post('/update/:id', async (req, res) => {
     }
 });
 
-router.get('/get_user_settings', async (req, res) => {
+router.get('/get_user_settings', (req, res) => {
     if (!req.isAuthenticated) {
         return res.send(defaultUserSettings)
     }
+    res.send(JSON.parse(req.user.settings));
+})
+
+router.post('/update_user_settings', async (req, res) => {
     try {
-        const currentUser = await User.findOne({
+        const curUser = await User.findOne({
             where: {
                 id: req.user.id,
             }
-        });
-        let settings = JSON.parse(currentUser.settings), changed = false;
-
-        for (let field in defaultUserSettings) {
-            if (!(field in settings)) {
-                settings = {
-                    ...settings,
-                    field: defaultUserSettings[field],
-                };
-                changed = true;
-            }
-        }
-        if (changed) {
-            await currentUser.update({
-                settings,
-            });
-            await currentUser.save();
-        }
-
-        res.send(settings);
+        })
+        await curUser.update({
+            settings: JSON.stringify(req.body.settings),
+        })
+        await curUser.save();
+        res.send({ success: true});
     } catch (err) {
-        console.log(`Error while getting user settings: ${err.message}`);
-        res.redirect('/');
+        console.log(`Error while updating user settings: ${err.message}`);
+        res.send({ success: false });
     }
 
 })
+
+
 
 module.exports = router;

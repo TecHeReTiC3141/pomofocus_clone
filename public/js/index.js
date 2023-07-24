@@ -8,6 +8,19 @@
     * TODO: think about adding toast notifications
 */
 
+function processForm(form) {
+    let data = {};
+    for (let { name, value } of form.serializeArray()) {
+        data[name] = value;
+    }
+
+    $('input:checkbox', form).map(function() {
+        data[this.name] = this.checked;
+    })
+    console.log(data);
+    return data;
+}
+
 function setLeftTime(timeLeft) {
     let le = Math.floor(timeLeft / 60).toString(), ri = (timeLeft % 60).toString();
     if (le.length === 1) {
@@ -231,7 +244,6 @@ $(document).ready(() => {
                 resetUpdateForm()
                 updateForm.removeClass('hidden');
             }
-
         });
 
         updateForm.on('click', function (ev) {
@@ -254,7 +266,7 @@ $(document).ready(() => {
                 id: task.data('id'),
             }, (data) => {
                 if (data?.deleted === true) {
-                    task.addClass('hidden');
+                    task.addClass('hidden').removeClass('updated');
                     getTotalPomos();
                 }
             })
@@ -270,9 +282,7 @@ $(document).ready(() => {
             ev.preventDefault();
             $.post('/update?_method=PUT', {
                 id: task.data('id'),
-                name: $('#name', updateForm).val(),
-                pomosNeed: $('#pomosNeed', updateForm).val(),
-                description: $('#description', updateForm).val(),
+                ...processForm(updateForm),
             }, data => {
                 console.log(data);
                 updateTask(task, data);
@@ -314,14 +324,11 @@ $(document).ready(() => {
     $('.submit-btn', addTaskForm).on('click', function (ev) {
         ev.preventDefault();
 
-        $.post('/new', {
-            name: $('#name', addTaskForm).val(),
-            pomosNeed: $('#pomosNeed', addTaskForm).val(),
-            description: $('#description', addTaskForm).val(),
-        }, data => {
+        $.post('/new', processForm(addTaskForm), data => {
             const newTask = $('.blank-task .task').clone();
             updateTask(newTask, data);
             initTask(newTask);
+            newTask.data('id', data.id);
             $('.tasks').append(newTask);
             getTotalPomos();
         })
@@ -336,7 +343,6 @@ $(document).ready(() => {
 
 
     // -------TASKS MENU------------
-
 
     const tasksMenu =  $('.tasks-menu');
 
@@ -480,15 +486,7 @@ $(document).ready(() => {
 
     $('#submit-btn', settingsForm).on('click', function(ev) {
         ev.preventDefault();
-        let newSettings = {};
-        for (let { name, value } of settingsForm.serializeArray()) {
-            newSettings[name] = value;
-        }
-
-        $('input:checkbox', settingsForm).map(function() {
-            newSettings[this.name] = this.checked;
-        })
-
+        let newSettings = processForm(settingsForm);
         console.log(newSettings);
     })
 })

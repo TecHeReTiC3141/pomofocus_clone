@@ -115,7 +115,7 @@ router.get('/get_user_settings', async (req, res) => {
             }
         });
         let settings = JSON.parse(currentUser.settings), changed = false;
-        console.log(settings);
+
         for (let field in defaultUserSettings) {
             if (!(field in settings)) {
                 settings = {
@@ -131,7 +131,7 @@ router.get('/get_user_settings', async (req, res) => {
             });
             await currentUser.save();
         }
-        console.log(settings);
+
         res.send(settings);
     } catch (err) {
         console.log(`Error while getting user settings: ${err.message}`);

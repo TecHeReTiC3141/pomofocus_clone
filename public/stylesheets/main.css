@@ -49,6 +49,16 @@
 
     .menu > li {
         @apply flex py-2 px-4 gap-2 items-center
-        cursor-pointer hover:bg-gray-200 w-full
+        cursor-pointer hover:bg-gray-200 w-full;
+    }
+
+    .toggle {
+        @apply bg-gray-400 w-16 h-8 rounded-full relative
+        after:block after:w-6 after:h-6 after:rounded-full after:bg-gray-100
+        after:absolute after:left-1 after:top-1;
+    }
+
+    .toggle.active {
+        @apply bg-green-500 after:right-1 after:left-auto;
     }
 }

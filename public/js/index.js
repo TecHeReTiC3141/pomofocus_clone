@@ -447,4 +447,48 @@ $(document).ready(() => {
         userProfile.addClass('hidden');
     })
 
+    // -------USER SETTINGS ------------
+
+    const settingsPage = $('.settings'), settingsForm = $('.settings-form');
+
+    $('.settings-btn').on('click', function(ev) {
+        ev.stopPropagation();
+        settingsPage.removeClass('hidden');
+    })
+
+    $(document).on('click', function() {
+        settingsPage.addClass('hidden');
+    })
+
+    settingsForm.on('click', function(ev) {
+        ev.stopPropagation();
+    })
+
+    $('.close-settings', settingsForm).on('click', function(ev) {
+        ev.preventDefault();
+        settingsPage.addClass('hidden');
+    })
+
+    $('.toggle', settingsForm).each(function() {
+        $(this).on('click', function(ev) {
+            ev.preventDefault();
+            $(this).toggleClass('active');
+            console.log($(`#${$(this).data('field')}`, settingsForm));
+            $(`#${$(this).data('field')}`, settingsForm).prop('checked', $(this).hasClass('active'));
+        })
+    })
+
+    $('#submit-btn', settingsForm).on('click', function(ev) {
+        ev.preventDefault();
+        let newSettings = {};
+        for (let { name, value } of settingsForm.serializeArray()) {
+            newSettings[name] = value;
+        }
+
+        $('input:checkbox', settingsForm).map(function() {
+            newSettings[this.name] = this.checked;
+        })
+
+        console.log(newSettings);
+    })
 })

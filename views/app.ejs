@@ -16,7 +16,7 @@
             </button>
         </div>
         <div class="px-2 py-1 bg-white bg-opacity-10  rounded-md relative active:top-0.5">
-            <button class="text-sm hover:brightness-105">
+            <button class="settings-btn text-sm hover:brightness-105">
                 <i class="fa-solid fa-gear text-md"></i>
                 <span class="hidden md:inline-block">Setting</span></button>
         </div>
@@ -145,5 +145,6 @@
     <% if (isAuthenticated) { %>
         <%- include('./users/user_profile', { user }) %>
     <% } %>
+    <%- include('./users/user_settings', { settings: JSON.parse(user.settings) }) %>
 
 </main>

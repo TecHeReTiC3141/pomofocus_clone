@@ -3,9 +3,10 @@
     * TODO: search for better font
     * TODO: add dark mode
     * TODO: implement adding task using cookies
-    * TODO: add settings (time for pomos and breaks, dark mode switch);
     * TODO: add long breaks
     * TODO: think about adding toast notifications
+    * TODO: save all done tasks in doneTask Table (start and finish time, task name),
+    *  then use it for statistics
 */
 
 function processForm(form) {
@@ -151,17 +152,18 @@ $(document).ready(() => {
             $('.time-left-bar').width(timeLeftBarWidth);
         } else if (currentTime === 0) {
             if (currentMode === 'Pomodoro') {
-                currentMode = 'Short Break';
+                currentMode = (+$('.total-pomos-done').text() + 1) % userSettings.longBreakInterval === 0
+                    ? 'Long Break' : 'Short Break';
                 const currentTask = $('.task.active');
                 $.get(`/task_done/${currentTask.data('id')}`, {}, data => {
                     const {pomosDone, pomosNeed} = data;
                     $('.task-pomos-need', currentTask).text(pomosNeed);
                     $('.task-pomos-done', currentTask).text(pomosDone);
-
                     getTotalPomos();
+                    console.log( +$('.total-pomos-done').text() )
                 });
                 if (notificationsAllowed && document.visibilityState === 'hidden') {
-                    notification = new Notification('Time to take a short break!')
+                    notification = new Notification(`Time to take a ${currentMode.toLowerCase()}!`)
                     notification.onclick = function() {
                         window.focus();
                     }

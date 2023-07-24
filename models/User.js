@@ -33,7 +33,7 @@ const User = connection.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: JSON.stringify(defaultUserSettings),
-    }
+    },
 });
 
 module.exports = { User, defaultUserSettings };

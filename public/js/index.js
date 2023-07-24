@@ -122,7 +122,8 @@ $(document).ready(() => {
 
     // setting current state
     let currentMode = $('.modes button.active').text(),
-        currentTime = timeModes[currentMode];
+        currentTime = timeModes[currentMode],
+        lastStart = Date.now();
     let taskActive = false;
     const timeLeft = $('.time-left');
 
@@ -160,6 +161,19 @@ $(document).ready(() => {
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
         $(this).text(taskActive ? 'Pause' : 'Start');
+        if (currentMode === 'Pomodoro') {
+            if (taskActive) lastStart = Date.now();
+            else {
+                console.log(typeof(lastStart))
+                $.post('/save_task', {
+                    name: $('.current-task-name').text(),
+                    startTime: lastStart,
+                    finishTime: Date.now(),
+                }, () => {
+
+                })
+            }
+        }
         toggleDarkMode();
     })
 
@@ -192,6 +206,11 @@ $(document).ready(() => {
                         window.focus();
                     }
                 }
+                $.post('/save_task', {
+                    name: $('.current-task-name').text(),
+                    startTime: lastStart,
+                    finishTime: Date.now(),
+                }, () => {});
 
             } else {
                 currentMode = 'Pomodoro';

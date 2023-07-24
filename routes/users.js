@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 
 const {User, defaultUserSettings} = require('../models/User');
+const DoneTask = require('../models/DoneTask');
 
 const passport = require('passport');
 const initializePassport = require('../utils/initializePassport');

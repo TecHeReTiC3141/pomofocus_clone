@@ -1,9 +1,7 @@
 /*
     *
     * TODO: search for better font
-    * TODO: add dark mode
     * TODO: implement adding task using cookies
-    * TODO: add long breaks
     * TODO: think about adding toast notifications
     * TODO: save all done tasks in doneTask Table (start and finish time, task name),
     *  then use it for statistics
@@ -133,7 +131,8 @@ $(document).ready(() => {
     setUser();
 
     function toggleDarkMode() {
-        if (!userSettings.darkMode) return;
+        console.log(userSettings);
+        if (userSettings.darkMode === 'false') return;
         if (taskActive) {
             $('body')
                 .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
@@ -381,10 +380,6 @@ $(document).ready(() => {
     $('.toggle-tasks-menu').on('click', function (ev) {
         ev.stopPropagation();
         tasksMenu.toggleClass('hidden');
-    })
-
-    tasksMenu.on('click', function (ev) {
-        ev.stopPropagation();
     })
 
     $(document).on('click', function () {

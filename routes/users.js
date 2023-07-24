@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
-const { User, defaultUserSettings } = require('../models/User');
+const {User, defaultUserSettings} = require('../models/User');
 
 const passport = require('passport');
 const initializePassport = require('../utils/initializePassport');
@@ -21,7 +21,7 @@ const initializePassport = require('../utils/initializePassport');
     )
 })();
 
-const { checkAuthenticated, checkNotAuthenticated } = require('../utils/middleware');
+const {checkAuthenticated, checkNotAuthenticated} = require('../utils/middleware');
 
 router.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('users/login.ejs');
@@ -50,7 +50,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-router.delete('/logout',  checkAuthenticated, (req, res) => {
+router.delete('/logout', checkAuthenticated, (req, res) => {
     req.logOut(err => {
         if (err) {
             console.log(err);
@@ -59,7 +59,7 @@ router.delete('/logout',  checkAuthenticated, (req, res) => {
     })
 })
 
-router.delete('/delete',  checkAuthenticated, async (req, res) => {
+router.delete('/delete', checkAuthenticated, async (req, res) => {
     try {
         await User.destroy({
             where: {
@@ -102,6 +102,42 @@ router.post('/update/:id', async (req, res) => {
         console.log(`Error while updating user: ${err.message}`);
         res.redirect('/');
     }
+});
+
+router.get('/get_user_settings', async (req, res) => {
+    if (!req.isAuthenticated) {
+        return res.send(defaultUserSettings)
+    }
+    try {
+        const currentUser = await User.findOne({
+            where: {
+                id: req.user.id,
+            }
+        });
+        let settings = JSON.parse(currentUser.settings), changed = false;
+        console.log(settings);
+        for (let field in defaultUserSettings) {
+            if (!(field in settings)) {
+                settings = {
+                    ...settings,
+                    field: defaultUserSettings[field],
+                };
+                changed = true;
+            }
+        }
+        if (changed) {
+            await currentUser.update({
+                settings,
+            });
+            await currentUser.save();
+        }
+        console.log(settings);
+        res.send(settings);
+    } catch (err) {
+        console.log(`Error while getting user settings: ${err.message}`);
+        res.redirect('/');
+    }
+
 })
 
 module.exports = router;

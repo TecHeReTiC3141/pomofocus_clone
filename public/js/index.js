@@ -60,6 +60,25 @@ $(document).ready(() => {
         console.log(notificationsAllowed);
     })()
 
+    let userSettings = {};
+    function setUser() {
+        $.get('/users/get_user_settings', {}, data => {
+            userSettings = data;
+            timeModes['Pomodoro'].time = userSettings.time.pomoTime;
+            timeModes['Short Break'].time = userSettings.time.shortBreakTime;
+            timeModes['Long Break'].time = userSettings.time.longBreakTime;
+            setFinishTime();
+
+            modesBtns.each(function () {
+                $(this).on('click', function () {
+                    currentMode = $(this).text()
+                    setState();
+                })
+            })
+            setState();
+        })
+    }
+
     function setState() {
         modesBtns.each(function () {
             $(this).removeClass('active');
@@ -89,17 +108,11 @@ $(document).ready(() => {
         currentTime = timeModes[currentMode];
     let taskActive = false;
     const timeLeft = $('.time-left');
-    setFinishTime();
 
+    const modesBtns = $('.modes button');
 
-    const modesBtns = $('.modes button')
-    modesBtns.each(function () {
-        $(this).on('click', function () {
-            currentMode = $(this).text()
-            setState();
-        })
-    })
-    setState();
+    setUser();
+
     $('.toggle-task').on('click', function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
@@ -226,7 +239,7 @@ $(document).ready(() => {
         })
 
         document.addEventListener('click', function (ev) {
-            if (!updateForm.hasClass('hidden')) {
+            if (!updateForm.hasClass('hidden') && !task.hasClass('hidden')) {
                 const isCancelled = confirm('The change will be lost. Are you sure you want to close it?');
                 if (isCancelled) {
                     $(task).removeClass('updated');
@@ -258,7 +271,7 @@ $(document).ready(() => {
             $.post('/update?_method=PUT', {
                 id: task.data('id'),
                 name: $('#name', updateForm).val(),
-                pomosNeed: +$('#pomosNeed', updateForm).val(),
+                pomosNeed: $('#pomosNeed', updateForm).val(),
                 description: $('#description', updateForm).val(),
             }, data => {
                 console.log(data);
@@ -308,6 +321,7 @@ $(document).ready(() => {
         }, data => {
             const newTask = $('.blank-task .task').clone();
             updateTask(newTask, data);
+            initTask(newTask);
             $('.tasks').append(newTask);
             getTotalPomos();
         })

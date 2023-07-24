@@ -1,3 +1,13 @@
+/*
+    *
+    * TODO: search for better font
+    * TODO: add dark mode
+    * TODO: implement adding task using cookies
+    * TODO: add settings (time for pomos and breaks, dark mode switch);
+    * TODO: add long breaks
+    * TODO: think about adding toast notifications
+*/
+
 function setLeftTime(timeLeft) {
     let le = Math.floor(timeLeft / 60).toString(), ri = (timeLeft % 60).toString();
     if (le.length === 1) {
@@ -30,15 +40,15 @@ function setFinishTime() {
 const timeModes = {
     'Pomodoro': {
         time: 15,
-        color: 'bg-pomodoro',
+        color: 'pomodoro',
     },
     'Short Break': {
         time: 3,
-        color: 'bg-shortBreak',
+        color: 'shortBreak',
     },
     'Long Break': {
         time: 6,
-        color: 'bg-longBreak',
+        color: 'longBreak',
     },
 }
 
@@ -61,9 +71,14 @@ $(document).ready(() => {
         taskActive = false;
 
         timeLeft.text(setLeftTime(currentTime));
+
         $('body')
             .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
-            .addClass(timeModes[currentMode].color);
+            .addClass('bg-' + timeModes[currentMode].color);
+
+        $('.toggle-task')
+            .removeClass('text-pomodoro text-shortBreak text-longBreak')
+            .addClass('text-' + timeModes[currentMode].color);
 
         $('.toggle-task').text('Start');
         $('.forward-btn').addClass('hidden');
@@ -305,16 +320,9 @@ $(document).ready(() => {
 
     $('#description', addTaskForm).prop('selectionEnd', 1);
 
-    /*
-    *
-    * TODO: search for better font
-    * TODO: add dark mode
-    * TODO: implement adding task using cookies
-    * TODO: add notifications when mode is changed
-    * TODO: add settings (time for pomos and breaks, dark mode switch);
-    * TODO: add long breaks
-    * */
-    // Tasks menu
+
+    // -------TASKS MENU------------
+
 
     const tasksMenu =  $('.tasks-menu');
 
@@ -356,7 +364,8 @@ $(document).ready(() => {
             }
         });
     })
-    // user menu
+    // -------USER MENU------------
+
 
     const userMenu = $('.user-menu');
 
@@ -390,6 +399,8 @@ $(document).ready(() => {
         userProfile.removeClass('hidden');
         userMenu.addClass('hidden');
     })
+
+    // -------USER PROFILE PAGE------------
 
     const userProfile = $('.user-profile');
 

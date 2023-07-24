@@ -1227,9 +1227,19 @@ video {
   color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 
+.text-longBreak {
+  --tw-text-opacity: 1;
+  color: rgb(57 112 151 / var(--tw-text-opacity));
+}
+
 .text-pomodoro {
   --tw-text-opacity: 1;
   color: rgb(186 73 73 / var(--tw-text-opacity));
+}
+
+.text-shortBreak {
+  --tw-text-opacity: 1;
+  color: rgb(56 133 138 / var(--tw-text-opacity));
 }
 
 .text-white {
@@ -1310,6 +1320,14 @@ video {
 
 .active\:top-0\.5:active {
   top: 0.125rem;
+}
+
+.active\:top-2:active {
+  top: 0.5rem;
+}
+
+.active\:border-b-0:active {
+  border-bottom-width: 0px;
 }
 
 .group:hover .group-hover\:block {

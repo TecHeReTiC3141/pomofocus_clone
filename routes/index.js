@@ -98,13 +98,36 @@ router.post('/save_task', async (req, res) => {
     if (!req.isAuthenticated()) {
         res.send('User is not authenticated');
     }
+
+    const curTaskStart = +req.body.startTime, curTaskFinish = +req.body.finishTime;
     try {
-        console.log(req.body);
+        const lastTask = await DoneTask.findOne({
+            where: {
+                UserId: req.user.id,
+            },
+            order: [
+                ['finishTime', 'DESC'],
+            ],
+            limit: 1,
+        })
+        if (lastTask && lastTask.name === req.body.name ) {
+            const lastTaskFinish = lastTask.finishTime.getTime();
+            if (curTaskStart - lastTaskFinish <= 5 * 60 * 1000) {
+                await lastTask.update({
+                    finishTime: new Date(curTaskFinish),
+                })
+                await lastTask.save();
+                return res.send({ success: true });
+            }
+        }
+
+        console.log(lastTask.toJSON());
+
         await DoneTask.create({
             UserId: req.user.id,
             name: req.body.name,
-            startTime: new Date(+req.body.startTime),
-            finishTime: new Date(+req.body.finishTime),
+            startTime: new Date(curTaskStart),
+            finishTime: new Date(curTaskFinish),
         })
         res.send({ success: true });
     } catch (err) {

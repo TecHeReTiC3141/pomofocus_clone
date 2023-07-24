@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const connection = require('../utils/getDBInstance');
 
-const User = require('./User');
+const { User } = require('./User');
 
 const Task = connection.define('Task', {
     name: {

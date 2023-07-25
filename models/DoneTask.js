@@ -7,6 +7,9 @@ const DoneTask = connection.define('DoneTask', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        set(value) {
+            this.setDataValue('name', value.trim());
+        }
     },
     startTime: {
         type: DataTypes.DATE,
@@ -16,6 +19,12 @@ const DoneTask = connection.define('DoneTask', {
         type: DataTypes.DATE,
         allowNull: false,
     },
+    duration: {
+        type: DataTypes.VIRTUAL,
+        get() {
+            return Math.round((this.finishTime - this.startTime) / (60 * 1000));
+        }
+    }
 });
 
 User.hasMany(DoneTask, {

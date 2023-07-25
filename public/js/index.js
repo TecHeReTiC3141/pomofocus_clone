@@ -568,6 +568,31 @@ $(document).ready(() => {
         statsPage.addClass('hidden');
     });
 
+    function formatTaskDate(startDate, finishDate) {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        let startMins = startDate.getMinutes().toString(),
+            startHours = startDate.getHours().toString();
+        if (startMins.length === 1) {
+            startMins = '0' + startMins;
+        }
+        if (startHours.length === 1) {
+            startHours = '0' + startHours;
+        }
+
+        let finishMins = finishDate.getMinutes().toString(),
+            finishHours = finishDate.getHours().toString();
+        if (finishMins.length === 1) {
+            finishMins = '0' + finishMins;
+        }
+        if (finishHours.length === 1) {
+            finishHours = '0' + finishHours;
+        }
+        return `${startDate.getDate()}-${monthNames[startDate.getMonth()].slice(0, 3)}-${startDate.getFullYear()} 
+                ${startHours}:${startMins} ~ ${finishHours}:${finishMins}`;
+    }
+
     $('.report-nav > button').on('click', function() {
         $('.report-nav > button').each(function() {
             $(this).removeClass('active');
@@ -577,6 +602,27 @@ $(document).ready(() => {
         $(this).addClass('active');
         const section = $(this).prop('class').split(' ')[0];
         $(`.user-report > .${section}`).removeClass('hidden');
+
+        if ($(this).hasClass('detail')) {
+            $('.done-task tr.task').remove();
+            $.get('/users/get_done_tasks', {}, data => {
+                if (!data.success) return;
+                const tasks = data.data;
+                console.log(tasks);
+                for (let task of tasks) {
+                    const startDate = new Date(task.startTime),
+                          finishDate = new Date(task.finishTime);
+                    $('.done-task').append($(`
+                        <tr class="border-b">
+                            <td>${formatTaskDate(startDate, finishDate)}</td>
+                            <td>${task.name.trim()}</td>
+                            <td>${task.duration}</td>
+                        </tr>
+                    `))
+                }
+            });
+
+        }
 
     })
 

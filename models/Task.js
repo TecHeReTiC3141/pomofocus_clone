@@ -7,6 +7,9 @@ const Task = connection.define('Task', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
+        set(value) {
+            this.setDataValue('name', value.trim());
+        }
     },
 
     done: {

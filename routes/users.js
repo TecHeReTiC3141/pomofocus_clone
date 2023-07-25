@@ -131,6 +131,32 @@ router.post('/update_user_settings', async (req, res) => {
 
 })
 
+router.get('/get_done_tasks', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.send({
+            success: false,
+        })
+    }
+    try {
+        const doneTasks = await DoneTask.findAll({
+            where: {
+                UserId: req.user.id,
+            },
+            order: [
+                ['finishTime', 'DESC'],
+            ],
+            attributes: ['name', 'startTime', 'finishTime', 'duration'],
+        })
+        res.send({
+            success: true,
+            data: doneTasks,
+        })
+    } catch (err) {
+        console.log(`Error while getting user done tasks: ${err.message}`);
+        res.send({ success: false });
+    }
+})
+
 
 
 module.exports = router;

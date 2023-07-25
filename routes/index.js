@@ -50,6 +50,8 @@ router.get('/', async (req, res) => {
             });
             await currentUser.save();
         }
+
+
     } else {
         tasks = req.cookies.tasks || [];
     }
@@ -120,8 +122,6 @@ router.post('/save_task', async (req, res) => {
                 return res.send({ success: true });
             }
         }
-
-        console.log(lastTask.toJSON());
 
         await DoneTask.create({
             UserId: req.user.id,

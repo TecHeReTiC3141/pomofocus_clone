@@ -613,10 +613,10 @@ $(document).ready(() => {
                     const startDate = new Date(task.startTime),
                           finishDate = new Date(task.finishTime);
                     $('.done-task').append($(`
-                        <tr class="border-b">
-                            <td>${formatTaskDate(startDate, finishDate)}</td>
-                            <td>${task.name.trim()}</td>
-                            <td>${task.duration}</td>
+                        <tr class="task border-b border-gray-100">
+                            <td class="text-sm">${formatTaskDate(startDate, finishDate)}</td>
+                            <td class="font-bold text-gray-800 py-3">${task.name.trim()}</td>
+                            <td class="text-gray-600 py-3">${task.duration}</td>
                         </tr>
                     `))
                 }

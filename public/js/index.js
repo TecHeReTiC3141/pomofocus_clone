@@ -518,7 +518,7 @@ $(document).ready(() => {
     $('.close-settings', settingsForm).on('click', function(ev) {
         ev.preventDefault();
         settingsPage.addClass('hidden');
-    })
+    });
 
     $('.toggle', settingsForm).each(function() {
         const checkbox = $(`#${$(this).data('field')}`, settingsForm);
@@ -531,7 +531,7 @@ $(document).ready(() => {
             $(this).toggleClass('active');
             checkbox.prop('checked', $(this).hasClass('active'));
         })
-    })
+    });
 
     $('#submit-btn', settingsForm).on('click', function(ev) {
         ev.preventDefault();
@@ -544,5 +544,41 @@ $(document).ready(() => {
         } );
         settingsPage.addClass('hidden');
         console.log(newSettings);
+    });
+
+    // ------- USER STATS ------------
+
+    const statsPage = $('.statistics-page'), userStats = $('.user-report');
+
+    $('.report-btn').on('click', function(ev) {
+        ev.stopPropagation();
+        statsPage.removeClass('hidden');
+    });
+
+    $(document).on('click', function() {
+        statsPage.addClass('hidden');
+    });
+
+    userStats.on('click', function(ev) {
+        ev.stopPropagation();
     })
+
+    $('.close-report', userStats).on('click', function(ev) {
+        ev.preventDefault();
+        statsPage.addClass('hidden');
+    });
+
+    $('.report-nav > button').on('click', function() {
+        $('.report-nav > button').each(function() {
+            $(this).removeClass('active');
+            const section = $(this).prop('class').split(' ')[0];
+            $(`.user-report > .${section}`).addClass('hidden');
+        })
+        $(this).addClass('active');
+        const section = $(this).prop('class').split(' ')[0];
+        $(`.user-report > .${section}`).removeClass('hidden');
+
+    })
+
+
 })

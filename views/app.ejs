@@ -10,7 +10,7 @@
 
     <div class="flex gap-3">
         <div class="px-2 py-1 bg-white bg-opacity-10  rounded-md relative active:top-0.5">
-            <button class="text-sm hover:brightness-105">
+            <button class="report-btn text-sm hover:brightness-105">
                 <i class="fa-solid fa-chart-column text-md"></i>
                 <span class="hidden md:inline-block">Report</span>
             </button>
@@ -145,6 +145,7 @@
     <% if (isAuthenticated) { %>
         <%- include('./users/user_profile', { user }) %>
         <%- include('./users/user_settings', { settings: JSON.parse(user.settings) }) %>
+        <%- include('./users/user_stats', {}) %>
     <% } %>
 
 </main>

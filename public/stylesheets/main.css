@@ -73,4 +73,8 @@
     body.dark .toggle-task {
         @apply bg-transparent border-black text-white ;
     }
+
+    .report-nav > button.active {
+        @apply bg-red-400 text-white border-red-400;
+    }
 }

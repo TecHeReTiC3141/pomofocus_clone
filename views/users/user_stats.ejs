@@ -1,0 +1,86 @@
+<div class="statistics-page bg-opacity-25 bg-black fixed w-full h-full top-0 left-0
+flex justify-center items-start hidden">
+    <div class="user-report bg-white rounded-md relative
+          w-[38rem] mt-12 text-gray-400 text-start py-12 px-6">
+        <button class="close-report absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="report-nav rounded-xl w-full border-red-400 border-2 flex justify-between mb-8">
+            <button class="summary active rounded-l-md border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Summary</button>
+            <button class="detail border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Detail</button>
+            <button class="ranking border-transparent border-r-2 rounded-r-md py-2 text-center grow text-red-400 font-bold">Ranking</button>
+        </div>
+
+        <div class="summary">
+            <div class="flex items-center gap-4">
+                <h2 class="font-bold text-black text-xl">Activity Summary</h2>
+                <hr class="h-[1px] grow bg-gray-200 border-0">
+            </div>
+
+            <div class="flex gap-4 my-6">
+
+                <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                    <i class="fa-regular fa-clock text-2xl absolute top-2 left-4"></i>
+                    <h3 class="text-xl">--</h3>
+                    <h4 class="text-sm">hours focused</h4>
+                </div>
+                <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                    <i class="fa-regular fa-calendar-check text-2xl absolute top-2 left-4"></i>
+                    <h3 class="text-xl">--</h3>
+                    <h4 class="text-sm">days accessed</h4>
+                </div>
+                <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                    <i class="fa-solid fa-fire-flame-curved fa-beat-fade text-2xl absolute top-2 left-4"></i>
+                    <h3 class="text-xl">--</h3>
+                    <h4 class="text-sm">day streak</h4>
+                </div>
+
+            </div>
+
+            <div class="flex items-center gap-4">
+                <h2 class="font-bold text-black text-xl">Focus Hours</h2>
+                <hr class="h-[1px] grow bg-gray-200 border-0">
+            </div>
+        </div>
+
+        <div class="detail hidden">
+            <div class="flex items-center gap-4">
+                <h2 class="font-bold text-black text-xl">Activity Summary</h2>
+                <hr class="h-[1px] grow bg-gray-200 border-0">
+            </div>
+
+            <table class="table-auto border-collapse w-full">
+                <tr class="border-b text-gray-400">
+                    <th  class="text-start px-4 py-3">Date</th>
+                    <th class="text-start px-4 py-3">Task</th>
+                    <th class="text-start px-4 py-3">Minutes</th>
+                </tr>
+
+                <tr class="border-b py-4 py-3">
+                    <td class="">
+                        24-Jul-2023
+                        15:02 ~ 22:47
+                    </td>
+                    <td class="font-bold text-gray-800 text-center py-3">
+                        Pomofocus
+                    </td>
+                    <td class="text-center py-3">
+                        300
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="ranking hidden">
+            <div class="flex items-center gap-4">
+                <h2 class="font-bold text-black text-xl">Focus Time This Week</h2>
+                <hr class="h-[1px] grow bg-gray-200 border-0">
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>

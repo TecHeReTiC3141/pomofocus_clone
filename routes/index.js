@@ -44,6 +44,7 @@ router.get('/', async (req, res) => {
                 changed = true;
             }
         }
+
         if (changed) {
             await currentUser.update({
                 settings: JSON.stringify(settings),
@@ -51,12 +52,12 @@ router.get('/', async (req, res) => {
             await currentUser.save();
         }
 
-
     } else {
         tasks = req.cookies.tasks || [];
     }
 
-    res.render('app.ejs', {tasks, totalPomosDone, totalPomosNeed});
+    res.render('app.ejs', {tasks, totalPomosDone,
+        totalPomosNeed});
 });
 
 router.post('/new', async (req, res) => {
@@ -103,6 +104,7 @@ router.post('/save_task', async (req, res) => {
 
     const curTaskStart = +req.body.startTime, curTaskFinish = +req.body.finishTime;
     try {
+        const curUser = await User.findByPk(req.user.id);
         const lastTask = await DoneTask.findOne({
             where: {
                 UserId: req.user.id,
@@ -115,20 +117,27 @@ router.post('/save_task', async (req, res) => {
         if (lastTask && lastTask.name === req.body.name ) {
             const lastTaskFinish = lastTask.finishTime.getTime();
             if (curTaskStart - lastTaskFinish <= 5 * 60 * 1000) {
+                const prevDur = lastTask.duration;
                 await lastTask.update({
                     finishTime: new Date(curTaskFinish),
                 })
+
+                await curUser.increment('totalHoursFocused',
+                    { by: lastTask.duration - prevDur })
                 await lastTask.save();
                 return res.send({ success: true });
             }
         }
 
-        await DoneTask.create({
+        const doneTask = await DoneTask.create({
             UserId: req.user.id,
             name: req.body.name,
             startTime: new Date(curTaskStart),
             finishTime: new Date(curTaskFinish),
-        })
+        });
+
+        await curUser.increment('totalHoursFocused',
+            { by: doneTask.duration })
         res.send({ success: true });
     } catch (err) {
         console.log(`Error while saving task: ${err.message}`);

@@ -13,12 +13,12 @@ flex flex-col justify-center items-center">
           class="w-full bg-white text-black px-4 py-2 rounded-md mt-4">
         <label for="email"
                class="text-gray-400 uppercase text-xs">Email </label>
-        <input type="email" id="email" name="email" required placeholder="example@mial.com"
+        <input type="email" id="email" name="email" required placeholder="example@mail.com" value="<%= body.email %>"
             class="w-full bg-gray-300 indent-1 p-1  focus:outline-none mb-4 rounded">
 
         <label for="password"
                class="text-gray-400 uppercase text-xs">Password </label>
-        <input type="password" id="password" required name="password"
+        <input type="password" id="password" required name="password" value="<%= body.password %>"
             class="w-full bg-gray-300 indent-1 p-1 focus:outline-none rounded mb-4">
 
         <button class="w-full text-center bg-gray-600 hover:bg-black

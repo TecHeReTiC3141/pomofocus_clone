@@ -79,7 +79,7 @@ $(document).ready(() => {
         timeModes['Pomodoro'].time = userSettings.pomoTime * 60;
         timeModes['Short Break'].time = userSettings.shortBreakTime * 60;
         timeModes['Long Break'].time = userSettings.longBreakTime * 60;
-        setFinishTime();
+        setState();
     }
 
     function setUser() {
@@ -118,6 +118,8 @@ $(document).ready(() => {
 
         $('.toggle-task').text('Start');
         $('.forward-btn').addClass('hidden');
+
+        getTotalPomos();
     }
 
     // setting current state
@@ -412,14 +414,25 @@ $(document).ready(() => {
         $.post('/delete-finished-tasks?_method=DELETE', {}, data => {
             if (data?.success) {
                 $('.task.done').addClass('hidden');
+                triggerNotification({
+                    message_type: 'info',
+                    message_title: 'Tasks cleaned',
+                    message_body: 'Finished tasks are removed',
+                })
             }
         });
+
     })
 
     $('.clear-all-tasks', tasksMenu).on('click', function() {
         $.post('/delete-all-tasks?_method=DELETE', {}, data => {
             if (data?.success) {
                 $('.task').addClass('hidden');
+                triggerNotification({
+                    message_type: 'info',
+                    message_title: 'Tasks erased',
+                    message_body: 'All tasks are removed',
+                })
             }
         });
     })
@@ -431,6 +444,11 @@ $(document).ready(() => {
                 $('.total-pomos-done').text(0);
                 setFinishTime();
             }
+            triggerNotification({
+                message_type: 'info',
+                message_title: 'Tasks erased',
+                message_body: 'Tasks progress is removed',
+            })
         });
     })
 
@@ -451,8 +469,8 @@ $(document).ready(() => {
     })
 
     $('.logout', userMenu).on('click', function() {
-        $.post('/users/logout?_method=DELETE', {}, () => {
-            location.replace('/users/login');
+        $.post('/users/logout?_method=DELETE', {}, path => {
+            location.replace(path);
         });
 
     })
@@ -543,6 +561,11 @@ $(document).ready(() => {
         $.post('/users/update_user_settings', { settings: newSettings }, data => {
             if (data.success) {
                 updateSettings(newSettings);
+                triggerNotification({
+                    message_type: 'success',
+                    message_title: 'Settings Updated',
+                    message_body: 'Your settings successfully updated',
+                })
             }
         } );
         settingsPage.addClass('hidden');
@@ -624,15 +647,26 @@ $(document).ready(() => {
                     `))
                 }
             });
-
         }
-
     })
-
 
     // ------- TOAST NOTIFICATION ------------
 
     const toastNotification = $('.toast-not'), notificationLifeTime = 5000;
+
+    function triggerNotification({ message_type, message_title, message_body }) {
+        toastNotification.removeClass('success error info').addClass(message_type);
+        $('.title', toastNotification).text(message_title);
+        $('.body', toastNotification).text(message_body);
+        toastNotification.show('slide', {
+            direction: 'right',
+        }, 500);
+        setTimeout(() => {
+            toastNotification.hide('slide', {
+                direction: 'right',
+            }, 500);
+        }, notificationLifeTime);
+    }
 
     if (!toastNotification.hasClass('hidden')) {
         toastNotification.addClass('hidden')
@@ -651,7 +685,8 @@ $(document).ready(() => {
             }, 500);
         }, notificationLifeTime);
 
-
+        // const searchParams = new URLSearchParams(location.href.split('?')[1]);
+        // searchParams.delete('message_type');
     }
 
     $('.close-notification', toastNotification).on('click', function() {

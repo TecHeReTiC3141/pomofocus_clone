@@ -77,7 +77,7 @@
 
     <div class="mb-4">
         <p class="today-pomos-count text-gray-400">#1</p>
-        <h3 class="current-task-name"><%= (tasks && tasks[0].name) || 'Time to focus!' %></h3>
+        <h3 class="current-task-name"><%= (tasks.length && tasks[0].name) || 'Time to focus!' %></h3>
     </div>
 
     <div class="tasks-header flex justify-between items-center w-full relative">
@@ -88,7 +88,7 @@
         </button>
 
         <ul class="tasks-menu menu hidden">
-            <li class="clear-finished-task">
+            <li class="clear-finished-tasks">
                 <i class="fa-regular fa-trash-can"></i>
                 <p>Clear finished tasks</p>
             </li>

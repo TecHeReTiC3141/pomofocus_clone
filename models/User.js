@@ -41,7 +41,6 @@ const User = connection.define('User', {
         defaultValue: 0,
     },
 
-
     totalDaysAccessed: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -77,7 +77,12 @@ router.delete('/logout', checkAuthenticated, (req, res) => {
         if (err) {
             console.log(err);
         }
-        res.redirect('/users/login');
+        const message = querystring.stringify({
+            message_type: 'info',
+            message_title: 'Log out',
+            message_body: `You are logged out now. Don't forget to log in again`
+        })
+        res.send(`/users/login?${message}`);
     })
 })
 

@@ -1,0 +1,14 @@
+<div class="toast-not <%= query.message_type || 'hidden' %> fixed bottom-8 right-4 flex items-center gap-4
+ border-2 rounded-xl p-2">
+    <button class="close-notification absolute right-4 top-1 text-xl">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    <i class="fa-solid fa-circle-<%= query.message_type === 'success' ? 'check' :
+            query.message_type === 'error' ? 'exclamation' : 'info' %> text-4xl"></i>
+    <div>
+        <h2 class="font-bold title"><%= query.message_title || 'No notification'%></h2>
+        <p class="body bg-gray-100 rounded p-2 max-width-[5rem]
+         whitespace-nowrap overflow-x-hidden">
+            <%= query.message_body || 'No notification'%></p>
+    </div>
+</div>

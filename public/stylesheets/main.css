@@ -77,4 +77,16 @@
     .report-nav > button.active {
         @apply bg-red-400 text-white border-red-400;
     }
+
+    .toast-not.success {
+        @apply text-green-600 bg-green-300 border-green-600;
+    }
+
+    .toast-not.error {
+        @apply text-red-600 bg-red-300 border-red-600;
+    }
+
+    .toast-not.info {
+        @apply text-blue-600 bg-blue-300 border-blue-600;
+    }
 }

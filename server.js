@@ -65,6 +65,11 @@ app.use((req, res, next) => {
     next();
 })
 
+app.use((req, res, next) => {
+    res.locals.query = req.query;
+    next();
+})
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

@@ -231,11 +231,14 @@ $(document).ready(() => {
 
     // -----------------TASKS-------------------
     const tasks = document.querySelector('.tasks');
-    let sortable = Sortable.create(tasks,
-        {
-            animation: 150,
-            ghostClass: 'ghost',
-        });
+    if (tasks) {
+        let sortable = Sortable.create(tasks,
+            {
+                animation: 150,
+                ghostClass: 'ghost',
+            });
+    }
+
 
     function updateTask(task, newData) {
         task.data('name', newData.name);
@@ -449,7 +452,7 @@ $(document).ready(() => {
 
     $('.logout', userMenu).on('click', function() {
         $.post('/users/logout?_method=DELETE', {}, () => {
-            location.reload();
+            location.replace('/users/login');
         });
 
     })
@@ -546,7 +549,7 @@ $(document).ready(() => {
         console.log(newSettings);
     });
 
-    // ------- USER STATS ------------
+    // ------- USER REPORT ------------
 
     const statsPage = $('.statistics-page'), userStats = $('.user-report');
 
@@ -627,4 +630,34 @@ $(document).ready(() => {
     })
 
 
+    // ------- TOAST NOTIFICATION ------------
+
+    const toastNotification = $('.toast-not'), notificationLifeTime = 5000;
+
+    if (!toastNotification.hasClass('hidden')) {
+        toastNotification.addClass('hidden')
+        toastNotification.hide('slide', {
+            direction: 'right',
+        }, 500, () => {
+            toastNotification.removeClass('hidden')
+            toastNotification.show('slide', {
+                direction: 'right',
+            }, 500);
+        });
+
+        setTimeout(() => {
+            toastNotification.hide('slide', {
+                direction: 'right',
+            }, 500);
+        }, notificationLifeTime);
+
+
+    }
+
+    $('.close-notification', toastNotification).on('click', function() {
+        console.log('not closed')
+        toastNotification.hide('slide', {
+            direction: 'right',
+        }, 500);
+    });
 })

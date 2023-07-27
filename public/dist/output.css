@@ -1026,6 +1026,14 @@ body.dark .toggle-task {
   width: 100vw;
 }
 
+.min-w-\[32rem\] {
+  min-width: 32rem;
+}
+
+.max-w-full {
+  max-width: 100%;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -1436,8 +1444,8 @@ body.dark .toggle-task {
   line-height: 2.5rem;
 }
 
-.text-\[7\.5rem\] {
-  font-size: 7.5rem;
+.text-\[6\.5rem\] {
+  font-size: 6.5rem;
 }
 
 .text-lg {
@@ -1635,6 +1643,12 @@ body.dark .toggle-task {
 .group:hover .group-hover\:brightness-90 {
   --tw-brightness: brightness(.9);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+@media (min-width: 640px) {
+  .sm\:text-\[7\.5rem\] {
+    font-size: 7.5rem;
+  }
 }
 
 @media (min-width: 768px) {

@@ -5,6 +5,12 @@
     * TODO: think about adding toast notifications
     * TODO: save all done tasks in doneTask Table (start and finish time, task name),
     *  then use it for statistics
+    *  Tasks for TOMORROW:
+    * TODO: implement task pagination;
+    * TODO: add left time to page title;
+    * TODO: add top users + tag tasks made last week;
+    * TODO: start implementing responsive layout;
+    *
 */
 
 function processForm(form) {

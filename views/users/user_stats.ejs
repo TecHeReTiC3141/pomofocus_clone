@@ -27,17 +27,17 @@ flex justify-center items-start hidden">
 
                 <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
                     <i class="fa-regular fa-clock text-2xl absolute top-2 left-4"></i>
-                    <h3 class="text-xl"><%= isAuthenticated ? (user.totalHoursFocused / 60).toFixed(1) : '--' %></h3>
+                    <h3 class="user-hours-focused -text-xl"><%= isAuthenticated ? (user.totalHoursFocused / 60).toFixed(1) : '--' %></h3>
                     <h4 class="text-sm">hours focused</h4>
                 </div>
                 <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
                     <i class="fa-regular fa-calendar-check text-2xl absolute top-2 left-4"></i>
-                    <h3 class="text-xl"><%= isAuthenticated ? user.totalDaysAccessed : '--' %></h3>
+                    <h3 class="user-days-accessed -text-xl"><%= isAuthenticated ? user.totalDaysAccessed : '--' %></h3>
                     <h4 class="text-sm">days accessed</h4>
                 </div>
                 <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
                     <i class="fa-solid fa-fire-flame-curved fa-beat-fade text-2xl absolute top-2 left-4"></i>
-                    <h3 class="text-xl"><%= isAuthenticated ? user.dayStreak : '--' %></h3>
+                    <h3 class="user-day-streak text-xl"><%= isAuthenticated ? user.dayStreak : '--' %></h3>
                     <h4 class="text-sm">day streak</h4>
                 </div>
             </div>

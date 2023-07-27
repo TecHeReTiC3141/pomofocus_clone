@@ -72,7 +72,6 @@ router.post('/new', async (req, res) => {
     } catch (err) {
         console.log(`Error while adding {err.message}`);
     }
-
 })
 
 router.get('/task_done/:id', async (req, res) => {
@@ -175,7 +174,12 @@ router.post('/save_task', async (req, res) => {
 
         await curUser.increment('totalHoursFocused',
             { by: doneTask.duration })
-        res.send({ success: true });
+        res.send({
+            success: true,
+            totalHoursFocused: curUser.totalHoursFocused,
+            totalDaysAccessed: curUser.totalDaysAccessed,
+            dayStreak: curUser.dayStreak,
+        });
     } catch (err) {
         console.log(`Error while saving task: ${err.message}`);
         res.sendStatus(503);

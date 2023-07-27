@@ -7,7 +7,7 @@
     *  then use it for statistics
     *  Tasks for TOMORROW:
     * TODO: implement task pagination;
-    * TODO: add top users + tag tasks made last week;
+    * TODO: add top users;
     * TODO: start implementing responsive layout;
     *
 */
@@ -179,8 +179,12 @@ $(document).ready(() => {
                     name: $('.current-task-name').text(),
                     startTime: lastStart,
                     finishTime: Date.now(),
-                }, () => {
-
+                }, data => {
+                    if (data.success) {
+                        $('.user-hours-focused').text((data.totalHoursFocused / 60).toFixed(1) )
+                        $('.user-days-accessed').text(data.totalDaysAccessed);
+                        $('.user-day-streak').text(data.dayStreak);
+                    }
                 })
             }
         }

@@ -128,8 +128,6 @@ router.post('/save_task', async (req, res) => {
             }
         }
 
-
-
         const doneTasksToday = await DoneTask.findAll({
             where: {
                 UserId: req.user.id,

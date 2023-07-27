@@ -50,8 +50,10 @@ flex justify-center items-start hidden">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> Theme</h2>
             <div class="flex justify-between items-center my-8">
                 <label for="" class="text-gray-600 font-bold block">Dark Mode</label>
-                <input type="checkbox" <%= settings.darkMode === 'true' && 'checked'%> name="darkMode" id="darkMode" class="hidden">
-                <button class="toggle block" data-field="darkMode"></button>
+                <input type="checkbox" <%= !(settings.darkMode === 'false' || !settings.darkMode) &&
+                    'checked'%> name="darkMode" id="darkMode" class="hidden">
+                <button class="toggle <%= !(settings.darkMode === 'false' || !settings.darkMode) &&
+                    'active'%> block" data-field="darkMode"></button>
             </div>
 
         </div>

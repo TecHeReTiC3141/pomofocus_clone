@@ -181,7 +181,7 @@ $(document).ready(() => {
                     finishTime: Date.now(),
                 }, data => {
                     if (data.success) {
-                        $('.user-hours-focused').text((data.totalHoursFocused / 60).toFixed(1) )
+                        $('.user-hours-focused').text((+data.totalHoursFocused / 60).toFixed(1) )
                         $('.user-days-accessed').text(data.totalDaysAccessed);
                         $('.user-day-streak').text(data.dayStreak);
                     }
@@ -263,6 +263,12 @@ $(document).ready(() => {
         $('.task-name', task).text(newData.name);
         $('.task-pomos-need', task).text(newData.pomosNeed);
         $('.task-description', task).text(newData.description);
+        if (newData.description) {
+            $('.task-description', task).removeClass('hidden');
+        } else {
+            $('.task-description', task).addClass('hidden');
+
+        }
     }
 
     function getTotalPomos() {

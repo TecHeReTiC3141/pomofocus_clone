@@ -129,6 +129,43 @@ router.post('/save_task', async (req, res) => {
             }
         }
 
+
+
+        const doneTasksToday = await DoneTask.findAll({
+            where: {
+                UserId: req.user.id,
+            }
+        });
+        let noTasksDoneToday = true;
+        for (let task of doneTasksToday) {
+            if (task.doneToday) {
+                noTasksDoneToday = false;
+                break;
+            }
+        }
+        if (noTasksDoneToday) {
+            console.log('No tasks today ')
+            await curUser.increment('totalDaysAccessed',
+                { by: 1 });
+            let anyTasksDoneYesterday = false;
+
+            for (let task of doneTasksToday) {
+
+                if (task.doneYesterday) {
+                    await curUser.increment('dayStreak',
+                        { by: 1 });
+                    anyTasksDoneYesterday = true;
+                    console.log('New day in day streak')
+                    break;
+                }
+            }
+
+            if (!anyTasksDoneYesterday) {
+                await curUser.update({ dayStreak: 1 });
+                await curUser.save();
+            }
+        }
+
         const doneTask = await DoneTask.create({
             UserId: req.user.id,
             name: req.body.name,

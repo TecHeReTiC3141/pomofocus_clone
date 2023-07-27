@@ -145,7 +145,7 @@ router.post('/update/:id', async (req, res) => {
 });
 
 router.get('/get_user_settings', (req, res) => {
-    if (!req.isAuthenticated) {
+    if (!req.isAuthenticated()) {
         return res.send(defaultUserSettings)
     }
     res.send(JSON.parse(req.user.settings));

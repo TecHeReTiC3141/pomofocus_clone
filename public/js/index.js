@@ -7,7 +7,6 @@
     *  then use it for statistics
     *  Tasks for TOMORROW:
     * TODO: implement task pagination;
-    * TODO: add left time to page title;
     * TODO: add top users + tag tasks made last week;
     * TODO: start implementing responsive layout;
     *
@@ -126,6 +125,9 @@ $(document).ready(() => {
         $('.forward-btn').addClass('hidden');
 
         getTotalPomos();
+
+        document.title = `${timeLeft.text()} - ${currentMode === 'Pomodoro' ? 
+            $('.current-task-name').text() : 'Time for a break'}`;
     }
 
     // setting current state
@@ -141,7 +143,7 @@ $(document).ready(() => {
 
     function toggleDarkMode() {
         console.log(userSettings);
-        if (userSettings.darkMode === 'false') return;
+        if (userSettings.darkMode === 'false' || !userSettings.darkMode) return;
         if (taskActive) {
             $('body')
                 .removeClass('bg-pomodoro bg-shortBreak bg-longBreak')
@@ -196,6 +198,10 @@ $(document).ready(() => {
             let timeLeftRatio = (timeModes[currentMode].time - currentTime) / timeModes[currentMode].time
             let timeLeftBarWidth = Math.floor($('.time-left-container').width() * timeLeftRatio);
             $('.time-left-bar').width(timeLeftBarWidth);
+
+            document.title = `${timeLeft.text()} - ${currentMode === 'Pomodoro' ?
+                $('.current-task-name').text() : 'Time for a break'}`;
+
         } else if (currentTime === 0) {
             if (currentMode === 'Pomodoro') {
                 currentMode = (+$('.total-pomos-done').text() + 1) % userSettings.longBreakInterval === 0
@@ -271,11 +277,18 @@ $(document).ready(() => {
     function initTask(task) {
 
         task.on('click', function () {
+            if (taskActive && currentMode === 'Pomodoro') {
+                const confTaskSwitch = confirm('Are you sure to switch the task?');
+                if (!confTaskSwitch) return;
+            }
             $('.task').each(function () {
                 $(this).removeClass('active');
             });
             task.addClass('active');
             $('.current-task-name').text(task.data('name'));
+            if (currentMode === 'Pomodoro') {
+                document.title = `${timeLeft.text()} - ${$('.current-task-name').text()}`;
+            }
         })
 
         // updating and deleting tasks

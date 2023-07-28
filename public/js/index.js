@@ -435,10 +435,6 @@ $(document).ready(() => {
         tasksMenu.toggleClass('hidden');
     })
 
-    $(document).on('click', function () {
-        tasksMenu.addClass('hidden');
-    })
-
     $('.clear-finished-tasks', tasksMenu).on('click', function() {
         $.post('/delete-finished-tasks?_method=DELETE', {}, data => {
             if (data?.success) {
@@ -493,10 +489,6 @@ $(document).ready(() => {
         ev.stopPropagation();
     })
 
-    $(document).on('click', function () {
-        userMenu.addClass('hidden');
-    })
-
     $('.logout', userMenu).on('click', function() {
         $.post('/users/logout?_method=DELETE', {}, path => {
             location.replace(path);
@@ -509,15 +501,27 @@ $(document).ready(() => {
             location.reload();
         });
     })
+    // -------USER PROFILE PAGE------------
+
+    const blurPage = $('.blur-page'), layout = $('.layout');
+    const userProfile = $('.user-profile');
+
+    function toggleFixLayout() {
+        for (let cl of ['fixed', 'top-0', 'left-[50%]', '-translate-x-[50%]']) {
+            layout.toggleClass(cl);
+        }
+    }
 
     $('.open-profile', userMenu).on('click', function() {
         userProfile.removeClass('hidden');
+        blurPage.removeClass('hidden');
         userMenu.addClass('hidden');
+        toggleFixLayout();
     })
 
-    // -------USER PROFILE PAGE------------
-
-    const userProfile = $('.user-profile');
+    userProfile.on('click', function(ev) {
+        ev.stopPropagation();
+    })
 
     $('.avatar-field', userProfile).on('click', async function() {
         const [ fileHandle ] = await window.showOpenFilePicker({
@@ -545,21 +549,22 @@ $(document).ready(() => {
 
     $('.close-profile, #cancel-update-btn', userProfile).on('click', function(ev) {
         ev.preventDefault();
+        blurPage.addClass('hidden');
         userProfile.addClass('hidden');
+        toggleFixLayout();
     })
 
     // -------USER SETTINGS ------------
 
-    const settingsPage = $('.settings'), settingsForm = $('.settings-form');
+    const settingsForm = $('.settings-form');
 
     $('.settings-btn').on('click', function(ev) {
         ev.stopPropagation();
-        settingsPage.removeClass('hidden');
+        blurPage.removeClass('hidden');
+        settingsForm.removeClass('hidden');
+        toggleFixLayout();
     })
 
-    $(document).on('click', function() {
-        settingsPage.addClass('hidden');
-    })
 
     settingsForm.on('click', function(ev) {
         ev.stopPropagation();
@@ -567,7 +572,9 @@ $(document).ready(() => {
 
     $('.close-settings', settingsForm).on('click', function(ev) {
         ev.preventDefault();
-        settingsPage.addClass('hidden');
+        blurPage.addClass('hidden');
+        settingsForm.addClass('hidden');
+        toggleFixLayout();
     });
 
     $('.toggle', settingsForm).each(function() {
@@ -597,21 +604,20 @@ $(document).ready(() => {
                 })
             }
         } );
-        settingsPage.addClass('hidden');
-        console.log(newSettings);
+        blurPage.addClass('hidden');
+        settingsForm.addClass('hidden');
+        toggleFixLayout();
     });
 
     // ------- USER REPORT ------------
 
-    const statsPage = $('.statistics-page'), userStats = $('.user-report');
+    const userStats = $('.user-report');
 
     $('.report-btn').on('click', function(ev) {
         ev.stopPropagation();
-        statsPage.removeClass('hidden');
-    });
-
-    $(document).on('click', function() {
-        statsPage.addClass('hidden');
+        blurPage.removeClass('hidden');
+        userStats.removeClass('hidden');
+        toggleFixLayout();
     });
 
     userStats.on('click', function(ev) {
@@ -620,7 +626,9 @@ $(document).ready(() => {
 
     $('.close-report', userStats).on('click', function(ev) {
         ev.preventDefault();
-        statsPage.addClass('hidden');
+        userStats.addClass('hidden');
+        blurPage.addClass('hidden');
+        toggleFixLayout();
     });
 
     function formatTaskDate(startDate, finishDate) {
@@ -714,6 +722,15 @@ $(document).ready(() => {
             usersTopData = data.usersTop;
             renderUsersTopPage();
         }
+    })
+
+    $(document).on('click', function() {
+        blurPage.addClass('hidden');
+        settingsForm.addClass('hidden');
+        userProfile.addClass('hidden');
+        userStats.addClass('hidden');
+        userMenu.addClass('hidden');
+        tasksMenu.addClass('hidden');
     })
 
     // ------- TOAST NOTIFICATION ------------

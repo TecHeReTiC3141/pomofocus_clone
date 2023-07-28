@@ -1,82 +1,79 @@
-<div class="statistics-page bg-opacity-25 bg-black fixed
-w-full h-full top-0 left-0
-flex justify-center items-start hidden py-12">
-    <div class="user-report bg-white rounded-md relative
-          w-[38rem] text-gray-400 text-start py-12 px-6">
-        <button class="close-report absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+<div class="user-report bg-white rounded-md
+        absolute top-12 left-[50%] -translate-x-[50%]
+      w-[38rem] text-gray-400 text-start py-12 px-6 hidden z-40">
+    <button class="close-report absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
 
-        <div class="report-nav rounded-xl w-full border-red-400 border-2 flex justify-between mb-8">
-            <button class="summary active rounded-l-md border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Summary</button>
-            <button class="detail border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Detail</button>
-            <button class="ranking border-transparent border-r-2 rounded-r-md py-2 text-center grow text-red-400 font-bold">Ranking</button>
+    <div class="report-nav rounded-xl w-full border-red-400 border-2 flex justify-between mb-8">
+        <button class="summary active rounded-l-md border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Summary</button>
+        <button class="detail border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Detail</button>
+        <button class="ranking border-transparent border-r-2 rounded-r-md py-2 text-center grow text-red-400 font-bold">Ranking</button>
+    </div>
+
+    <div class="summary">
+
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Activity Summary</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
         </div>
 
-        <div class="summary">
+        <% if (!isAuthenticated) { %>
+            <p>* This report will be available when you are logged in</p>
+        <% } %>
 
-            <div class="flex items-center gap-4">
-                <h2 class="font-bold text-black text-xl">Activity Summary</h2>
-                <hr class="h-[1px] grow bg-gray-200 border-0">
+        <div class="flex gap-4 my-6">
+
+            <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                <i class="fa-regular fa-clock text-2xl absolute top-2 left-4"></i>
+                <h3 class="user-hours-focused -text-xl"><%= isAuthenticated ? (user.totalHoursFocused / 60).toFixed(1) : '--' %></h3>
+                <h4 class="text-sm">hours focused</h4>
             </div>
-
-            <% if (!isAuthenticated) { %>
-                <p>* This report will be available when you are logged in</p>
-            <% } %>
-
-            <div class="flex gap-4 my-6">
-
-                <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
-                    <i class="fa-regular fa-clock text-2xl absolute top-2 left-4"></i>
-                    <h3 class="user-hours-focused -text-xl"><%= isAuthenticated ? (user.totalHoursFocused / 60).toFixed(1) : '--' %></h3>
-                    <h4 class="text-sm">hours focused</h4>
-                </div>
-                <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
-                    <i class="fa-regular fa-calendar-check text-2xl absolute top-2 left-4"></i>
-                    <h3 class="user-days-accessed -text-xl"><%= isAuthenticated ? user.totalDaysAccessed : '--' %></h3>
-                    <h4 class="text-sm">days accessed</h4>
-                </div>
-                <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
-                    <i class="fa-solid fa-fire-flame-curved fa-beat-fade text-2xl absolute top-2 left-4"></i>
-                    <h3 class="user-day-streak text-xl"><%= isAuthenticated ? user.dayStreak : '--' %></h3>
-                    <h4 class="text-sm">day streak</h4>
-                </div>
+            <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                <i class="fa-regular fa-calendar-check text-2xl absolute top-2 left-4"></i>
+                <h3 class="user-days-accessed -text-xl"><%= isAuthenticated ? user.totalDaysAccessed : '--' %></h3>
+                <h4 class="text-sm">days accessed</h4>
             </div>
-
-            <div class="flex items-center gap-4">
-                <h2 class="font-bold text-black text-xl">Focus Hours</h2>
-                <hr class="h-[1px] grow bg-gray-200 border-0">
+            <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                <i class="fa-solid fa-fire-flame-curved fa-beat-fade text-2xl absolute top-2 left-4"></i>
+                <h3 class="user-day-streak text-xl"><%= isAuthenticated ? user.dayStreak : '--' %></h3>
+                <h4 class="text-sm">day streak</h4>
             </div>
         </div>
 
-        <div class="detail hidden">
-            <div class="flex items-center gap-4">
-                <h2 class="font-bold text-black text-xl">Activity Summary</h2>
-                <hr class="h-[1px] grow bg-gray-200 border-0">
-            </div>
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Focus Hours</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
+        </div>
+    </div>
 
-            <table class="done-task table-fixed border-collapse w-full">
-                <tr class="border-b text-gray-400">
-                    <th  class="text-start py-3 w-28 uppercase">Date</th>
-                    <th class="text-start py-3 uppercase">Task</th>
-                    <th class="text-start py-3 w-24 uppercase">Minutes</th>
-                </tr>
-            </table>
+    <div class="detail hidden">
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Activity Summary</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
         </div>
 
-        <div class="ranking hidden">
-            <div class="flex items-center gap-4">
-                <h2 class="font-bold text-black text-xl">Focus Time This Week</h2>
-                <hr class="h-[1px] grow bg-gray-200 border-0">
-            </div>
+        <table class="done-task table-fixed border-collapse w-full">
+            <tr class="border-b text-gray-400">
+                <th  class="text-start py-3 w-28 uppercase">Date</th>
+                <th class="text-start py-3 uppercase">Task</th>
+                <th class="text-start py-3 w-24 uppercase">Minutes</th>
+            </tr>
+        </table>
+    </div>
 
-            <table class="users-top table-fixed border-collapse w-full">
-                <tr class="border-b text-gray-400">
-                    <th  class="text-start py-3 w-12 uppercase"></th>
-                    <th class="text-start py-3 text-sm uppercase">User</th>
-                    <th class="text-start py-3 w-24 text-xs uppercase">Time (HH:MM)</th>
-                </tr>
-            </table>
+    <div class="ranking hidden">
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Focus Time This Week</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
         </div>
+
+        <table class="users-top table-fixed border-collapse w-full">
+            <tr class="border-b text-gray-400">
+                <th  class="text-start py-3 w-12 uppercase"></th>
+                <th class="text-start py-3 text-sm uppercase">User</th>
+                <th class="text-start py-3 w-24 text-xs uppercase">Time (HH:MM)</th>
+            </tr>
+        </table>
     </div>
 </div>

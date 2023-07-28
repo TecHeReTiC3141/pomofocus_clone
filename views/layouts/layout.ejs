@@ -43,9 +43,11 @@
 <!--            href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"-->
 <!--            rel="stylesheet">-->
 </head>
-<body class="bg-pomodoro flex flex-col items-center justify-center
+<body class="bg-pomodoro
  text-white font-body transition ease-linear duration-500 min-w-[32rem]">
     <%- body %>
     <%- include('../notification') %>
+    <div class="blur-page bg-opacity-25 bg-black fixed
+    w-full h-full top-0 left-0 hidden z-10">
 </body>
 </html>

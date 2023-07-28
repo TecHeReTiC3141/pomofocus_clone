@@ -1,151 +1,152 @@
-<header class="flex justify-between items-center
+<div class="layout flex flex-col items-center justify-center">
+    <header class="flex justify-between items-center
  w-[40rem] max-w-full py-4 px-1 shadow mb-8 relative">
-    <div class="logo">
-        <!--            <img src="/images/icon.png">-->
+        <div class="logo">
+            <!--            <img src="/images/icon.png">-->
 
-        <h4 class="font-bold text-xl tracking-wide">
-            <i class="fa-solid fa-circle-check"></i> PomoFocus
-        </h4>
-    </div>
+            <h4 class="font-bold text-xl tracking-wide">
+                <i class="fa-solid fa-circle-check"></i> PomoFocus
+            </h4>
+        </div>
 
-    <div class="flex gap-3">
-        <div class="px-2 py-1 bg-white bg-opacity-10  rounded-md relative active:top-0.5">
-            <button class="report-btn text-sm hover:brightness-105">
-                <i class="fa-solid fa-chart-column text-md"></i>
-                <span class="hidden md:inline-block">Report</span>
-            </button>
-        </div>
-        <div class="px-2 py-1 bg-white bg-opacity-10  rounded-md relative active:top-0.5">
-            <button class="settings-btn text-sm hover:brightness-105">
-                <i class="fa-solid fa-gear text-md"></i>
-                <span class="hidden md:inline-block">Setting</span></button>
-        </div>
-        <% if (isAuthenticated) { %>
-            <button class="user-btn text-sm p-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
-                <img src="<%= user.avatar || "/images/user-icon.png"%>" alt="user_icon" class="block w-6 bg-gray-100 rounded">
-            </button>
-        <% } else { %>
-            <a href="/users/login"
-               class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
-                <button class="text-sm">
-                    <i class="fa-solid fa-circle-user text-md"></i>
-                    <span class="hidden md:inline-block">Login</span>
+        <div class="flex gap-3">
+            <div class="px-2 py-1 bg-white bg-opacity-10  rounded-md relative active:top-0.5">
+                <button class="report-btn text-sm hover:brightness-105">
+                    <i class="fa-solid fa-chart-column text-md"></i>
+                    <span class="hidden md:inline-block">Report</span>
                 </button>
-            </a>
-        <% } %>
-        <ul class="user-menu menu top-[95%] hidden">
-            <li class="open-profile">
-                <i class="fa-solid fa-circle-user text-md"></i>
-                <p>Profile</p>
-            </li>
-            <li class="logout">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <p>Logout</p>
-            </li>
-            <li class="delete-account">
-                <i class="fa-regular fa-trash-can"></i>
-                <p>Delete account</p>
-            </li>
-        </ul>
-    </div>
-
-    <div class="time-left-container
-        absolute h-1 w-full left-0 top-full bg-black bg-opacity-20 rounded-md hidden">
-        <div class="time-left-bar absolute h-1 left-0 top-0 bg-white rounded"></div>
-    </div>
-</header>
-
-<main class="w-[32rem] flex flex-col items-center text-center relative px-2">
-    <div class="timer bg-white bg-opacity-10 px-20 py-4 relative rounded-md mb-4 relative">
-        <div class="modes flex justify-center">
-            <button class="px-2 py-1 mr-4 active rounded-md relative active:top-0.5" id="pomodoro">Pomodoro</button>
-            <button class="px-2 py-1 mr-4 rounded-md relative active:top-0.5" id="short-break">Short Break</button>
-            <button class="px-2 py-1 rounded-md relative active:top-0.5" id="long-break">Long Break</button>
+            </div>
+            <div class="px-2 py-1 bg-white bg-opacity-10  rounded-md relative active:top-0.5">
+                <button class="settings-btn text-sm hover:brightness-105">
+                    <i class="fa-solid fa-gear text-md"></i>
+                    <span class="hidden md:inline-block">Setting</span></button>
+            </div>
+            <% if (isAuthenticated) { %>
+                <button class="user-btn text-sm p-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
+                    <img src="<%= user.avatar || "/images/user-icon.png"%>" alt="user_icon" class="block w-6 bg-gray-100 rounded">
+                </button>
+            <% } else { %>
+                <a href="/users/login"
+                   class="px-2 py-1 bg-white bg-opacity-10 hover:brightness-105 rounded-md relative active:top-0.5">
+                    <button class="text-sm">
+                        <i class="fa-solid fa-circle-user text-md"></i>
+                        <span class="hidden md:inline-block">Login</span>
+                    </button>
+                </a>
+            <% } %>
+            <ul class="user-menu menu top-[95%] hidden">
+                <li class="open-profile">
+                    <i class="fa-solid fa-circle-user text-md"></i>
+                    <p>Profile</p>
+                </li>
+                <li class="logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <p>Logout</p>
+                </li>
+                <li class="delete-account">
+                    <i class="fa-regular fa-trash-can"></i>
+                    <p>Delete account</p>
+                </li>
+            </ul>
         </div>
-        <h1 class="time-left text-[6.5rem] sm:text-[7.5rem] font-bold">25:00</h1>
-        <button class="toggle-task px-16 py-3 bg-white text-pomodoro uppercase
+
+        <div class="time-left-container
+        absolute h-1 w-full left-0 top-full bg-black bg-opacity-20 rounded-md hidden">
+            <div class="time-left-bar absolute h-1 left-0 top-0 bg-white rounded"></div>
+        </div>
+    </header>
+
+    <main class="w-[32rem] flex flex-col items-center text-center relative px-2">
+        <div class="timer bg-white bg-opacity-10 px-20 py-4 relative rounded-md mb-4 relative">
+            <div class="modes flex justify-center">
+                <button class="px-2 py-1 mr-4 active rounded-md relative active:top-0.5" id="pomodoro">Pomodoro</button>
+                <button class="px-2 py-1 mr-4 rounded-md relative active:top-0.5" id="short-break">Short Break</button>
+                <button class="px-2 py-1 rounded-md relative active:top-0.5" id="long-break">Long Break</button>
+            </div>
+            <h1 class="time-left text-[6.5rem] sm:text-[7.5rem] font-bold">25:00</h1>
+            <button class="toggle-task px-16 py-3 bg-white text-pomodoro uppercase
         text-2xl rounded-md mb-4 font-bold border-b-4 border-gray-300
         transition ease-linear duration-500
         relative active:border-b-0 active:top-2">Start
-        </button>
-        <button class="forward-btn text-white uppercase
+            </button>
+            <button class="forward-btn text-white uppercase
             text-3xl font-bold ml-16 hover:text-opacity-90
             absolute  right-20 bottom-10 hidden">
-            <i class="fa-solid fa-forward-step"></i>
-        </button>
-    </div>
-
-    <div class="mb-4">
-        <p class="today-pomos-count text-gray-400">#1</p>
-        <h3 class="current-task-name"><%= (tasks.length && tasks[0].name) || 'Time to focus!' %></h3>
-    </div>
-
-    <div class="tasks-header flex justify-between items-center w-full relative">
-        <h2 class="text-xl font-bold">Tasks</h2>
-        <button class="toggle-tasks-menu bg-white bg-opacity-10 py-1 px-4
-                rounded-md hover:brightness-105 relative active:top-0.5">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-        </button>
-
-        <ul class="tasks-menu menu hidden">
-            <li class="clear-finished-tasks">
-                <i class="fa-regular fa-trash-can"></i>
-                <p>Clear finished tasks</p>
-            </li>
-            <li class="clear-act-pomos">
-                <i class="fa-solid fa-check"></i>
-                <p>Clear act pomodoros</p>
-            </li>
-            <li class="clear-all-tasks">
-                <i class="fa-regular fa-trash-can"></i>
-                <p>Clear all tasks</p>
-            </li>
-        </ul>
-    </div>
-    <hr class="h-[1px] my-4 bg-white border-0  w-full">
-    <div class="tasks w-full">
-
-
-        <% for (let task of tasks) { %>
-            <%- include('./task', {task: task}) %>
-        <% } %>
-
-        <div class="blank-task hidden">
-            <%- include('task.ejs', { task: {
-            done: null,
-            name: null,
-            pomosDone: 0,
-            pomosNeed: null,
-            description: null,
-            }
-            }) %>
+                <i class="fa-solid fa-forward-step"></i>
+            </button>
         </div>
 
-    </div>
+        <div class="mb-4">
+            <p class="today-pomos-count text-gray-400">#1</p>
+            <h3 class="current-task-name"><%= (tasks.length && tasks[0].name) || 'Time to focus!' %></h3>
+        </div>
 
-    <button class="add-task py-4 w-full bg-black bg-opacity-10
+        <div class="tasks-header flex justify-between items-center w-full relative">
+            <h2 class="text-xl font-bold">Tasks</h2>
+            <button class="toggle-tasks-menu bg-white bg-opacity-10 py-1 px-4
+                rounded-md hover:brightness-105 relative active:top-0.5">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </button>
+
+            <ul class="tasks-menu menu hidden">
+                <li class="clear-finished-tasks">
+                    <i class="fa-regular fa-trash-can"></i>
+                    <p>Clear finished tasks</p>
+                </li>
+                <li class="clear-act-pomos">
+                    <i class="fa-solid fa-check"></i>
+                    <p>Clear act pomodoros</p>
+                </li>
+                <li class="clear-all-tasks">
+                    <i class="fa-regular fa-trash-can"></i>
+                    <p>Clear all tasks</p>
+                </li>
+            </ul>
+        </div>
+        <hr class="h-[1px] my-4 bg-white border-0  w-full">
+        <div class="tasks w-full">
+
+
+            <% for (let task of tasks) { %>
+                <%- include('./task', {task: task}) %>
+            <% } %>
+
+            <div class="blank-task hidden">
+                <%- include('task.ejs', { task: {
+                done: null,
+                name: null,
+                pomosDone: 0,
+                pomosNeed: null,
+                description: null,
+                }
+                }) %>
+            </div>
+
+        </div>
+
+        <button class="add-task py-4 w-full bg-black bg-opacity-10
         rounded-md border-gray-500 border-2 border-dashed
         font-bold ">
-        <i class="fa-solid fa-circle-plus"></i>
-        Add Task
-    </button>
-    <%- include('./forms/add_form') %>
-    <% if (tasks.length) { %>
-        <div class="pomo-stats bg-white bg-opacity-10 w-full rounded-b
+            <i class="fa-solid fa-circle-plus"></i>
+            Add Task
+        </button>
+        <%- include('./forms/add_form') %>
+        <% if (tasks.length) { %>
+            <div class="pomo-stats bg-white bg-opacity-10 w-full rounded-b
                 flex justify-center items-center gap-12 mt-8 mb-8 border-t-2
                 py-4">
-            <p class="text-gray-300">Pomos: <span class="font-bold text-2xl mr-4 text-white"><span
-                            class="total-pomos-done "><%= totalPomosDone %> </span>
+                <p class="text-gray-300">Pomos: <span class="font-bold text-2xl mr-4 text-white"><span
+                                class="total-pomos-done "><%= totalPomosDone %> </span>
                     / <span class="total-pomos-need "><%= totalPomosNeed %></span> </span>
-                Finish At: <span class="finish-time font-bold text-2xl text-white">18:20</span>
-                (<span class="time-needed">0 </span>h)</p>
-        </div>
-    <% } %>
+                    Finish At: <span class="finish-time font-bold text-2xl text-white">18:20</span>
+                    (<span class="time-needed">0 </span>h)</p>
+            </div>
+        <% } %>
+    </main>
+</div>
 
-    <% if (isAuthenticated) { %>
-        <%- include('./users/user_profile', { user }) %>
-        <%- include('./users/user_settings', { settings: JSON.parse(user.settings) }) %>
-        <%- include('./users/user_stats', {}) %>
-    <% } %>
-
-</main>
+<% if (isAuthenticated) { %>
+    <%- include('./users/user_profile', { user }) %>
+    <%- include('./users/user_settings', { settings: JSON.parse(user.settings) }) %>
+    <%- include('./users/user_stats', {}) %>
+<% } %>

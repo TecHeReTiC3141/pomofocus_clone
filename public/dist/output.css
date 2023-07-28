@@ -813,6 +813,10 @@ body.dark .toggle-task {
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+}
+
 .bottom-10 {
   bottom: 2.5rem;
 }
@@ -982,6 +986,32 @@ body.dark .toggle-task {
   height: 100vh;
 }
 
+.h-12 {
+  height: 3rem;
+}
+
+.h-8 {
+  height: 2rem;
+}
+
+.h-min {
+  height: -moz-min-content;
+  height: min-content;
+}
+
+.min-h-full {
+  min-height: 100%;
+}
+
+.min-h-min {
+  min-height: -moz-min-content;
+  min-height: min-content;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
 .w-16 {
   width: 4rem;
 }
@@ -1026,8 +1056,25 @@ body.dark .toggle-task {
   width: 100vw;
 }
 
+.w-12 {
+  width: 3rem;
+}
+
+.w-8 {
+  width: 2rem;
+}
+
 .min-w-\[32rem\] {
   min-width: 32rem;
+}
+
+.min-w-full {
+  min-width: 100%;
+}
+
+.min-w-min {
+  min-width: -moz-min-content;
+  min-width: min-content;
 }
 
 .max-w-full {
@@ -1375,6 +1422,11 @@ body.dark .toggle-task {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
+}
+
+.py-48 {
+  padding-top: 12rem;
+  padding-bottom: 12rem;
 }
 
 .pb-2 {

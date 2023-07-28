@@ -199,7 +199,7 @@ router.get('/get_done_tasks', async (req, res) => {
 router.get('/get_top_users', async (req, res) => {
     try {
         const users = await User.findAll();
-        const userTop = [];
+        const usersTop = [];
         for (let user of users) {
             const doneTasksThisWeek = await DoneTask.findAll({
                 where: {
@@ -210,18 +210,18 @@ router.get('/get_top_users', async (req, res) => {
             for (let task of doneTasksThisWeek) {
                 totalFocusTime += task.duration * task.doneLast7Days;
             }
-            userTop.push({
+            usersTop.push({
                 avatar: user.avatar,
                 name: user.name,
                 totalFocusTime,
             });
         }
-        console.log(userTop);
-        userTop.sort((u1, u2) =>
+        console.log(usersTop);
+        usersTop.sort((u1, u2) =>
             u2.totalFocusTime - u1.totalFocusTime);
         res.send({
             success: true,
-            userTop
+            usersTop
         })
 
     } catch (err) {

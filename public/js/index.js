@@ -679,6 +679,43 @@ $(document).ready(() => {
         }
     })
 
+    // ------- USERS TOP ------------
+
+    const usersTopTable = $('.users-top');
+
+    let usersTopData, currentUsersTopPage = 1, usersOnPage = 20;
+
+    function renderUsersTopPage() {
+        $('.user-row', usersTopTable).remove();
+        let currentInd = (currentUsersTopPage - 1) * usersOnPage + 1;
+
+        for (let user of usersTopData.slice(
+            (currentUsersTopPage - 1) * usersOnPage,
+                currentUsersTopPage * usersOnPage)) {
+            usersTopTable.append($(`
+                <tr class="user-row border-b border-gray-100">
+                    <td class="text-gray-600 text-xl">${currentInd++}</td>
+                    <td class="text-gray-800 text-xl py-48 flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full overflow-hidden">
+                            <img src="${user.avatar || '/images/user-icon.png'}" alt="${user.name}">
+                        </div>
+                        ${user.name.trim()}
+                    </td>
+                    <td class="text-gray-800 font-bold text-xl py-3 text-end">
+                        ${setLeftTime(user.totalFocusTime)}
+                    </td>
+                </tr>
+            `))
+        }
+    }
+
+    $.get('/users/get_top_users', {}, data => {
+        if (data.success) {
+            usersTopData = data.usersTop;
+            renderUsersTopPage();
+        }
+    })
+
     // ------- TOAST NOTIFICATION ------------
 
     const toastNotification = $('.toast-not'), notificationLifeTime = 5000;

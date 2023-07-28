@@ -1,7 +1,8 @@
-<div class="statistics-page bg-opacity-25 bg-black fixed w-full h-full top-0 left-0
-flex justify-center items-start hidden">
+<div class="statistics-page bg-opacity-25 bg-black fixed
+w-full h-full top-0 left-0
+flex justify-center items-start hidden py-12">
     <div class="user-report bg-white rounded-md relative
-          w-[38rem] mt-12 text-gray-400 text-start py-12 px-6">
+          w-[38rem] text-gray-400 text-start py-12 px-6">
         <button class="close-report absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -56,11 +57,10 @@ flex justify-center items-start hidden">
 
             <table class="done-task table-fixed border-collapse w-full">
                 <tr class="border-b text-gray-400">
-                    <th  class="text-start py-3 w-28">Date</th>
-                    <th class="text-start py-3">Task</th>
-                    <th class="text-start py-3 w-24">Minutes</th>
+                    <th  class="text-start py-3 w-28 uppercase">Date</th>
+                    <th class="text-start py-3 uppercase">Task</th>
+                    <th class="text-start py-3 w-24 uppercase">Minutes</th>
                 </tr>
-
             </table>
         </div>
 
@@ -69,10 +69,14 @@ flex justify-center items-start hidden">
                 <h2 class="font-bold text-black text-xl">Focus Time This Week</h2>
                 <hr class="h-[1px] grow bg-gray-200 border-0">
             </div>
+
+            <table class="users-top table-fixed border-collapse w-full">
+                <tr class="border-b text-gray-400">
+                    <th  class="text-start py-3 w-12 uppercase"></th>
+                    <th class="text-start py-3 text-sm uppercase">User</th>
+                    <th class="text-start py-3 w-24 text-xs uppercase">Time (HH:MM)</th>
+                </tr>
+            </table>
         </div>
-
-
-
-
     </div>
 </div>

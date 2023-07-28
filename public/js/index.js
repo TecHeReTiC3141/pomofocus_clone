@@ -693,17 +693,11 @@ $(document).ready(() => {
 
     let usersTopData, currentUsersTopPage = 1, usersOnPage = 20;
 
-    function renderUsersTopPage() {
-        $('.user-row', usersTopTable).remove();
-        let currentInd = (currentUsersTopPage - 1) * usersOnPage + 1;
-
-        for (let user of usersTopData.slice(
-            (currentUsersTopPage - 1) * usersOnPage,
-                currentUsersTopPage * usersOnPage)) {
-            usersTopTable.append($(`
+    function renderUserInfo(currentInd, user) {
+        return `
                 <tr class="user-row border-b border-gray-100">
-                    <td class="text-gray-600 text-xl">${currentInd++}</td>
-                    <td class="text-gray-800 text-xl py-48 flex items-center gap-4">
+                    <td class="text-gray-600 text-xl">${currentInd}</td>
+                    <td class="text-gray-800 text-xl py-3 flex items-center gap-4">
                         <div class="w-8 h-8 rounded-full overflow-hidden">
                             <img src="${user.avatar || '/images/user-icon.png'}" alt="${user.name}">
                         </div>
@@ -713,7 +707,17 @@ $(document).ready(() => {
                         ${setLeftTime(user.totalFocusTime)}
                     </td>
                 </tr>
-            `))
+            `
+    }
+
+    function renderUsersTopPage() {
+        $('.user-row', usersTopTable).remove();
+        let currentInd = (currentUsersTopPage - 1) * usersOnPage + 1;
+
+        for (let user of usersTopData.slice(
+            (currentUsersTopPage - 1) * usersOnPage,
+                currentUsersTopPage * usersOnPage)) {
+            usersTopTable.append($(renderUserInfo(currentInd++, user)));
         }
     }
 
@@ -721,7 +725,28 @@ $(document).ready(() => {
         if (data.success) {
             usersTopData = data.usersTop;
             renderUsersTopPage();
+            console.log('From db');
         }
+    })
+
+    const randomUserGeneratorURL = 'https://randomuser.me/api/';
+    const randomUserGeneratorSearchParams = new URLSearchParams({
+        results: 100,
+        inc: 'name,email,password,picture',
+        noinfo: true,
+        // dl: true,
+    })
+    console.log(randomUserGeneratorSearchParams.toString());
+    $.get(`${randomUserGeneratorURL}?${randomUserGeneratorSearchParams}`, {}, data => {
+        let currentInd = $('.user-row', usersTopTable).length;
+        for (let user of data.results) {
+            user.name = user.name.first + ' ' + user.name.last;
+            user.avatar = user.picture.medium;
+            usersTopTable.append($(renderUserInfo(currentInd++, user)));
+
+
+        }
+        console.log('From api');
     })
 
     $(document).on('click', function() {

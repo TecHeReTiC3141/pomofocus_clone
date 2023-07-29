@@ -718,8 +718,11 @@ $(document).ready(() => {
     // ------- USERS TOP ------------
 
     const usersTopTable = $('.users-top');
+    const prevPageBtn = $('.ranking .prev-page'),
+            nextPageBtn = $('.ranking .next-page'),
+            currentUserTopPageInd = $('.ranking .current-page')
 
-    let usersTopData, currentUsersTopPage = 1, usersOnPage = 20;
+    let usersTopData, currentUsersTopPage = 1, usersOnPage = 25, usersTopMaxPages;
 
     function renderUserInfo(currentInd, user) {
         return `
@@ -765,10 +768,38 @@ $(document).ready(() => {
     $.get('/users/get_top_users', {}, data => {
         if (data.success) {
             usersTopData = data.usersTop;
+            usersTopMaxPages = Math.floor((usersTopData.length + usersOnPage - 1) / usersOnPage);
+            console.log(usersTopMaxPages);
             renderUsersTopPage();
             console.log('From db');
         }
-    })
+    });
+
+    prevPageBtn.on('click', function() {
+        if (currentUsersTopPage === 1) {
+            return;
+        } if (currentUsersTopPage === 2) {
+            $(this).addClass('opacity-0').addClass('cursor-default');
+        } else if (currentUsersTopPage === usersTopMaxPages) {
+            nextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+        }
+
+        currentUserTopPageInd.text(--currentUsersTopPage);
+        renderUsersTopPage();
+    });
+
+    nextPageBtn.on('click', function() {
+        if (currentUsersTopPage === usersTopMaxPages) {
+            return;
+        } if (currentUsersTopPage === usersTopMaxPages - 1) {
+            $(this).addClass('opacity-0').addClass('cursor-default');
+        } else if (currentUsersTopPage === 1) {
+            prevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+        }
+
+        currentUserTopPageInd.text(++currentUsersTopPage);
+        renderUsersTopPage();
+    });
 
     $(document).on('click', function() {
         blurPage.addClass('hidden');

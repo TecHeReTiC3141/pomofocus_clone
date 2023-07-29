@@ -89,4 +89,8 @@
     .toast-not.info {
         @apply text-blue-600 bg-blue-300 border-blue-600;
     }
+
+    .chart .bar {
+        @apply fill-red-200 opacity-60 stroke-red-800 stroke-2;
+    }
 }

@@ -813,10 +813,6 @@ body.dark .toggle-task {
   position: relative;
 }
 
-.sticky {
-  position: sticky;
-}
-
 .bottom-10 {
   bottom: 2.5rem;
 }
@@ -837,6 +833,10 @@ body.dark .toggle-task {
   left: 1.5rem;
 }
 
+.left-\[50\%\] {
+  left: 50%;
+}
+
 .right-20 {
   right: 5rem;
 }
@@ -853,6 +853,10 @@ body.dark .toggle-task {
   top: 0.25rem;
 }
 
+.top-12 {
+  top: 3rem;
+}
+
 .top-2 {
   top: 0.5rem;
 }
@@ -861,24 +865,16 @@ body.dark .toggle-task {
   top: 1rem;
 }
 
+.top-\[50\%\] {
+  top: 50%;
+}
+
 .top-\[95\%\] {
   top: 95%;
 }
 
 .top-full {
   top: 100%;
-}
-
-.left-\[50\%\] {
-  left: 50%;
-}
-
-.top-12 {
-  top: 3rem;
-}
-
-.top-\[50\%\] {
-  top: 50%;
 }
 
 .z-10 {
@@ -912,6 +908,11 @@ body.dark .toggle-task {
 .my-8 {
   margin-top: 2rem;
   margin-bottom: 2rem;
+}
+
+.my-12 {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 
 .mb-12 {
@@ -958,10 +959,6 @@ body.dark .toggle-task {
   margin-right: auto;
 }
 
-.mt-12 {
-  margin-top: 3rem;
-}
-
 .mt-4 {
   margin-top: 1rem;
 }
@@ -994,6 +991,10 @@ body.dark .toggle-task {
   height: 4rem;
 }
 
+.h-8 {
+  height: 2rem;
+}
+
 .h-\[1px\] {
   height: 1px;
 }
@@ -1006,30 +1007,8 @@ body.dark .toggle-task {
   height: 100vh;
 }
 
-.h-12 {
-  height: 3rem;
-}
-
-.h-8 {
-  height: 2rem;
-}
-
-.h-min {
-  height: -moz-min-content;
-  height: min-content;
-}
-
-.min-h-full {
-  min-height: 100%;
-}
-
-.min-h-min {
-  min-height: -moz-min-content;
-  min-height: min-content;
-}
-
-.min-h-screen {
-  min-height: 100vh;
+.w-12 {
+  width: 3rem;
 }
 
 .w-16 {
@@ -1046,6 +1025,10 @@ body.dark .toggle-task {
 
 .w-6 {
   width: 1.5rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .w-\[16rem\] {
@@ -1072,29 +1055,8 @@ body.dark .toggle-task {
   width: 100%;
 }
 
-.w-screen {
-  width: 100vw;
-}
-
-.w-12 {
-  width: 3rem;
-}
-
-.w-8 {
-  width: 2rem;
-}
-
 .min-w-\[32rem\] {
   min-width: 32rem;
-}
-
-.min-w-full {
-  min-width: 100%;
-}
-
-.min-w-min {
-  min-width: -moz-min-content;
-  min-width: min-content;
 }
 
 .max-w-full {
@@ -1452,11 +1414,6 @@ body.dark .toggle-task {
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-}
-
-.py-48 {
-  padding-top: 12rem;
-  padding-bottom: 12rem;
 }
 
 .pb-2 {

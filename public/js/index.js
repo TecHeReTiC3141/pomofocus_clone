@@ -8,9 +8,37 @@
     *  Tasks for TOMORROW:
     * TODO: implement task pagination;
     * TODO: add top users;
+    *  Add information about pomofocus usage in readme and on main page
     * TODO: start implementing responsive layout;
     *
 */
+
+async function generateUsers() {
+
+    const randomUserGeneratorURL = 'https://randomuser.me/api/';
+    const randomUserGeneratorSearchParams = new URLSearchParams({
+        results: 100,
+        inc: 'name,email,login,picture',
+        noinfo: true,
+        // dl: true,
+    })
+    $.get(`${randomUserGeneratorURL}?${randomUserGeneratorSearchParams}`, {}, data => {
+        for (let user of data.results) {
+            user.name = user.name.first + ' ' + user.name.last;
+            user.avatar = user.picture.medium;
+            user.password = user.login.password;
+
+            $.post('/users/create_user', { ...user }, data => {
+                console.log(data);
+            } )
+
+        }
+    })
+}
+//
+// (async () => {
+//     await generateUsers();
+// })();
 
 function processForm(form) {
     let data = {};
@@ -180,7 +208,7 @@ $(document).ready(() => {
                     startTime: lastStart,
                     finishTime: Date.now(),
                 }, data => {
-                    if (data.success) {
+                    if (data.success && data.newTask) {
                         $('.user-hours-focused').text((+data.totalHoursFocused / 60).toFixed(1) )
                         $('.user-days-accessed').text(data.totalDaysAccessed);
                         $('.user-day-streak').text(data.dayStreak);
@@ -721,32 +749,25 @@ $(document).ready(() => {
         }
     }
 
+    // generateUsers().then(
+    //     $.get('/users/get_top_users', {}, data => {
+    //         if (data.success) {
+    //             usersTopData = data.usersTop;
+    //             renderUsersTopPage();
+    //             console.log('From db');
+    //         }
+    //     })
+    // ).catch(err => {
+    //     console.log(err);
+    // })
+    //
+
     $.get('/users/get_top_users', {}, data => {
         if (data.success) {
             usersTopData = data.usersTop;
             renderUsersTopPage();
             console.log('From db');
         }
-    })
-
-    const randomUserGeneratorURL = 'https://randomuser.me/api/';
-    const randomUserGeneratorSearchParams = new URLSearchParams({
-        results: 100,
-        inc: 'name,email,password,picture',
-        noinfo: true,
-        // dl: true,
-    })
-    console.log(randomUserGeneratorSearchParams.toString());
-    $.get(`${randomUserGeneratorURL}?${randomUserGeneratorSearchParams}`, {}, data => {
-        let currentInd = $('.user-row', usersTopTable).length;
-        for (let user of data.results) {
-            user.name = user.name.first + ' ' + user.name.last;
-            user.avatar = user.picture.medium;
-            usersTopTable.append($(renderUserInfo(currentInd++, user)));
-
-
-        }
-        console.log('From api');
     })
 
     $(document).on('click', function() {

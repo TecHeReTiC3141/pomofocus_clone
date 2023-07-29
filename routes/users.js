@@ -23,6 +23,7 @@ const initializePassport = require('../utils/initializePassport');
     )
 })();
 
+
 const {checkAuthenticated, checkNotAuthenticated} = require('../utils/middleware');
 
 router.get('/login', checkNotAuthenticated, (req, res) => {
@@ -54,11 +55,13 @@ router.get('/signup', checkNotAuthenticated, (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
+    console.log('signup', req.body);
     try {
         await User.create({
             name: req.body.name,
             email: req.body.email,
             password: await bcrypt.hash(req.body.password, 10),
+            avatar: req.body.avatar || '/images/user-icon.png',
         })
         const message = querystring.stringify({
             message_type: 'success',
@@ -69,6 +72,24 @@ router.post('/signup', async (req, res) => {
         res.redirect(`/users/login?${message}`);
     } catch (err) {
         res.redirect('/users/signup');
+    }
+});
+
+router.post('/create_user', async (req, res) => {
+    console.log('signup', req.body);
+    try {
+        const newUser = await User.create({
+            name: req.body.name,
+            email: req.body.email,
+            password: await bcrypt.hash(req.body.password, 10),
+            avatar: req.body.avatar || '/images/user-icon.png',
+        })
+        res.send({
+            success: true,
+            newUser
+        });
+    } catch (err) {
+        res.send({ success: false});
     }
 });
 
@@ -229,7 +250,5 @@ router.get('/get_top_users', async (req, res) => {
         res.send({ success: false });
     }
 })
-
-
 
 module.exports = router;

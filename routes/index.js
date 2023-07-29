@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const { getTask } = require('../utils/generateTemplates');
-
 const Task = require('../models/Task');
 const DoneTask = require('../models/DoneTask');
 const {User, defaultUserSettings} = require("../models/User");
@@ -174,6 +172,7 @@ router.post('/save_task', async (req, res) => {
             { by: doneTask.duration })
         res.send({
             success: true,
+            newTask: true,
             totalHoursFocused: curUser.totalHoursFocused,
             totalDaysAccessed: curUser.totalDaysAccessed,
             dayStreak: curUser.dayStreak,

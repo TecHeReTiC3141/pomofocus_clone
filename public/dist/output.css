@@ -1522,6 +1522,10 @@ body.dark .toggle-task {
   line-height: 2.5rem;
 }
 
+.text-\[1\.1rem\] {
+  font-size: 1.1rem;
+}
+
 .text-\[6\.5rem\] {
   font-size: 6.5rem;
 }
@@ -1544,6 +1548,14 @@ body.dark .toggle-task {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+
+.text-\[\.8rem\] {
+  font-size: .8rem;
+}
+
+.text-\[\.75rem\] {
+  font-size: .75rem;
 }
 
 .font-bold {
@@ -1632,10 +1644,6 @@ body.dark .toggle-task {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-.text-transparent {
-  color: transparent;
-}
-
 .text-opacity-80 {
   --tw-text-opacity: 0.8;
 }
@@ -1705,25 +1713,9 @@ body.dark .toggle-task {
   top: 100%;
 }
 
-.after\:border-4::after {
-  content: var(--tw-content);
-  border-width: 4px;
-}
-
 .after\:border-8::after {
   content: var(--tw-content);
   border-width: 8px;
-}
-
-.after\:border-t-4::after {
-  content: var(--tw-content);
-  border-top-width: 4px;
-}
-
-.after\:border-black::after {
-  content: var(--tw-content);
-  --tw-border-opacity: 1;
-  border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
 .after\:border-b-transparent::after {
@@ -1750,16 +1742,6 @@ body.dark .toggle-task {
 .after\:text-transparent::after {
   content: var(--tw-content);
   color: transparent;
-}
-
-.after\:content-\[\'\*\'\]::after {
-  --tw-content: '*';
-  content: var(--tw-content);
-}
-
-.after\:content-\[\'--\'\]::after {
-  --tw-content: '--';
-  content: var(--tw-content);
 }
 
 .after\:content-\[\'\'\]::after {

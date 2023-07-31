@@ -1,12 +1,14 @@
 /*
     *
     * TODO: search for better font
-    * TODO: implement adding task using cookies
-    *  Tasks for TOMORROW:
-    * TODO: add top users;
-    *  Add information about pomofocus usage in readme and on main page
+    * TODO: implement adding task using cookies for non-auth users
+    * TODO: fix bugs:
+    *  1. problem with updating total-days-accessed and day-streak without reloading;
+    *  2. problem with counting day streak
+    *  3. remove login success message after reload
+    * TODO: Add information about pomofocus usage in readme and on main page
     * TODO: start implementing responsive layout;
-    *
+    * TODO: add ? button in corner which leads to info page
 */
 
 async function generateUsers() {

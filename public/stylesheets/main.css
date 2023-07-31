@@ -93,4 +93,12 @@
     .chart .bar {
         @apply fill-red-200 opacity-60 stroke-red-800 stroke-2;
     }
+
+    .tooltip.side-left {
+        @apply after:left-1.5;
+    }
+
+    .tooltip.side-right {
+        @apply after:right-3;
+    }
 }

@@ -59,12 +59,17 @@
             <p>* This report will be available when you are logged in</p>
         <% } %>
 
-        <div class="chart w-full relative">
+        <div class="chart w-full relative mt-12">
             <svg class="chart-img"></svg>
-            <div class="tooltip absolute bg-gray-800 rounded text-gray-100 p-4
-                transition ease-linear duration-500">
-                <h4 class="text-sm">Day</h4>
-                <p class="uppercase">Total</p>
+            <div class="tooltip absolute bg-gray-800 rounded text-gray-100
+            py-1 px-2 opacity-0 -translate-y-[150%] left-0
+            after:text-transparent
+            after:content-[''] after:absolute after:top-full
+            after:border-8 after:border-t-black after:border-l-transparent
+            after:border-r-transparent after:border-b-transparent
+            transition transition-all ease-linear duration-500">
+                <h4 class="day text-xs text-white">Day</h4>
+                <p class="total uppercase">Total</p>
             </div>
         </div>
 

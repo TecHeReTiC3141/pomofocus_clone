@@ -49,19 +49,39 @@ function renderChart() {
         .attr('x', data => xScale(data.day))
         .attr('y', chartHeight)
         .attr('width', xScale.bandwidth())
+        .on('mouseover', data => {
+            tooltip.select('.day').text(data.day);
+            tooltip.select('.total').text(`Total: ${data.value}`);
+            tooltip
+                .style('bottom', `${chartHeight - yScale(data.value)}px`)
+                .classed('opacity-100', true);
+            if (data.id <= 3) {
+                tooltip.style('left', `${xScale(data.day) + xScale.bandwidth() / 2 - 15}px`)
+                tooltip.classed('side-left', true)
+                    .classed('side-right', false);
+            } else {
+                tooltip.style('left', `${xScale(data.day) - xScale.bandwidth() / 2 - 25}px`)
+                tooltip.classed('side-left', false)
+                    .classed('side-right', true);
+            }
+        }).on('mouseleave', () => {
+            tooltip.classed('opacity-100', false);
+    })
         .transition()
         .duration(totalAnimTime)
         .attr('height', data => chartHeight - yScale(data.value))
-        .attr('y', data => yScale(data.value));
+        .attr('y', data => yScale(data.value))
+
 }
 
-const summaryBtn = $('.summary');
+const summaryBtn = $('button.summary');
 
 summaryBtn.on('click', function() {
     renderChart();
 })
 
 $('.report-btn').on('click', function(ev) {
+    console.log('report btn')
     ev.stopPropagation();
     renderChart();
 });

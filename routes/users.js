@@ -31,7 +31,7 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
 });
 
 router.post('/login', passport.authenticate('local', {
-    successRedirect: `/?${
+    successRedirect: `/app?${
         querystring.stringify({
             message_type: 'success',
             message_title: 'Login Success',

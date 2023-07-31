@@ -9,6 +9,7 @@
     * TODO: Add information about pomofocus usage in readme and on main page
     * TODO: start implementing responsive layout;
     * TODO: add ? button in corner which leads to info page
+    *  TODO: add sounds when tasks end
 */
 
 async function generateUsers() {
@@ -96,6 +97,10 @@ const timeModes = {
 }
 
 $(document).ready(() => {
+
+    if (!$('body').data('isauthenticated')) {
+        return;
+    }
 
     let notificationsAllowed, notification;
     (async () => {

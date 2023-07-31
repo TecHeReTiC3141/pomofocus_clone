@@ -5,7 +5,14 @@ const Task = require('../models/Task');
 const DoneTask = require('../models/DoneTask');
 const {User, defaultUserSettings} = require("../models/User");
 
-router.get('/', async (req, res) => {
+const {checkAuthenticated, checkNotAuthenticated} = require('../utils/middleware');
+
+
+router.get('/', (req, res) => {
+    res.render('index.ejs')
+})
+
+router.get('/app',  checkAuthenticated, async (req, res) => {
     let tasks, totalPomosDone = 0, totalPomosNeed = 0;
     if (req.isAuthenticated()) {
         tasks = await Task.findAll({

@@ -39,7 +39,8 @@
     <script src="https://d3js.org/d3-transition.v1.min.js" defer></script>
 
     <script defer src="/js/chartSetup.js"></script>
-    <script defer src="/js/index.js"></script>
+    <script defer src="/js/forAuth.js"></script>
+    <script defer src="/js/forNonAuth.js"></script>
     <!--    <script defer src="/js/fileUpload.js" type="module"></script>-->
 
     <link href="/dist/output.css" type="text/css" rel="stylesheet">
@@ -49,7 +50,8 @@
 <!--            rel="stylesheet">-->
 </head>
 <body class="bg-pomodoro
- text-white font-body transition ease-linear duration-500 min-w-[32rem]">
+ text-white font-body transition ease-linear duration-500 min-w-[32rem]"
+      data-isAuthenticated=<%= isAuthenticated %>>
     <%- body %>
     <%- include('../notification') %>
     <div class="blur-page bg-opacity-25 bg-black fixed

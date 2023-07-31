@@ -36,15 +36,33 @@ chart.append('g')
     .attr('transform', `translate(0, ${chartHeight})`)
     .style('margin-top', '1rem');
 
-chart.selectAll('.bar')
-    .data(testData)
-    .enter()
-    .append('rect')
-    .classed('bar', true)
-    .attr('x', data => xScale(data.day))
-    .attr('y', chartHeight)
-    .attr('width', xScale.bandwidth())
-    .transition()
-    .duration(totalAnimTime)
-    .attr('height', data => chartHeight - yScale(data.value))
-    .attr('y', data => yScale(data.value));
+function renderChart() {
+    chart
+        .selectAll('.bar')
+        .remove();
+
+    chart.selectAll('.bar')
+        .data(testData)
+        .enter()
+        .append('rect')
+        .classed('bar', true)
+        .attr('x', data => xScale(data.day))
+        .attr('y', chartHeight)
+        .attr('width', xScale.bandwidth())
+        .transition()
+        .duration(totalAnimTime)
+        .attr('height', data => chartHeight - yScale(data.value))
+        .attr('y', data => yScale(data.value));
+}
+
+const summaryBtn = $('.summary');
+
+summaryBtn.on('click', function() {
+    renderChart();
+})
+
+$('.report-btn').on('click', function(ev) {
+    ev.stopPropagation();
+    renderChart();
+});
+

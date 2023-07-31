@@ -2,11 +2,7 @@
     *
     * TODO: search for better font
     * TODO: implement adding task using cookies
-    * TODO: think about adding toast notifications
-    * TODO: save all done tasks in doneTask Table (start and finish time, task name),
-    *  then use it for statistics
     *  Tasks for TOMORROW:
-    * TODO: implement task pagination;
     * TODO: add top users;
     *  Add information about pomofocus usage in readme and on main page
     * TODO: start implementing responsive layout;

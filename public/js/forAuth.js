@@ -1,7 +1,6 @@
 /*
     *
     * TODO: search for better font
-    * TODO: implement adding task using cookies for non-auth users
     * TODO: fix bugs:
     *  1. problem with updating total-days-accessed and day-streak without reloading;
     *  2. problem with counting day streak

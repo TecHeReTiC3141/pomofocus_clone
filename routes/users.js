@@ -237,7 +237,6 @@ router.get('/get_top_users', async (req, res) => {
                 totalFocusTime,
             });
         }
-        console.log(usersTop);
         usersTop.sort((u1, u2) =>
             u2.totalFocusTime - u1.totalFocusTime);
         res.send({

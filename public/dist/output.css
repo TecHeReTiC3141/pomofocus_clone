@@ -1040,6 +1040,10 @@ body.dark .toggle-task {
   height: 100vh;
 }
 
+.h-auto {
+  height: auto;
+}
+
 .w-12 {
   width: 3rem;
 }
@@ -1949,5 +1953,9 @@ body.dark .toggle-task {
 @media (min-width: 768px) {
   .md\:inline-block {
     display: inline-block;
+  }
+
+  .md\:text-\[1\.2rem\] {
+    font-size: 1.2rem;
   }
 }

@@ -95,6 +95,8 @@ const timeModes = {
     },
 }
 
+const toggleTaskSound = new Audio('/audio/toggleBtn.mp3');
+
 $(document).ready(() => {
 
     if (!$('body').data('isauthenticated')) {
@@ -196,7 +198,7 @@ $(document).ready(() => {
         $('body').toggleClass('dark');
     }
 
-    $('.toggle-task').on('click', function () {
+    $('.toggle-task').on('click', async function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
@@ -218,6 +220,7 @@ $(document).ready(() => {
                 })
             }
         }
+        await toggleTaskSound.play();
         toggleDarkMode();
     })
 

@@ -7,6 +7,7 @@ const defaultUserSettings = {
     longBreakTime: 10,
     longBreakInterval: 3,
     darkMode: true,
+    alarmSound: 'wood',
 }
 
 const User = connection.define('User', {

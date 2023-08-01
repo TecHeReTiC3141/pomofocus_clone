@@ -664,6 +664,12 @@ $(document).ready(() => {
         toggleFixLayout();
     });
 
+    // ------- DETAIL SECTION ------------
+
+    const doneTasksPrevPageBtn = $('.detail .prev-page'),
+        doneTasksNextPageBtn = $('.detail .next-page'),
+        currentDoneTasksPageInd = $('.detail .current-page')
+
     function formatTaskDate(startDate, finishDate) {
         const monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
@@ -689,6 +695,65 @@ $(document).ready(() => {
                 ${startHours}:${startMins} ~ ${finishHours}:${finishMins}`;
     }
 
+    function renderDoneTask(task, startDate, finishDate) {
+        return `
+                <tr class="task border-b border-gray-100">
+                    <td class="text-sm">${formatTaskDate(startDate, finishDate)}</td>
+                    <td class="font-bold text-gray-800 py-3">${task.name.trim()}</td>
+                    <td class="text-gray-600 py-3">${task.duration}</td>
+                </tr>
+            `
+    }
+
+    let doneTasksData, currentDoneTasksPage = 1,
+        tasksOnPage = 10, doneTasksMaxPages;
+
+    doneTasksPrevPageBtn.on('click', function() {
+        if (currentDoneTasksPage === 1) {
+            return;
+        } if (currentDoneTasksPage === 2) {
+            $(this).addClass('opacity-0').addClass('cursor-default');
+        } else if (currentDoneTasksPage === doneTasksMaxPages) {
+            doneTasksNextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+        }
+
+        currentDoneTasksPageInd.text(--currentDoneTasksPage);
+        renderDoneTasksTable();
+    });
+
+    doneTasksNextPageBtn.on('click', function() {
+        if (currentDoneTasksPage === doneTasksMaxPages) {
+            return;
+        } if (currentDoneTasksPage === doneTasksMaxPages - 1) {
+            $(this).addClass('opacity-0').addClass('cursor-default');
+        } else if (currentDoneTasksPage === 1) {
+            doneTasksPrevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+        }
+
+        currentDoneTasksPageInd.text(++currentDoneTasksPage);
+        renderDoneTasksTable();
+    });
+
+    function renderDoneTasksTable() {
+
+        $('.done-task tr.task').remove();
+        $.get('/users/get_done_tasks', {}, data => {
+            if (!data.success) return;
+            doneTasksData = data.data;
+            doneTasksMaxPages = Math.ceil(doneTasksData.length / tasksOnPage);
+            let currentInd = (currentDoneTasksPage - 1) * tasksOnPage + 1;
+            for (let task of doneTasksData.slice(
+                (currentDoneTasksPage - 1) * tasksOnPage,
+                currentDoneTasksPage * tasksOnPage,
+            )) {
+                const startDate = new Date(task.startTime),
+                    finishDate = new Date(task.finishTime);
+                $('.done-task').append($(renderDoneTask(task, startDate, finishDate)))
+            }
+        });
+
+    }
+
     $('.report-nav > button').on('click', function() {
         $('.report-nav > button').each(function() {
             $(this).removeClass('active');
@@ -700,31 +765,15 @@ $(document).ready(() => {
         $(`.user-report > .${section}`).removeClass('hidden');
 
         if ($(this).hasClass('detail')) {
-            $('.done-task tr.task').remove();
-            $.get('/users/get_done_tasks', {}, data => {
-                if (!data.success) return;
-                const tasks = data.data;
-                console.log(tasks);
-                for (let task of tasks) {
-                    const startDate = new Date(task.startTime),
-                          finishDate = new Date(task.finishTime);
-                    $('.done-task').append($(`
-                        <tr class="task border-b border-gray-100">
-                            <td class="text-sm">${formatTaskDate(startDate, finishDate)}</td>
-                            <td class="font-bold text-gray-800 py-3">${task.name.trim()}</td>
-                            <td class="text-gray-600 py-3">${task.duration}</td>
-                        </tr>
-                    `))
-                }
-            });
+            renderDoneTasksTable();
         }
     })
 
     // ------- USERS TOP ------------
 
     const usersTopTable = $('.users-top');
-    const prevPageBtn = $('.ranking .prev-page'),
-            nextPageBtn = $('.ranking .next-page'),
+    const usersTopPrevPageBtn = $('.ranking .prev-page'),
+            usersTopNextPageBtn = $('.ranking .next-page'),
             currentUserTopPageInd = $('.ranking .current-page')
 
     let usersTopData, currentUsersTopPage = 1, usersOnPage = 25, usersTopMaxPages;
@@ -780,26 +829,26 @@ $(document).ready(() => {
         }
     });
 
-    prevPageBtn.on('click', function() {
+    usersTopPrevPageBtn.on('click', function() {
         if (currentUsersTopPage === 1) {
             return;
         } if (currentUsersTopPage === 2) {
             $(this).addClass('opacity-0').addClass('cursor-default');
         } else if (currentUsersTopPage === usersTopMaxPages) {
-            nextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+            usersTopNextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
         }
 
         currentUserTopPageInd.text(--currentUsersTopPage);
         renderUsersTopPage();
     });
 
-    nextPageBtn.on('click', function() {
+    usersTopNextPageBtn.on('click', function() {
         if (currentUsersTopPage === usersTopMaxPages) {
             return;
         } if (currentUsersTopPage === usersTopMaxPages - 1) {
             $(this).addClass('opacity-0').addClass('cursor-default');
         } else if (currentUsersTopPage === 1) {
-            prevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+            usersTopPrevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
         }
 
         currentUserTopPageInd.text(++currentUsersTopPage);

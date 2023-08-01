@@ -4,13 +4,10 @@ for (let i = 0; i < 7; ++i) {
     const prevDay = new Date(today.setHours(0, 0, 0, 0));
     prevDay.setDate(prevDay.getDate() - 6 + i);
     const [day, month, date, year] = prevDay.toDateString().split(' ')
-    console.log(day, month, date, year);
     const entry = {id: i, day: `(${day}) ${date}-${month}`,
         value: +(Math.random() * 2).toFixed(1), };
     testData.push(entry);
 }
-
-console.log(testData);
 
 const margins = {
     top: 20,

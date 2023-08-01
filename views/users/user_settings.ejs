@@ -54,6 +54,20 @@
                 'active'%> block" data-field="darkMode"></button>
         </div>
 
+        <h2 class="text-gray-300 uppercase my-6">
+            <i class="fa-solid fa-volume-high"></i> Sound</h2>
+        <div class="flex justify-between items-center my-8">
+            <label for="alarmSound" class="text-gray-600 font-bold block">Alarm Sound</label>
+
+            <select name="alarmSound" id="alarmSound" class="bg-gray-200 p-2 border-0
+             focus:outline-none text-black rounded-md">
+                <option value="<%= settings.alarmSound %>" selected><%=
+                    settings.alarmSound[0].toUpperCase() + settings.alarmSound.slice(1) %>
+                </option>
+
+            </select>
+
+        </div>
     </div>
 
     <div class="absolute left-0 top-full w-full p-3 rounded-b-md

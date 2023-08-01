@@ -97,6 +97,12 @@ const timeModes = {
 
 const toggleTaskSound = new Audio('/audio/toggleBtn.mp3');
 
+const alarmSoundNames = ['bell', 'bird', 'digital', 'wood'];
+const alarmSounds = {};
+for (let sound of alarmSoundNames) {
+    alarmSounds[sound] = new Audio(`/audio/alarmSounds/${sound}.mp3`);
+}
+
 $(document).ready(() => {
 
     if (!$('body').data('isauthenticated')) {
@@ -122,7 +128,13 @@ $(document).ready(() => {
     function setUser() {
         $.get('/users/get_user_settings', {}, data => {
             updateSettings(data);
-
+            for (let sound of alarmSoundNames) {
+                console.log(sound, userSettings);
+                if (sound === userSettings.alarmSound) continue;
+                $('#alarmSound', settingsForm).append(
+                    $(`<option value="${sound}">${sound[0].toUpperCase() + sound.slice(1)}</option>`)
+                )
+            }
             modesBtns.each(function () {
                 $(this).on('click', function () {
                     currentMode = $(this).text()
@@ -228,7 +240,7 @@ $(document).ready(() => {
         currentTime = 0;
     })
 
-    setInterval(() => {
+    setInterval(async () => {
         if (taskActive && currentTime > 0) {
 
             timeLeft.text(setLeftTime(--currentTime));
@@ -273,7 +285,7 @@ $(document).ready(() => {
                 }
             }
             $('.time-left-bar').width(0);
-
+            await alarmSounds[userSettings.alarmSound].play();
             $('.time-left-container').addClass('hidden');
             toggleDarkMode();
             setState();
@@ -626,7 +638,7 @@ $(document).ready(() => {
     $('#submit-btn', settingsForm).on('click', function(ev) {
         ev.preventDefault();
         let newSettings = processForm(settingsForm);
-
+        console.log(newSettings);
         $.post('/users/update_user_settings', { settings: newSettings }, data => {
             if (data.success) {
                 updateSettings(newSettings);

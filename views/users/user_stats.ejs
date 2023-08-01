@@ -1,0 +1,138 @@
+<div class="user-report bg-white rounded-md
+        absolute top-0 left-[50%] -translate-x-[50%]
+      w-[38rem] text-gray-400 text-start pt-12 pb-4 px-6 mt-12 hidden z-40">
+    <button class="close-report absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="report-nav rounded-xl w-full border-red-400 border-2 flex justify-between mb-8">
+        <button class="summary active rounded-l-md border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Summary</button>
+        <button class="detail border-red-400 border-r-2 py-2 text-center grow text-red-400 font-bold">Detail</button>
+        <button class="ranking border-transparent border-r-2 rounded-r-md py-2 text-center grow text-red-400 font-bold">Ranking</button>
+    </div>
+
+    <div class="summary">
+
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Activity Summary</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
+        </div>
+
+        <% if (!isAuthenticated) { %>
+            <p>* This report will be available when you are logged in</p>
+        <% } %>
+
+        <div class="flex gap-4 my-6">
+
+            <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                <i class="fa-regular fa-clock text-2xl absolute top-2 left-4"></i>
+                <h3 class="user-hours-focused -text-xl"><%= isAuthenticated ? (user.totalHoursFocused / 60).toFixed(1) : '--' %></h3>
+                <h4 class="text-sm">hours focused</h4>
+            </div>
+            <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                <i class="fa-regular fa-calendar-check text-2xl absolute top-2 left-4"></i>
+                <h3 class="user-days-accessed -text-xl"><%= isAuthenticated ? user.totalDaysAccessed : '--' %></h3>
+                <h4 class="text-sm">days accessed</h4>
+            </div>
+            <div class="bg-red-100 rounded-md text-end pr-4 pl-10 pb-2 pt-6 text-red-400 relative">
+                <i class="fa-solid fa-fire-flame-curved fa-beat-fade text-2xl absolute top-2 left-4"></i>
+                <h3 class="user-day-streak text-xl"><%= isAuthenticated ? user.dayStreak : '--' %></h3>
+                <h4 class="text-sm">day streak</h4>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Focus Hours</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
+        </div>
+
+        <div class="period rounded-xl w-full border-red-300 flex justify-end my-4">
+            <button class="summary active rounded-l-md border-red-300 border-2 py-1 px-8
+                text-center text-red-400 text-sm">Summary</button>
+            <button class="detail border-red-300 border-2 py-1 px-8
+                text-center text-red-400 text-sm">Detail</button>
+            <button class="ranking  border-red-300 border-2 rounded-r-md py-1 px-8
+                text-center text-red-400 text-sm">Ranking</button>
+        </div>
+
+        <% if (!isAuthenticated) { %>
+            <p>* This report will be available when you are logged in</p>
+        <% } %>
+
+        <div class="chart w-full relative mt-12 mb-8">
+            <svg class="chart-img"></svg>
+            <div class="tooltip absolute bg-gray-800 rounded text-gray-100
+            py-1 px-2 opacity-0 -translate-y-[150%] left-0
+            after:text-transparent
+            after:content-[''] after:absolute after:top-full
+            after:border-8 after:border-t-black after:border-l-transparent
+            after:border-r-transparent after:border-b-transparent
+            transition transition-all ease-linear duration-500">
+                <h4 class="day text-xs text-white">Day</h4>
+                <p class="total uppercase">Total</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 my-4">
+            <h2 class="font-bold text-black text-xl">Total Focus Time This Week</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
+            <h3 class="font-bold text-black text-xl">30:00</h3>
+        </div>
+
+    </div>
+
+    <div class="detail hidden">
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Activity Summary</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
+        </div>
+
+        <table class="done-task table-fixed border-collapse w-full">
+            <tr class="border-b text-gray-400">
+                <th  class="text-start py-3 w-28 uppercase">Date</th>
+                <th class="text-start py-3 uppercase">Task</th>
+                <th class="text-start py-3 w-24 uppercase">Minutes</th>
+            </tr>
+        </table>
+
+        <div class="page flex justify-center items-center gap-12 w-full pt-8 pb-2">
+            <button class="prev-page px-6 py-2 text-gray-800 text-xl
+            shadow-md  shadow-gray-400 rounded-md border border-gray-300
+            active:shadow-none opacity-0 cursor-default">
+                <i class="fa-solid fa-chevron-left font-bold"></i>
+            </button>
+            <h3 class="current-page text-2xl">1</h3>
+            <button class="next-page px-6 py-2 text-gray-800 text-xl
+              shadow-md shadow-gray-400 rounded-md border border-gray-300 active:shadow-none">
+                <i class="fa-solid fa-chevron-right font-bold"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="ranking hidden">
+        <div class="flex items-center gap-4">
+            <h2 class="font-bold text-black text-xl">Focus Time This Week</h2>
+            <hr class="h-[1px] grow bg-gray-200 border-0">
+        </div>
+
+        <table class="users-top table-fixed border-collapse w-full">
+            <tr class="border-b text-gray-400">
+                <th  class="text-start py-3 w-12 uppercase"></th>
+                <th class="text-start py-3 text-sm uppercase">User</th>
+                <th class="text-start py-3 w-24 text-xs uppercase">Time (HH:MM)</th>
+            </tr>
+        </table>
+        <div class="page flex justify-center items-center gap-12 w-full pt-8 pb-2">
+            <button class="prev-page px-6 py-2 text-gray-800 text-xl
+            shadow-md  shadow-gray-400 rounded-md border border-gray-300
+            active:shadow-none opacity-0 cursor-default">
+                <i class="fa-solid fa-chevron-left font-bold"></i>
+            </button>
+            <h3 class="current-page text-2xl">1</h3>
+            <button class="next-page px-6 py-2 text-gray-800 text-xl
+              shadow-md shadow-gray-400 rounded-md border border-gray-300 active:shadow-none">
+                <i class="fa-solid fa-chevron-right font-bold"></i>
+            </button>
+        </div>
+    </div>
+</div>

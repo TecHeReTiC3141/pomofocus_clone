@@ -1,67 +1,66 @@
-<div class="settings bg-opacity-25 bg-black fixed w-full h-full top-0 left-0
-flex justify-center items-start hidden">
-    <form method="POST" action=""
-          class="settings-form bg-white rounded-t-md relative
-          w-[28rem] mt-12 text-gray-400 text-start">
+<form method="POST" action=""
+      class="settings-form bg-white rounded-t-md absolute top-12 left-[50%]
+      -translate-x-[50%] w-[28rem] text-gray-400 text-start z-40 hidden">
 
-        <div class="flex justify-between w-full py-3  px-6 border-b border-gray-300">
-            <h2 class="text-gray-600  ">Settings</h2>
-            <button class="close-settings absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div class="mt-4 px-6 w-full">
-            <h2 class="text-gray-300 uppercase my-6">
-                <i class="fa-regular fa-clock "></i> Timer</h2>
+    <div class="flex justify-between w-full py-3  px-6 border-b border-gray-300">
+        <h2 class="text-gray-600  ">Settings</h2>
+        <button class="close-settings absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="mt-4 px-6 w-full">
+        <h2 class="text-gray-300 uppercase my-6">
+            <i class="fa-regular fa-clock "></i> Timer</h2>
 
-            <h3 class="text-gray-600 font-bold">Time (minutes)</h3>
+        <h3 class="text-gray-600 font-bold">Time (minutes)</h3>
 
-            <div class="flex gap-8">
-                 <div>
-                     <label for="" class="text-sm text-gray-300 block">Pomodoro
-                         <input type="number" value="<%= settings.pomoTime %>" min="1" class="bg-gray-200 w-28
-        focus:outline-none rounded text-black p-2 indent-1" name="pomoTime" id="pomoTime">
-                     </label>
-                 </div>
+        <div class="flex gap-8">
+             <div>
+                 <label for="" class="text-sm text-gray-300 block">Pomodoro
+                     <input type="number" value="<%= settings.pomoTime %>" min="1" class="bg-gray-200 w-28
+    focus:outline-none rounded text-black p-2 indent-1" name="pomoTime" id="pomoTime">
+                 </label>
+             </div>
 
-                <div>
-                    <label for="" class="text-sm text-gray-300 block">Short Break
-                        <input type="number" value="<%= settings.shortBreakTime %>" min="1" class="bg-gray-200 w-28
-        focus:outline-none rounded text-black p-2 indent-1" name="shortBreakTime" id="shortBreakTime">
-                    </label>
-                </div>
-
-                <div>
-                    <label for="" class="text-sm text-gray-300 block">Long Break
-                        <input type="number" value="<%= settings.longBreakTime %>" min="1" class="bg-gray-200 w-28
-        focus:outline-none rounded text-black p-2 indent-1" name="longBreakTime" id="longBreakTime">
-                    </label>
-                </div>
-
+            <div>
+                <label for="" class="text-sm text-gray-300 block">Short Break
+                    <input type="number" value="<%= settings.shortBreakTime %>" min="1" class="bg-gray-200 w-28
+    focus:outline-none rounded text-black p-2 indent-1" name="shortBreakTime" id="shortBreakTime">
+                </label>
             </div>
 
-            <div class="flex justify-between items-center my-8">
-                <label for="" class="text-gray-600 font-bold block">Long Break Interval</label>
-                <input type="number" value="<%= settings.longBreakInterval %>" min="1" class="bg-gray-200 w-16
-        focus:outline-none rounded-md text-black p-1 indent-1.5" name="longBreakInterval" id="longBreakInterval">
-            </div>
-
-            <h2 class="text-gray-300 uppercase my-6">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Theme</h2>
-            <div class="flex justify-between items-center my-8">
-                <label for="" class="text-gray-600 font-bold block">Dark Mode</label>
-                <input type="checkbox" <%= settings.darkMode === 'true' && 'checked'%> name="darkMode" id="darkMode" class="hidden">
-                <button class="toggle block" data-field="darkMode"></button>
+            <div>
+                <label for="" class="text-sm text-gray-300 block">Long Break
+                    <input type="number" value="<%= settings.longBreakTime %>" min="1" class="bg-gray-200 w-28
+    focus:outline-none rounded text-black p-2 indent-1" name="longBreakTime" id="longBreakTime">
+                </label>
             </div>
 
         </div>
 
-        <div class="absolute left-0 top-full w-full p-3 rounded-b-md
-            flex justify-end gap-3 bg-gray-300">
-
-            <button class="bg-gray-700 hover:bg-black text-white py-2 px-4
-            rounded relative active:top-0.5" id="submit-btn">Save</button>
+        <div class="flex justify-between items-center my-8">
+            <label for="" class="text-gray-600 font-bold block">Long Break Interval</label>
+            <input type="number" value="<%= settings.longBreakInterval %>" min="1" class="bg-gray-200 w-16
+    focus:outline-none rounded-md text-black p-1 indent-1.5" name="longBreakInterval" id="longBreakInterval">
         </div>
-    </form>
-</div>
+
+        <h2 class="text-gray-300 uppercase my-6">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Theme</h2>
+        <div class="flex justify-between items-center my-8">
+            <label for="" class="text-gray-600 font-bold block">Dark Mode</label>
+            <input type="checkbox" <%= !(settings.darkMode === 'false' || !settings.darkMode) &&
+                'checked'%> name="darkMode" id="darkMode" class="hidden">
+            <button class="toggle <%= !(settings.darkMode === 'false' || !settings.darkMode) &&
+                'active'%> block" data-field="darkMode"></button>
+        </div>
+
+    </div>
+
+    <div class="absolute left-0 top-full w-full p-3 rounded-b-md
+        flex justify-end gap-3 bg-gray-300">
+
+        <button class="bg-gray-700 hover:bg-black text-white py-2 px-4
+        rounded relative active:top-0.5" id="submit-btn">Save</button>
+    </div>
+</form>
 

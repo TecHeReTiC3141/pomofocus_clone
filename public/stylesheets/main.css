@@ -73,4 +73,32 @@
     body.dark .toggle-task {
         @apply bg-transparent border-black text-white ;
     }
+
+    .report-nav > button.active {
+        @apply bg-red-400 text-white border-red-400;
+    }
+
+    .toast-not.success {
+        @apply text-green-600 bg-green-300 border-green-600;
+    }
+
+    .toast-not.error {
+        @apply text-red-600 bg-red-300 border-red-600;
+    }
+
+    .toast-not.info {
+        @apply text-blue-600 bg-blue-300 border-blue-600;
+    }
+
+    .chart .bar {
+        @apply fill-red-200 opacity-60 stroke-red-800 stroke-2;
+    }
+
+    .tooltip.side-left {
+        @apply after:left-1.5;
+    }
+
+    .tooltip.side-right {
+        @apply after:right-3;
+    }
 }

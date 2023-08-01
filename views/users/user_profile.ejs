@@ -1,51 +1,46 @@
-<div class="user-profile fixed top-0 left-0 w-screen h-screen
-            bg-black bg-opacity-20
-            flex justify-center items-center hidden">
-
-    <form action="/users/update/<%= user.id %>" method="POST" class="w-[32rem]
-                bg-white rounded-t-md pb-4 pt-12 px-6
-                text-black flex justify-start items-center relative mb-12
-                transition ease-linear duration-300"
-          id="user-update-form" enctype="multipart/form-data">
-        <h3 class="absolute top-4 left-6 uppercase text-gray-400 font-bold">Account</h3>
-        <button class="close-profile absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+<form action="/users/update/<%= user.id %>" method="POST" class="user-profile w-[32rem]
+            bg-white rounded-t-md pb-4 pt-12 px-6
+            absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]
+            text-black flex justify-start items-center mb-12
+            transition ease-linear duration-300 z-40 hidden"
+      id="user-update-form" enctype="multipart/form-data">
+    <h3 class="absolute top-4 left-6 uppercase text-gray-400 font-bold">Account</h3>
+    <button class="close-profile absolute right-4 top-2 text-2xl text-gray-400 hover:text-gray-600">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
 
 <!--        <div class="w-16 h-16 border-4 border-gray-400-->
 <!--                        border-dotted rounded-full mr-10 overflow-hidden">-->
 
-        <div class="avatar-field relative group">
-            <img src="<%= user.avatar || "/images/user-icon.png"%>" alt="User avatar"
-                 id="avatar" class="w-16 border-4 border-gray-400
-                    border-dotted rounded-full overflow-hidden group-hover:brightness-90">
-            <div class="absolute top-0 left-0 w-full h-full flex
-            justify-center items-center">
+    <div class="avatar-field relative group">
+        <img src="<%= user.avatar || "/images/user-icon.png"%>" alt="User avatar"
+             id="avatar" class="w-16 border-4 border-gray-400
+                border-dotted rounded-full overflow-hidden group-hover:brightness-90">
+        <div class="absolute top-0 left-0 w-full h-full flex
+        justify-center items-center">
 
-                <i class="fa-solid fa-circle-plus absolute text-gray-200 text-3xl  hidden group-hover:block text-opacity-80"></i>
-            </div>
+            <i class="fa-solid fa-circle-plus absolute text-gray-200 text-3xl  hidden group-hover:block text-opacity-80"></i>
         </div>
+    </div>
 
 <!--        </div>-->
-        <input type="file" name="filedata" id="filedata" class="hidden">
+    <input type="file" name="filedata" id="filedata" class="hidden">
 
-        <div class="ml-10">
-            <label for="" class="w-full">
-                <input type="text" value="<%= user.name %>" class="text-2xl
-            focus:outline-none my-2 font-bold
-             border-b border-gray-200 mb-4" name="name" id="name" required>
-            </label>
+    <div class="ml-10">
+        <label for="" class="w-full">
+            <input type="text" value="<%= user.name %>" class="text-2xl
+        focus:outline-none my-2 font-bold
+         border-b border-gray-200 mb-4" name="name" id="name" required>
+        </label>
 
-            <p class="text-left"><%= user.email %></p>
-        </div>
+        <p class="text-left"><%= user.email %></p>
+    </div>
 
 
-        <div class="absolute left-0 top-full w-full p-3 rounded-b-md
-                flex justify-end gap-3 bg-gray-300">
-            <button class="text-gray-600 text-sm" id="cancel-update-btn">Cancel</button>
-            <button class="submit-btn bg-black text-white py-2 px-4 rounded">Save</button>
-        </div>
+    <div class="absolute left-0 top-full w-full p-3 rounded-b-md
+            flex justify-end gap-3 bg-gray-300">
+        <button class="text-gray-600 text-sm" id="cancel-update-btn">Cancel</button>
+        <button class="submit-btn bg-black text-white py-2 px-4 rounded">Save</button>
+    </div>
 
-    </form>
-
-</div>
+</form>

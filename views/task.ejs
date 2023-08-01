@@ -17,12 +17,11 @@
         </div>
     </div>
 
-    <% if (task.description) { %>
-        <div class="task-description bg-yellow-100 w-[28rem] mx-4
-        text-gray-700 p-2 text-left rounded shadow">
-            <%= task.description%>
-        </div>
-    <% } %>
+    <div class="task-description bg-yellow-100 w-[28rem] mx-4
+    text-gray-700 p-2 text-left rounded shadow
+    <%= !task.description?.length && 'hidden' %>">
+        <%= task.description  %>
+    </div>
 
     <%- include('./forms/update_form', {task}) %>
 </div>

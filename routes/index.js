@@ -1,13 +1,18 @@
 const express = require('express');
 const router = express.Router();
 
-const { getTask } = require('../utils/generateTemplates');
-
 const Task = require('../models/Task');
 const DoneTask = require('../models/DoneTask');
 const {User, defaultUserSettings} = require("../models/User");
 
-router.get('/', async (req, res) => {
+const {checkAuthenticated, checkNotAuthenticated} = require('../utils/middleware');
+
+
+router.get('/', (req, res) => {
+    res.render('index.ejs')
+})
+
+router.get('/app',  checkAuthenticated, async (req, res) => {
     let tasks, totalPomosDone = 0, totalPomosNeed = 0;
     if (req.isAuthenticated()) {
         tasks = await Task.findAll({
@@ -44,17 +49,20 @@ router.get('/', async (req, res) => {
                 changed = true;
             }
         }
+
         if (changed) {
             await currentUser.update({
                 settings: JSON.stringify(settings),
             });
             await currentUser.save();
         }
+
     } else {
         tasks = req.cookies.tasks || [];
     }
 
-    res.render('app.ejs', {tasks, totalPomosDone, totalPomosNeed});
+    res.render('app.ejs', {tasks, totalPomosDone,
+        totalPomosNeed});
 });
 
 router.post('/new', async (req, res) => {
@@ -69,7 +77,6 @@ router.post('/new', async (req, res) => {
     } catch (err) {
         console.log(`Error while adding {err.message}`);
     }
-
 })
 
 router.get('/task_done/:id', async (req, res) => {
@@ -98,15 +105,85 @@ router.post('/save_task', async (req, res) => {
     if (!req.isAuthenticated()) {
         res.send('User is not authenticated');
     }
+
+    const curTaskStart = +req.body.startTime, curTaskFinish = +req.body.finishTime;
     try {
-        console.log(req.body);
-        await DoneTask.create({
+        const curUser = await User.findByPk(req.user.id);
+        const lastTask = await DoneTask.findOne({
+            where: {
+                UserId: req.user.id,
+            },
+            order: [
+                ['finishTime', 'DESC'],
+            ],
+            limit: 1,
+        })
+        if (lastTask && lastTask.name === req.body.name ) {
+            const lastTaskFinish = lastTask.finishTime.getTime();
+            if (curTaskStart - lastTaskFinish <= 5 * 60 * 1000) {
+                const prevDur = lastTask.duration;
+                await lastTask.update({
+                    finishTime: new Date(curTaskFinish),
+                })
+
+                await curUser.increment('totalHoursFocused',
+                    { by: lastTask.duration - prevDur })
+                await lastTask.save();
+                return res.send({ success: true });
+            }
+        }
+
+        const doneTasksToday = await DoneTask.findAll({
+            where: {
+                UserId: req.user.id,
+            }
+        });
+        let noTasksDoneToday = true;
+        for (let task of doneTasksToday) {
+            if (task.doneToday) {
+                noTasksDoneToday = false;
+                break;
+            }
+        }
+        if (noTasksDoneToday) {
+            console.log('No tasks today ')
+            await curUser.increment('totalDaysAccessed',
+                { by: 1 });
+            let anyTasksDoneYesterday = false;
+
+            for (let task of doneTasksToday) {
+
+                if (task.doneYesterday) {
+                    await curUser.increment('dayStreak',
+                        { by: 1 });
+                    anyTasksDoneYesterday = true;
+                    console.log('New day in day streak')
+                    break;
+                }
+            }
+
+            if (!anyTasksDoneYesterday) {
+                await curUser.update({ dayStreak: 1 });
+                await curUser.save();
+            }
+        }
+
+        const doneTask = await DoneTask.create({
             UserId: req.user.id,
             name: req.body.name,
-            startTime: new Date(+req.body.startTime),
-            finishTime: new Date(+req.body.finishTime),
-        })
-        res.send({ success: true });
+            startTime: new Date(curTaskStart),
+            finishTime: new Date(curTaskFinish),
+        });
+
+        await curUser.increment('totalHoursFocused',
+            { by: doneTask.duration })
+        res.send({
+            success: true,
+            newTask: true,
+            totalHoursFocused: curUser.totalHoursFocused,
+            totalDaysAccessed: curUser.totalDaysAccessed,
+            dayStreak: curUser.dayStreak,
+        });
     } catch (err) {
         console.log(`Error while saving task: ${err.message}`);
         res.sendStatus(503);

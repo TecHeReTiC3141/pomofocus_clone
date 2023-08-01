@@ -7,6 +7,7 @@ const defaultUserSettings = {
     longBreakTime: 10,
     longBreakInterval: 3,
     darkMode: true,
+    alarmSound: 'wood',
 }
 
 const User = connection.define('User', {
@@ -33,6 +34,24 @@ const User = connection.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: JSON.stringify(defaultUserSettings),
+    },
+
+    totalHoursFocused: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
+    totalDaysAccessed: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+
+    dayStreak: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
     },
 });
 

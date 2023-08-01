@@ -1,6 +1,7 @@
 /*
     *
     * TODO: search for better font
+    * TODO: implement adding task using cookies for non-auth users
     * TODO: fix bugs:
     *  1. problem with updating total-days-accessed and day-streak without reloading;
     *  2. problem with counting day streak
@@ -8,98 +9,19 @@
     * TODO: Add information about pomofocus usage in readme and on main page
     * TODO: start implementing responsive layout;
     * TODO: add ? button in corner which leads to info page
-    *  TODO: add sounds when tasks end
 */
 
-async function generateUsers() {
-
-    const randomUserGeneratorURL = 'https://randomuser.me/api/';
-    const randomUserGeneratorSearchParams = new URLSearchParams({
-        results: 100,
-        inc: 'name,email,login,picture',
-        noinfo: true,
-        // dl: true,
-    })
-    $.get(`${randomUserGeneratorURL}?${randomUserGeneratorSearchParams}`, {}, data => {
-        for (let user of data.results) {
-            user.name = user.name.first + ' ' + user.name.last;
-            user.avatar = user.picture.medium;
-            user.password = user.login.password;
-
-            $.post('/users/create_user', { ...user }, data => {
-                console.log(data);
-            } )
-
-        }
-    })
+const defaultUserSettings = {
+    pomoTime: 25,
+    shortBreakTime: 5,
+    longBreakTime: 10,
+    longBreakInterval: 3,
+    darkMode: true,
 }
-//
-// (async () => {
-//     await generateUsers();
-// })();
-
-function processForm(form) {
-    let data = {};
-    for (let { name, value } of form.serializeArray()) {
-        data[name] = value;
-    }
-
-    $('input:checkbox', form).map(function() {
-        data[this.name] = this.checked;
-    })
-    console.log(data);
-    return data;
-}
-
-function setLeftTime(timeLeft) {
-    let le = Math.floor(timeLeft / 60).toString(), ri = (timeLeft % 60).toString();
-    if (le.length === 1) {
-        le = '0' + le;
-    }
-    if (ri.length === 1) {
-        ri = '0' + ri;
-    }
-    return `${le}:${ri}`;
-}
-
-function setFinishTime() {
-    let pomosLeft = Number($('.total-pomos-need').text()) - Number($('.total-pomos-done').text());
-    let start = Date.now(), timeNeeded = Math.max(1000 * (pomosLeft * timeModes['Pomodoro'].time +
-        (pomosLeft - Math.floor(pomosLeft / 3) - 1) * timeModes['Short Break'].time +
-        Math.floor((pomosLeft - 1) / 3) * timeModes['Long Break'].time), 0);
-    if (pomosLeft) {
-        start += timeNeeded;
-    }
-
-    const finishTime = new Date(start);
-    let mins = finishTime.getMinutes().toString();
-    if (mins.length < 2) {
-        mins = '0' + mins;
-    }
-    $('.finish-time').text(`${finishTime.getHours()}:${mins}`);
-    $('.time-needed').text((timeNeeded / 3600000).toFixed(1));
-}
-
-const timeModes = {
-    'Pomodoro': {
-        time: 15,
-        color: 'pomodoro',
-    },
-    'Short Break': {
-        time: 3,
-        color: 'shortBreak',
-    },
-    'Long Break': {
-        time: 6,
-        color: 'longBreak',
-    },
-}
-
-const toggleTaskSound = new Audio('/audio/toggleBtn.mp3');
 
 $(document).ready(() => {
 
-    if (!$('body').data('isauthenticated')) {
+    if ($('body').data('isauthenticated')) {
         return;
     }
 
@@ -120,17 +42,19 @@ $(document).ready(() => {
     }
 
     function setUser() {
-        $.get('/users/get_user_settings', {}, data => {
-            updateSettings(data);
+        let settings = Cookies.get('user-settings');
+        if (!settings) {
+            settings = defaultUserSettings;
+        }
+        updateSettings(settings);
 
-            modesBtns.each(function () {
-                $(this).on('click', function () {
-                    currentMode = $(this).text()
-                    setState();
-                })
+        modesBtns.each(function () {
+            $(this).on('click', function () {
+                currentMode = $(this).text()
+                setState();
             })
-            setState();
         })
+        setState();
     }
 
     function setState() {
@@ -158,7 +82,7 @@ $(document).ready(() => {
 
         getTotalPomos();
 
-        document.title = `${timeLeft.text()} - ${currentMode === 'Pomodoro' ? 
+        document.title = `${timeLeft.text()} - ${currentMode === 'Pomodoro' ?
             $('.current-task-name').text() : 'Time for a break'}`;
     }
 
@@ -198,7 +122,7 @@ $(document).ready(() => {
         $('body').toggleClass('dark');
     }
 
-    $('.toggle-task').on('click', async function () {
+    $('.toggle-task').on('click', function () {
         taskActive = !taskActive;
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
@@ -220,7 +144,6 @@ $(document).ready(() => {
                 })
             }
         }
-        await toggleTaskSound.play();
         toggleDarkMode();
     })
 
@@ -244,24 +167,22 @@ $(document).ready(() => {
                 currentMode = (+$('.total-pomos-done').text() + 1) % userSettings.longBreakInterval === 0
                     ? 'Long Break' : 'Short Break';
                 const currentTask = $('.task.active');
-                $.get(`/task_done/${currentTask.data('id')}`, {}, data => {
-                    const {pomosDone, pomosNeed} = data;
-                    $('.task-pomos-need', currentTask).text(pomosNeed);
-                    $('.task-pomos-done', currentTask).text(pomosDone);
-                    getTotalPomos();
-                    console.log( +$('.total-pomos-done').text() )
-                });
+
+                const prevPomosDone = +$('.task-pomos-done', currentTask).text(),
+                    prevPomosNeed = +$('.task-pomos-need', currentTask).text();
+                const pomosDone = prevPomosDone + 1,
+                    pomosNeed = prevPomosNeed === prevPomosDone ? prevPomosNeed + 1 : prevPomosNeed;
+
+                $('.task-pomos-need', currentTask).text(pomosNeed);
+                $('.task-pomos-done', currentTask).text(pomosDone);
+                getTotalPomos();
+
                 if (notificationsAllowed && document.visibilityState === 'hidden') {
                     notification = new Notification(`Time to take a ${currentMode.toLowerCase()}!`)
                     notification.onclick = function() {
                         window.focus();
                     }
                 }
-                $.post('/save_task', {
-                    name: $('.current-task-name').text(),
-                    startTime: lastStart,
-                    finishTime: Date.now(),
-                }, () => {});
 
             } else {
                 currentMode = 'Pomodoro';
@@ -282,6 +203,7 @@ $(document).ready(() => {
 
     // -----------------TASKS-------------------
     const tasks = document.querySelector('.tasks');
+
     if (tasks) {
         let sortable = Sortable.create(tasks,
             {
@@ -311,7 +233,7 @@ $(document).ready(() => {
             totalPomosNeed += +$('.task-pomos-need', this).text();
             totalPomosDone += +$('.task-pomos-done', this).text();
         })
-        console.log(totalPomosNeed, totalPomosDone);
+
         $('.total-pomos-need').text(totalPomosNeed);
         $('.total-pomos-done').text(totalPomosDone);
         setFinishTime();
@@ -664,12 +586,6 @@ $(document).ready(() => {
         toggleFixLayout();
     });
 
-    // ------- DETAIL SECTION ------------
-
-    const doneTasksPrevPageBtn = $('.detail .prev-page'),
-        doneTasksNextPageBtn = $('.detail .next-page'),
-        currentDoneTasksPageInd = $('.detail .current-page')
-
     function formatTaskDate(startDate, finishDate) {
         const monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
@@ -695,65 +611,6 @@ $(document).ready(() => {
                 ${startHours}:${startMins} ~ ${finishHours}:${finishMins}`;
     }
 
-    function renderDoneTask(task, startDate, finishDate) {
-        return `
-                <tr class="task border-b border-gray-100">
-                    <td class="text-sm">${formatTaskDate(startDate, finishDate)}</td>
-                    <td class="font-bold text-gray-800 py-3">${task.name.trim()}</td>
-                    <td class="text-gray-600 py-3">${task.duration}</td>
-                </tr>
-            `
-    }
-
-    let doneTasksData, currentDoneTasksPage = 1,
-        tasksOnPage = 10, doneTasksMaxPages;
-
-    doneTasksPrevPageBtn.on('click', function() {
-        if (currentDoneTasksPage === 1) {
-            return;
-        } if (currentDoneTasksPage === 2) {
-            $(this).addClass('opacity-0').addClass('cursor-default');
-        } else if (currentDoneTasksPage === doneTasksMaxPages) {
-            doneTasksNextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
-        }
-
-        currentDoneTasksPageInd.text(--currentDoneTasksPage);
-        renderDoneTasksTable();
-    });
-
-    doneTasksNextPageBtn.on('click', function() {
-        if (currentDoneTasksPage === doneTasksMaxPages) {
-            return;
-        } if (currentDoneTasksPage === doneTasksMaxPages - 1) {
-            $(this).addClass('opacity-0').addClass('cursor-default');
-        } else if (currentDoneTasksPage === 1) {
-            doneTasksPrevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
-        }
-
-        currentDoneTasksPageInd.text(++currentDoneTasksPage);
-        renderDoneTasksTable();
-    });
-
-    function renderDoneTasksTable() {
-
-        $('.done-task tr.task').remove();
-        $.get('/users/get_done_tasks', {}, data => {
-            if (!data.success) return;
-            doneTasksData = data.data;
-            doneTasksMaxPages = Math.ceil(doneTasksData.length / tasksOnPage);
-            let currentInd = (currentDoneTasksPage - 1) * tasksOnPage + 1;
-            for (let task of doneTasksData.slice(
-                (currentDoneTasksPage - 1) * tasksOnPage,
-                currentDoneTasksPage * tasksOnPage,
-            )) {
-                const startDate = new Date(task.startTime),
-                    finishDate = new Date(task.finishTime);
-                $('.done-task').append($(renderDoneTask(task, startDate, finishDate)))
-            }
-        });
-
-    }
-
     $('.report-nav > button').on('click', function() {
         $('.report-nav > button').each(function() {
             $(this).removeClass('active');
@@ -765,16 +622,32 @@ $(document).ready(() => {
         $(`.user-report > .${section}`).removeClass('hidden');
 
         if ($(this).hasClass('detail')) {
-            renderDoneTasksTable();
+            $('.done-task tr.task').remove();
+            $.get('/users/get_done_tasks', {}, data => {
+                if (!data.success) return;
+                const tasks = data.data;
+                console.log(tasks);
+                for (let task of tasks) {
+                    const startDate = new Date(task.startTime),
+                        finishDate = new Date(task.finishTime);
+                    $('.done-task').append($(`
+                        <tr class="task border-b border-gray-100">
+                            <td class="text-sm">${formatTaskDate(startDate, finishDate)}</td>
+                            <td class="font-bold text-gray-800 py-3">${task.name.trim()}</td>
+                            <td class="text-gray-600 py-3">${task.duration}</td>
+                        </tr>
+                    `))
+                }
+            });
         }
     })
 
     // ------- USERS TOP ------------
 
     const usersTopTable = $('.users-top');
-    const usersTopPrevPageBtn = $('.ranking .prev-page'),
-            usersTopNextPageBtn = $('.ranking .next-page'),
-            currentUserTopPageInd = $('.ranking .current-page')
+    const prevPageBtn = $('.ranking .prev-page'),
+        nextPageBtn = $('.ranking .next-page'),
+        currentUserTopPageInd = $('.ranking .current-page')
 
     let usersTopData, currentUsersTopPage = 1, usersOnPage = 25, usersTopMaxPages;
 
@@ -801,7 +674,7 @@ $(document).ready(() => {
 
         for (let user of usersTopData.slice(
             (currentUsersTopPage - 1) * usersOnPage,
-                currentUsersTopPage * usersOnPage)) {
+            currentUsersTopPage * usersOnPage)) {
             usersTopTable.append($(renderUserInfo(currentInd++, user)));
         }
     }
@@ -829,26 +702,26 @@ $(document).ready(() => {
         }
     });
 
-    usersTopPrevPageBtn.on('click', function() {
+    prevPageBtn.on('click', function() {
         if (currentUsersTopPage === 1) {
             return;
         } if (currentUsersTopPage === 2) {
             $(this).addClass('opacity-0').addClass('cursor-default');
         } else if (currentUsersTopPage === usersTopMaxPages) {
-            usersTopNextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+            nextPageBtn.removeClass('opacity-0').removeClass('cursor-default');
         }
 
         currentUserTopPageInd.text(--currentUsersTopPage);
         renderUsersTopPage();
     });
 
-    usersTopNextPageBtn.on('click', function() {
+    nextPageBtn.on('click', function() {
         if (currentUsersTopPage === usersTopMaxPages) {
             return;
         } if (currentUsersTopPage === usersTopMaxPages - 1) {
             $(this).addClass('opacity-0').addClass('cursor-default');
         } else if (currentUsersTopPage === 1) {
-            usersTopPrevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
+            prevPageBtn.removeClass('opacity-0').removeClass('cursor-default');
         }
 
         currentUserTopPageInd.text(++currentUsersTopPage);

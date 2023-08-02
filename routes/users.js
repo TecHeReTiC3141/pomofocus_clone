@@ -267,4 +267,47 @@ router.get('/get_top_users', async (req, res) => {
     }
 })
 
+router.get('/get_user_current_task', async (req, res) => {
+    try {
+        const curTask = await CurrentTask.findOne({
+            where: {
+                UserId: req.user.id
+            },
+        })
+        res.send({
+            success: true,
+            task: curTask,
+        })
+    } catch (err) {
+        console.log(`Error while getting current user current task: ${err.message}`);
+        res.send({ success: false });
+    }
+})
+
+router.get('/update_user_current_task', async (req, res) => {
+    try {
+        const [curTask, created] = await CurrentTask.findOrCreate({
+            where: {
+                UserId: req.user.id
+            },
+            defaults: {
+                timeLeft: req.query.timeLeft,
+            }
+        });
+        if (!created) {
+            await curTask.update({
+                TaskId: req.query.taskId,
+                timeLeft: req.query.timeLeft,
+            });
+            await curTask.save();
+        }
+        res.send({
+            success: true,
+        });
+    } catch (err) {
+        console.log(`Error while updating current user current task: ${err.message}`);
+        res.send({ success: false });
+    }
+})
+
 module.exports = router;

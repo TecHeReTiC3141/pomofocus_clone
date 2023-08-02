@@ -1099,6 +1099,10 @@ body.dark .toggle-task {
   width: 18px;
 }
 
+.w-\[20rem\] {
+  width: 20rem;
+}
+
 .min-w-\[32rem\] {
   min-width: 32rem;
 }

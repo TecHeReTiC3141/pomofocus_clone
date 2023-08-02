@@ -7,6 +7,14 @@ const CurrentTask = connection.define('CurrentTask', {
     timeLeft: {
         type: DataTypes.INTEGER,
         allowNull: false,
+    },
+    taskState: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    taskActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
     }
 });
 

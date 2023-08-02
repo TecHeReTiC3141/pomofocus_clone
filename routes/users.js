@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const querystring = require('querystring');
 
 const {User, defaultUserSettings} = require('../models/User');
+const Task = require('../models/Task');
 const DoneTask = require('../models/DoneTask');
 const CurrentTask = require('../models/CurrentTask');
 
@@ -276,7 +277,8 @@ router.get('/get_user_current_task', async (req, res) => {
         })
         res.send({
             success: true,
-            task: curTask,
+            curTask: curTask,
+            task: await curTask.getTask(),
         })
     } catch (err) {
         console.log(`Error while getting current user current task: ${err.message}`);
@@ -292,12 +294,16 @@ router.get('/update_user_current_task', async (req, res) => {
             },
             defaults: {
                 timeLeft: req.query.timeLeft,
+                taskState: req.query.taskState,
+                taskActive: req.query.taskActive,
             }
         });
         if (!created) {
             await curTask.update({
                 TaskId: req.query.taskId,
                 timeLeft: req.query.timeLeft,
+                taskState: req.query.taskState,
+                taskActive: req.query.taskActive,
             });
             await curTask.save();
         }

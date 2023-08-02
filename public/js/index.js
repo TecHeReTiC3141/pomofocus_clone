@@ -129,7 +129,6 @@ $(document).ready(() => {
         $.get('/users/get_user_settings', {}, data => {
             updateSettings(data);
             for (let sound of alarmSoundNames) {
-                console.log(sound, userSettings);
                 if (sound === userSettings.alarmSound) continue;
                 $('#alarmSound', settingsForm).append(
                     $(`<option value="${sound}">${sound[0].toUpperCase() + sound.slice(1)}</option>`)
@@ -142,6 +141,7 @@ $(document).ready(() => {
                 })
             })
             setState();
+            restoreUserState();
         })
     }
 
@@ -172,6 +172,18 @@ $(document).ready(() => {
 
         document.title = `${timeLeft.text()} - ${currentMode === 'Pomodoro' ? 
             $('.current-task-name').text() : 'Time for a break'}`;
+    }
+
+    function setTask(task) {
+        currentTime = task.timeLeft;
+        taskActive = task.taskActive;
+        if (taskActive) {
+            toggleDarkMode();
+            $('.forward-btn').removeClass('hidden');
+            $('.time-left-container').removeClass('hidden');
+        }
+
+        timeLeft.text(setLeftTime(currentTime));
     }
 
     // setting current state
@@ -212,6 +224,14 @@ $(document).ready(() => {
 
     $('.toggle-task').on('click', async function () {
         taskActive = !taskActive;
+
+        $.get('/users/update_user_current_task', {
+            taskId: $('.task.active').data('id'),
+            timeLeft: currentTime,
+            taskState: currentMode,
+            taskActive,
+        })
+
         $('.forward-btn').toggleClass('hidden');
         $('.time-left-container').toggleClass('hidden');
         $(this).text(taskActive ? 'Pause' : 'Start');
@@ -241,6 +261,7 @@ $(document).ready(() => {
     })
 
     setInterval(async () => {
+        const currentTask = $('.task.active');
         if (taskActive && currentTime > 0) {
 
             timeLeft.text(setLeftTime(--currentTime));
@@ -251,11 +272,18 @@ $(document).ready(() => {
             document.title = `${timeLeft.text()} - ${currentMode === 'Pomodoro' ?
                 $('.current-task-name').text() : 'Time for a break'}`;
 
+            $.get('/users/update_user_current_task', {
+                taskId: currentTask.data('id'),
+                timeLeft: currentTime,
+                taskState: currentMode,
+                taskActive,
+            })
+
         } else if (currentTime === 0) {
             if (currentMode === 'Pomodoro') {
                 currentMode = (+$('.total-pomos-done').text() + 1) % userSettings.longBreakInterval === 0
                     ? 'Long Break' : 'Short Break';
-                const currentTask = $('.task.active');
+
                 $.get(`/task_done/${currentTask.data('id')}`, {}, data => {
                     const {pomosDone, pomosNeed} = data;
                     $('.task-pomos-need', currentTask).text(pomosNeed);
@@ -287,8 +315,14 @@ $(document).ready(() => {
             $('.time-left-bar').width(0);
             await alarmSounds[userSettings.alarmSound].play();
             $('.time-left-container').addClass('hidden');
-            toggleDarkMode();
             setState();
+            $.get('/users/update_user_current_task', {
+                taskId: $('.task.active').data('id'),
+                timeLeft: currentTime,
+                taskState: currentMode,
+                taskActive,
+            })
+            toggleDarkMode();
         }
     }, 1000)
 
@@ -924,4 +958,25 @@ $(document).ready(() => {
             direction: 'right',
         }, 500);
     });
+
+    // ------- RESTORING USER STATE ------------
+
+    function restoreUserState() {
+        $.get('/users/get_user_current_task', {}, data => {
+            if (!data.success) return;
+            const { curTask, task } = data;
+            console.log(curTask, task);
+            if (!curTask) return;
+            $('.current-task-name').text(task.name);
+            $('.task').each(function() {
+                $(this).removeClass('active');
+                if (+$(this).data('id') === task.id) {
+                    $(this).addClass('active');
+                }
+            });
+            currentMode = curTask.taskState;
+            setState();
+            setTask(curTask);
+        })
+    }
 })

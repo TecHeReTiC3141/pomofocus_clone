@@ -617,7 +617,6 @@ $(document).ready(() => {
 
     $('.close-settings', settingsForm).on('click', function(ev) {
         ev.preventDefault();
-        ev.stopPropagation();
         blurPage.addClass('hidden');
         settingsForm.addClass('hidden');
         toggleFixLayout();
@@ -878,7 +877,6 @@ $(document).ready(() => {
         userStats.addClass('hidden');
         userMenu.addClass('hidden');
         tasksMenu.addClass('hidden');
-
     })
 
     // ------- TOAST NOTIFICATION ------------

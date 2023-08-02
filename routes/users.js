@@ -13,6 +13,7 @@ const initializePassport = require('../utils/initializePassport');
         async email => (await User.findOne({
             where: {
                 email,
+                googleId: null,
             }
         }))?.toJSON(),
         async id => (await User.findOne({
@@ -23,6 +24,11 @@ const initializePassport = require('../utils/initializePassport');
     )
 })();
 
+const initializeOAuth2 = require('../utils/initializeGoogleOAuth2');
+(async () => {
+    await initializeOAuth2(passport);
+})();
+
 
 const {checkAuthenticated, checkNotAuthenticated} = require('../utils/middleware');
 
@@ -30,7 +36,7 @@ router.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('users/login.ejs');
 });
 
-router.post('/login', passport.authenticate('local', {
+router.post('/login', passport.authenticate('user-local', {
     successRedirect: `/app?${
         querystring.stringify({
             message_type: 'success',
@@ -49,6 +55,15 @@ router.post('/login', passport.authenticate('local', {
     }`,
     failureFlash: true,
 }));
+
+router.get('/login/google', passport.authenticate('google', {
+    scope: ['email', 'profile'],
+}))
+
+router.get('/google/callback', passport.authenticate('google', {
+    successRedirect: '/app',
+    failureRedirect: '/users/login',
+}))
 
 router.get('/signup', checkNotAuthenticated, (req, res) => {
     res.render('users/signup.ejs');

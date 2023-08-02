@@ -13,6 +13,7 @@ const initializePassport = require('../utils/initializePassport');
         async email => (await User.findOne({
             where: {
                 email,
+                googleId: null,
             }
         }))?.toJSON(),
         async id => (await User.findOne({
@@ -59,7 +60,7 @@ router.get('/login/google', passport.authenticate('google', {
     scope: ['email', 'profile'],
 }))
 
-router.get('/login/google/callback', passport.authenticate('google', {
+router.get('/google/callback', passport.authenticate('google', {
     successRedirect: '/app',
     failureRedirect: '/users/login',
 }))

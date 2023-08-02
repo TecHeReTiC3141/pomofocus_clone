@@ -898,6 +898,14 @@ body.dark .toggle-task {
   top: 100%;
 }
 
+.left-3 {
+  left: 0.75rem;
+}
+
+.top-1\/2 {
+  top: 50%;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -1085,6 +1093,10 @@ body.dark .toggle-task {
 
 .w-full {
   width: 100%;
+}
+
+.w-\[18px\] {
+  width: 18px;
 }
 
 .min-w-\[32rem\] {
@@ -1328,6 +1340,11 @@ body.dark .toggle-task {
 
 .border-transparent {
   border-color: transparent;
+}
+
+.border-gray-600 {
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99 / var(--tw-border-opacity));
 }
 
 .bg-black {
@@ -1873,6 +1890,10 @@ body.dark .toggle-task {
 
 .active\:top-2:active {
   top: 0.5rem;
+}
+
+.active\:top-1:active {
+  top: 0.25rem;
 }
 
 .active\:border-transparent:active {

@@ -28,7 +28,7 @@ const User = connection.define('User', {
 
     password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
 
     avatar: {

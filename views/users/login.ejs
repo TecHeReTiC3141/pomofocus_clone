@@ -11,8 +11,11 @@
         <% } %>
         <div class="w-full bg-white text-black px-4 py-2 rounded-md mt-4">
             <a href="/users/login/google">
-                <button class="w-full shadow py-2 text-gray-400">
-                    <i class="fa-brands fa-google text-blue-400"></i> Login with Google
+                <button class="w-full shadow py-2 text-gray-500 text-sm mt-4 relative
+                border border-gray-200 rounded-md active:top-1 active:shadow-none
+                flex gap-3 justify-center items-center">
+                    <img src="/images/g-logo.png" alt="google logo" class="w-[18px]">
+                    Login with Google
                 </button>
             </a>
 
@@ -22,9 +25,7 @@
                 <hr class="grow h-1 bg-grey-400">
             </div>
 
-            <form action="" method="POST"
-                  class="w-full">
-
+            <form action="" method="POST" class="w-full">
 
                 <label for="email"
                        class="text-gray-400 uppercase text-xs">Email </label>

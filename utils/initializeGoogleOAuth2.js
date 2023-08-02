@@ -13,7 +13,7 @@ async function initializeOAuth2(passport) {
             defaults: {
                 email: profile.email,
                 name: profile.displayName,
-                avatar: profile.photos.value,
+                avatar: profile.photos && profile.photos[0].value,
             }
         });
         return done(null, user.toJSON());
@@ -21,7 +21,7 @@ async function initializeOAuth2(passport) {
     passport.use(new GoogleStrategy({
             clientID:     GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/users/login/google/callback",
+            callbackURL: "http://localhost:3000/users/google/callback",
             passReqToCallback   : true
         },
         authenticateUser

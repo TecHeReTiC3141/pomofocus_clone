@@ -9,22 +9,38 @@
         <% if (messages.error) { %>
             <%= messages.error %>
         <% } %>
+        <div class="w-full bg-white text-black px-4 py-2 rounded-md mt-4">
+            <a href="/users/login/google">
+                <button class="w-full shadow py-2 text-gray-400">
+                    <i class="fa-brands fa-google text-blue-400"></i> Login with Google
+                </button>
+            </a>
 
-        <form action="" method="POST"
-              class="w-full bg-white text-black px-4 py-2 rounded-md mt-4">
-            <label for="email"
-                   class="text-gray-400 uppercase text-xs">Email </label>
-            <input type="email" id="email" name="email" required placeholder="example@mail.com" value="<%= body.email %>"
-                class="w-full bg-gray-300 indent-1 p-1  focus:outline-none mb-4 rounded">
+            <div class="w-full flex items-center my-2 gap-3">
+                <hr class="grow h-1 bg-grey-400">
+                <p class="text-gray-400">or</p>
+                <hr class="grow h-1 bg-grey-400">
+            </div>
 
-            <label for="password"
-                   class="text-gray-400 uppercase text-xs">Password </label>
-            <input type="password" id="password" required name="password" value="<%= body.password %>"
-                class="w-full bg-gray-300 indent-1 p-1 focus:outline-none rounded mb-4">
+            <form action="" method="POST"
+                  class="w-full">
 
-            <button class="w-full text-center bg-gray-600 hover:bg-black
+
+                <label for="email"
+                       class="text-gray-400 uppercase text-xs">Email </label>
+                <input type="email" id="email" name="email" required placeholder="example@mail.com" value="<%= body.email %>"
+                       class="w-full bg-gray-300 indent-1 p-1  focus:outline-none mb-4 rounded">
+
+                <label for="password"
+                       class="text-gray-400 uppercase text-xs">Password </label>
+                <input type="password" id="password" required name="password" value="<%= body.password %>"
+                       class="w-full bg-gray-300 indent-1 p-1 focus:outline-none rounded mb-4">
+
+                <button class="w-full text-center bg-gray-600 hover:bg-black
             rounded text-white py-2 mb-4">Log in with Email</button>
-        </form>
+            </form>
+        </div>
+
 
         <p class="text-gray-200 mt-4 mb-2">Do not have an account?</p>
         <a href="./signup" class="text-sm underline hover:brightness-105">Create account</a>

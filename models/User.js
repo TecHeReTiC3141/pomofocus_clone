@@ -11,6 +11,12 @@ const defaultUserSettings = {
 }
 
 const User = connection.define('User', {
+
+    googleId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+
     name: {
         type: DataTypes.STRING,
         allowNull: false,

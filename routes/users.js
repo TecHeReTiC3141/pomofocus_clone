@@ -5,6 +5,8 @@ const querystring = require('querystring');
 
 const {User, defaultUserSettings} = require('../models/User');
 const DoneTask = require('../models/DoneTask');
+const CurrentTask = require('../models/CurrentTask');
+
 
 const passport = require('passport');
 const initializePassport = require('../utils/initializePassport');
